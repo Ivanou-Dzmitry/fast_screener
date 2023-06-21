@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace screener3
 {
     public partial class FormTool : Form
     {
+
+        public Color guidlinesColor;
         public FormTool()
         {
             InitializeComponent();
+
+            picboxGuidlineColorSample.BackColor = FormMain.guidlinesColor;
+
+            tbWidth.Text = FormMain.clientWidth.ToString();
+            tbHeight.Text = FormMain.clientHeight.ToString();
+
         }
 
         private void tbWidth_TextChanged(object sender, EventArgs e)
@@ -74,12 +74,23 @@ namespace screener3
 
         private void FormTool_Activated(object sender, EventArgs e)
         {
-            lblInfo.Text = "Max: " + FormMain.VirtScreenWidth.ToString() + "x" + FormMain.VirtScreenHeight.ToString() + "px. Min: 200x100px";
+            lblInfo.Text = "Limits (px): max=" + FormMain.VirtScreenWidth.ToString() + "x" + FormMain.VirtScreenHeight.ToString() + ", min=200x100";
         }
 
         private void lblInfo_Click(object sender, EventArgs e)
         {
 
+        }
+
+
+
+        private void picboxGuidlineColorSample_Click(object sender, EventArgs e)
+        {
+            if (colorDialogGlines.ShowDialog() == DialogResult.OK)
+            {
+                picboxGuidlineColorSample.BackColor = colorDialogGlines.Color;
+                FormMain.guidlinesColor = colorDialogGlines.Color;
+            }
         }
     }
 }

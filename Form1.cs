@@ -1,20 +1,21 @@
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
-using System.Windows.Forms;
+using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Imaging;
-using System.Windows;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Reflection;
-using static System.Windows.Forms.DataFormats;
-using System.Reflection.Emit;
-using System.Configuration;
-using System.Collections.Specialized;
+using System.Windows.Forms;
+using System.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 
 namespace screener3
 {
 
+
+
     public partial class FormMain : Form
     {
-        public const string PROG_NAME = "Fast Screener 2023";
+        //Name
+        public const string PROG_NAME = "F.S. ";
 
         public static int NewWidth = 0;
         public static int NewHeight = 0;
@@ -22,22 +23,45 @@ namespace screener3
         public static int VirtScreenWidth = 0;
         public static int VirtScreenHeight = 0;
 
+        public static int clientWidth, clientHeight;
+
+        //Min size
         public const int MinWidth = 200;
         public const int MinHeight = 100;
+
+        private Color alphaColor = Color.FromArgb(255, 0, 255, 0);
+
+        public static Color guidlinesColor = Color.LightGray;
+
+        private bool drawGuidlines;
+
+
+
+        //screen sizes
+        public int[,] resArray = { { 600, 600, 600, 960 }, { 337, 600, 700, 600 } };
 
         public FormMain()
         {
             InitializeComponent();
 
             //set transparent
-            this.BackColor = Color.LimeGreen;
-            this.TransparencyKey = Color.LimeGreen;
+            this.BackColor = alphaColor;
+            this.TransparencyKey = alphaColor;
+
+            //transparency panel
+            panel1.BackColor = Color.FromArgb(0, 0, 255, 0);
+
+
+            drawGuidlinesStatus();
 
             // Set client size
-            this.ClientSize = new System.Drawing.Size(600, 337);
+            this.ClientSize = new System.Drawing.Size(resArray[0, 0], resArray[1, 0]);
+
+            clientWidth = this.ClientSize.Width;
+            clientHeight = this.ClientSize.Height;
 
             //Update form name
-            this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
+            this.Text = TextUpdater(PROG_NAME, clientWidth, clientHeight);
 
 
             Rectangle VirtScreenRect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
@@ -48,37 +72,39 @@ namespace screener3
             VirtScreenWidth = VirtScreenRect.Width;
             VirtScreenHeight = VirtScreenRect.Height;
 
+
         }
 
         private void btnMainMenu_Click(object sender, EventArgs e)
         {
             contextMenuMain.Show(Cursor.Position.X, Cursor.Position.Y);
+
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(600, 337);
+            this.ClientSize = new System.Drawing.Size(resArray[0, 0], resArray[1, 0]);
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(600, 600);
+            this.ClientSize = new System.Drawing.Size(resArray[0, 1], resArray[1, 1]);
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(600, 700);
+            this.ClientSize = new System.Drawing.Size(resArray[0, 2], resArray[1, 2]);
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(960, 600);
+            this.ClientSize = new System.Drawing.Size(resArray[0, 3], resArray[1, 3]);
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
@@ -103,18 +129,21 @@ namespace screener3
             CaptureMyScreen();
         }
 
-        private string TextUpdater(string Text, int Size1, int Size2)
+        private string TextUpdater(string Text, int Width, int Height)
         {
             string FinalText = "";
 
-            FinalText = (Text + ". Size: " + Size1.ToString() + "x" + Size2.ToString() + "px");
+            FinalText = (Text + "Size: " + Width.ToString() + "x" + Height.ToString() + "px");
 
-            toolTipMain.SetToolTip(btnScreen, "Take screenshot " + ". Size: " + Size1.ToString() + "x" + Size2.ToString() + "px");
+            toolTipMain.SetToolTip(btnScreen, "Take screenshot " + ". Size: " + Width.ToString() + "x" + Height.ToString() + "px");
 
-            lblInfo.Text = "Size setted to " + Size1.ToString() + "x" + Size2.ToString() + "px";
+            lblInfo.Text = "Size setted to " + Width.ToString() + "x" + Height.ToString() + "px";
 
             lblInfo.Visible = true;
             lblInfo.BackColor = Color.SteelBlue;
+
+            //refresh screen
+            this.Refresh();
 
             return FinalText;
         }
@@ -160,8 +189,6 @@ namespace screener3
 
             lblInfo.Text = "Screenshot copied to clipboard";
 
-
-
         }
 
         private void FormMain_Deactivate(object sender, EventArgs e)
@@ -188,15 +215,81 @@ namespace screener3
             }
             else
             {
-                lblInfo.Text = "Ñan't set size! Minimum size is 200x100px";
+                lblInfo.Text = "Ñan't set size! It doesn't fit within the limits.";
                 lblInfo.BackColor = Color.DarkRed;
                 lblInfo.Visible = true;
             }
+
+            this.Refresh();
         }
 
-        private void FormMain_Activated(object sender, EventArgs e)
+
+        private void FormMain_Load(object sender, EventArgs e)
         {
 
+
+
+        }
+
+        private void FormMain_Paint(object sender, PaintEventArgs e)
+        {
+            if (drawGuidlines == true)
+            {
+                DrawLines(e, guidlinesColor);
+            }
+
+        }
+
+        private void ClearDrawings(PaintEventArgs e, Color colorToClear)
+        {
+            // Clear screen with teal background.
+            e.Graphics.Clear(colorToClear);
+        }
+
+
+        private void DrawLines(PaintEventArgs e, Color lineColor)
+        {
+            int p1, p2, p3, p4;
+
+            p1 = this.ClientSize.Width / 3;
+            p2 = this.ClientSize.Height / 3;
+
+            p3 = (this.ClientSize.Width / 3) * 2;
+            p4 = (this.ClientSize.Height / 3) * 2;
+
+            //Color lineColor = Color.FromArgb(128, 0, 254, 0);
+
+            Pen pen = new Pen(lineColor);
+
+            //vertical
+            e.Graphics.DrawLine(pen, p1, 0, p1, this.ClientSize.Height);
+            e.Graphics.DrawLine(pen, p3, 0, p3, this.ClientSize.Height);
+
+            //horizontal
+            e.Graphics.DrawLine(pen, 0, p2, this.ClientSize.Width, p2);
+            e.Graphics.DrawLine(pen, 0, p4, this.ClientSize.Width, p4);
+        }
+
+
+        private void drawGuidlinesStatus()
+        {
+            if (mitShowGuidlines.CheckState == CheckState.Checked)
+            {
+                mitShowGuidlines.CheckState = CheckState.Unchecked;
+                drawGuidlines = false;
+            }
+            else
+            {
+                mitShowGuidlines.CheckState = CheckState.Checked;
+                drawGuidlines = true;
+            }
+
+        }
+
+        private void mitShowGuidlines_Click(object sender, EventArgs e)
+        {
+            drawGuidlinesStatus();
+            this.Refresh();
         }
     }
 }

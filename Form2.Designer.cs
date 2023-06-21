@@ -34,10 +34,19 @@
             tbHeight = new TextBox();
             tbWidth = new TextBox();
             toolTipTool = new ToolTip(components);
+            picboxGuidlineColorSample = new PictureBox();
             panel1 = new Panel();
             btnOK = new Button();
+            gboxGuidlines = new GroupBox();
+            textBox4 = new TextBox();
+            textBox3 = new TextBox();
+            textBox2 = new TextBox();
+            textBox1 = new TextBox();
+            colorDialogGlines = new ColorDialog();
             gboxNewSize.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).BeginInit();
             panel1.SuspendLayout();
+            gboxGuidlines.SuspendLayout();
             SuspendLayout();
             // 
             // gboxNewSize
@@ -56,7 +65,7 @@
             // lblInfo
             // 
             lblInfo.AutoSize = true;
-            lblInfo.Location = new Point(128, 24);
+            lblInfo.Location = new Point(128, 28);
             lblInfo.Margin = new Padding(8);
             lblInfo.Name = "lblInfo";
             lblInfo.Size = new Size(38, 15);
@@ -73,7 +82,7 @@
             tbHeight.PlaceholderText = "Height";
             tbHeight.Size = new Size(50, 23);
             tbHeight.TabIndex = 2;
-            toolTipTool.SetToolTip(tbHeight, "Input height. Min 100px");
+            toolTipTool.SetToolTip(tbHeight, "Set screenshot height");
             tbHeight.WordWrap = false;
             tbHeight.TextChanged += tbHeight_TextChanged;
             // 
@@ -87,9 +96,21 @@
             tbWidth.PlaceholderText = "Width";
             tbWidth.Size = new Size(50, 23);
             tbWidth.TabIndex = 1;
-            toolTipTool.SetToolTip(tbWidth, "Input width. Min 200px");
+            toolTipTool.SetToolTip(tbWidth, "Set sreenshot width");
             tbWidth.WordWrap = false;
             tbWidth.TextChanged += tbWidth_TextChanged;
+            // 
+            // picboxGuidlineColorSample
+            // 
+            picboxGuidlineColorSample.BackColor = Color.White;
+            picboxGuidlineColorSample.BorderStyle = BorderStyle.FixedSingle;
+            picboxGuidlineColorSample.Location = new Point(208, 64);
+            picboxGuidlineColorSample.Name = "picboxGuidlineColorSample";
+            picboxGuidlineColorSample.Size = new Size(24, 24);
+            picboxGuidlineColorSample.TabIndex = 4;
+            picboxGuidlineColorSample.TabStop = false;
+            toolTipTool.SetToolTip(picboxGuidlineColorSample, "Set guidlines color");
+            picboxGuidlineColorSample.Click += picboxGuidlineColorSample_Click;
             // 
             // panel1
             // 
@@ -110,11 +131,55 @@
             btnOK.UseVisualStyleBackColor = true;
             btnOK.Click += btnOK_Click;
             // 
+            // gboxGuidlines
+            // 
+            gboxGuidlines.Controls.Add(textBox4);
+            gboxGuidlines.Controls.Add(textBox3);
+            gboxGuidlines.Controls.Add(textBox2);
+            gboxGuidlines.Controls.Add(textBox1);
+            gboxGuidlines.Enabled = false;
+            gboxGuidlines.Location = new Point(0, 56);
+            gboxGuidlines.Name = "gboxGuidlines";
+            gboxGuidlines.Size = new Size(200, 152);
+            gboxGuidlines.TabIndex = 2;
+            gboxGuidlines.TabStop = false;
+            gboxGuidlines.Text = "Guidlines";
+            // 
+            // textBox4
+            // 
+            textBox4.Location = new Point(8, 120);
+            textBox4.Name = "textBox4";
+            textBox4.Size = new Size(100, 23);
+            textBox4.TabIndex = 3;
+            // 
+            // textBox3
+            // 
+            textBox3.Location = new Point(8, 88);
+            textBox3.Name = "textBox3";
+            textBox3.Size = new Size(100, 23);
+            textBox3.TabIndex = 2;
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(8, 56);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(100, 23);
+            textBox2.TabIndex = 1;
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(8, 24);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(100, 23);
+            textBox1.TabIndex = 0;
+            // 
             // FormTool
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(384, 261);
+            Controls.Add(picboxGuidlineColorSample);
+            Controls.Add(gboxGuidlines);
             Controls.Add(panel1);
             Controls.Add(gboxNewSize);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
@@ -126,7 +191,10 @@
             Deactivate += FormTool_Deactivate;
             gboxNewSize.ResumeLayout(false);
             gboxNewSize.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).EndInit();
             panel1.ResumeLayout(false);
+            gboxGuidlines.ResumeLayout(false);
+            gboxGuidlines.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -139,5 +207,12 @@
         private Panel panel1;
         private Button btnOK;
         private Label lblInfo;
+        private GroupBox gboxGuidlines;
+        private TextBox textBox4;
+        private TextBox textBox3;
+        private TextBox textBox2;
+        private TextBox textBox1;
+        private ColorDialog colorDialogGlines;
+        private PictureBox picboxGuidlineColorSample;
     }
 }

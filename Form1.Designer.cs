@@ -37,7 +37,8 @@
             mit600_700 = new ToolStripMenuItem();
             mit960_600 = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
-            mitCustomRes = new ToolStripMenuItem();
+            mitShowGuidlines = new ToolStripMenuItem();
+            mitSettings = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             mitTakeScreen = new ToolStripMenuItem();
             panel1 = new Panel();
@@ -62,9 +63,9 @@
             // 
             // contextMenuMain
             // 
-            contextMenuMain.Items.AddRange(new ToolStripItem[] { mit600_337, mit600_600, mit600_700, mit960_600, toolStripSeparator2, mitCustomRes, toolStripSeparator1, mitTakeScreen });
+            contextMenuMain.Items.AddRange(new ToolStripItem[] { mit600_337, mit600_600, mit600_700, mit960_600, toolStripSeparator2, mitShowGuidlines, mitSettings, toolStripSeparator1, mitTakeScreen });
             contextMenuMain.Name = "contextMenuStrip1";
-            contextMenuMain.Size = new Size(231, 148);
+            contextMenuMain.Size = new Size(231, 170);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
             // mit600_337
@@ -104,12 +105,22 @@
             toolStripSeparator2.Name = "toolStripSeparator2";
             toolStripSeparator2.Size = new Size(227, 6);
             // 
-            // mitCustomRes
+            // mitShowGuidlines
             // 
-            mitCustomRes.Name = "mitCustomRes";
-            mitCustomRes.Size = new Size(230, 22);
-            mitCustomRes.Text = "Custom Size";
-            mitCustomRes.Click += mitCustomRes_Click;
+            mitShowGuidlines.Checked = true;
+            mitShowGuidlines.CheckState = CheckState.Checked;
+            mitShowGuidlines.Name = "mitShowGuidlines";
+            mitShowGuidlines.ShortcutKeys = Keys.Control | Keys.Alt | Keys.A;
+            mitShowGuidlines.Size = new Size(230, 22);
+            mitShowGuidlines.Text = "Show Guidlines";
+            mitShowGuidlines.Click += mitShowGuidlines_Click;
+            // 
+            // mitSettings
+            // 
+            mitSettings.Name = "mitSettings";
+            mitSettings.Size = new Size(230, 22);
+            mitSettings.Text = "Settings";
+            mitSettings.Click += mitCustomRes_Click;
             // 
             // toolStripSeparator1
             // 
@@ -174,9 +185,11 @@
             MaximizeBox = false;
             MinimumSize = new Size(90, 50);
             Name = "FormMain";
+            StartPosition = FormStartPosition.CenterScreen;
             TopMost = true;
-            Activated += FormMain_Activated;
             Deactivate += FormMain_Deactivate;
+            Load += FormMain_Load;
+            Paint += FormMain_Paint;
             Move += FormMain_Move;
             contextMenuMain.ResumeLayout(false);
             panel1.ResumeLayout(false);
@@ -199,6 +212,7 @@
         private Label lblInfo;
         private ToolTip toolTipMain;
         private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem mitCustomRes;
+        private ToolStripMenuItem mitSettings;
+        private ToolStripMenuItem mitShowGuidlines;
     }
 }
