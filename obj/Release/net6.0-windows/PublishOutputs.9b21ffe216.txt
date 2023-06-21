@@ -1,5 +1,0 @@
-D:\programs\screener03\screener3\bin\Release\net6.0-windows\publish\FastScreener.exe
-D:\programs\screener03\screener3\bin\Release\net6.0-windows\publish\FastScreener.dll
-D:\programs\screener03\screener3\bin\Release\net6.0-windows\publish\FastScreener.deps.json
-D:\programs\screener03\screener3\bin\Release\net6.0-windows\publish\FastScreener.runtimeconfig.json
-D:\programs\screener03\screener3\bin\Release\net6.0-windows\publish\FastScreener.pdb
