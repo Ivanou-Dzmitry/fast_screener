@@ -32,10 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             btnMainMenu = new Button();
             contextMenuMain = new ContextMenuStrip(components);
-            mit600_337 = new ToolStripMenuItem();
-            mit600_600 = new ToolStripMenuItem();
-            mit600_700 = new ToolStripMenuItem();
-            mit960_600 = new ToolStripMenuItem();
+            mitSize01 = new ToolStripMenuItem();
+            mitSize02 = new ToolStripMenuItem();
+            mitSize03 = new ToolStripMenuItem();
+            mitSize04 = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             mitShowGuidlines = new ToolStripMenuItem();
             mitSettings = new ToolStripMenuItem();
@@ -63,42 +63,42 @@
             // 
             // contextMenuMain
             // 
-            contextMenuMain.Items.AddRange(new ToolStripItem[] { mit600_337, mit600_600, mit600_700, mit960_600, toolStripSeparator2, mitShowGuidlines, mitSettings, toolStripSeparator1, mitTakeScreen });
+            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitShowGuidlines, mitSettings, toolStripSeparator1, mitTakeScreen });
             contextMenuMain.Name = "contextMenuStrip1";
             contextMenuMain.Size = new Size(231, 170);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
-            // mit600_337
+            // mitSize01
             // 
-            mit600_337.Name = "mit600_337";
-            mit600_337.ShortcutKeys = Keys.Alt | Keys.D1;
-            mit600_337.Size = new Size(230, 22);
-            mit600_337.Text = "600x377";
-            mit600_337.Click += toolStripMenuItem2_Click;
+            mitSize01.Name = "mitSize01";
+            mitSize01.ShortcutKeys = Keys.Alt | Keys.D1;
+            mitSize01.Size = new Size(230, 22);
+            mitSize01.Text = "600x377";
+            mitSize01.Click += mitSize01_Click;
             // 
-            // mit600_600
+            // mitSize02
             // 
-            mit600_600.Name = "mit600_600";
-            mit600_600.ShortcutKeys = Keys.Alt | Keys.D2;
-            mit600_600.Size = new Size(230, 22);
-            mit600_600.Text = "600x600";
-            mit600_600.Click += toolStripMenuItem3_Click;
+            mitSize02.Name = "mitSize02";
+            mitSize02.ShortcutKeys = Keys.Alt | Keys.D2;
+            mitSize02.Size = new Size(230, 22);
+            mitSize02.Text = "600x600";
+            mitSize02.Click += toolStripMenuItem3_Click;
             // 
-            // mit600_700
+            // mitSize03
             // 
-            mit600_700.Name = "mit600_700";
-            mit600_700.ShortcutKeys = Keys.Alt | Keys.D3;
-            mit600_700.Size = new Size(230, 22);
-            mit600_700.Text = "600x700";
-            mit600_700.Click += toolStripMenuItem4_Click;
+            mitSize03.Name = "mitSize03";
+            mitSize03.ShortcutKeys = Keys.Alt | Keys.D3;
+            mitSize03.Size = new Size(230, 22);
+            mitSize03.Text = "600x700";
+            mitSize03.Click += toolStripMenuItem4_Click;
             // 
-            // mit960_600
+            // mitSize04
             // 
-            mit960_600.Name = "mit960_600";
-            mit960_600.ShortcutKeys = Keys.Alt | Keys.D4;
-            mit960_600.Size = new Size(230, 22);
-            mit960_600.Text = "960x600";
-            mit960_600.Click += toolStripMenuItem1_Click;
+            mitSize04.Name = "mitSize04";
+            mitSize04.ShortcutKeys = Keys.Alt | Keys.D4;
+            mitSize04.Size = new Size(230, 22);
+            mitSize04.Text = "960x600";
+            mitSize04.Click += toolStripMenuItem1_Click;
             // 
             // toolStripSeparator2
             // 
@@ -134,11 +134,12 @@
             mitTakeScreen.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
             mitTakeScreen.Size = new Size(230, 22);
             mitTakeScreen.Text = "Take Screenshot";
-            mitTakeScreen.Click += toolStripMenuItem5_Click;
+            mitTakeScreen.Click += mitTakeScreen_Click;
             // 
             // panel1
             // 
             panel1.AutoSize = true;
+            panel1.BackColor = Color.Transparent;
             panel1.Controls.Add(btnScreen);
             panel1.Controls.Add(btnMainMenu);
             panel1.Dock = DockStyle.Top;
@@ -188,7 +189,6 @@
             StartPosition = FormStartPosition.CenterScreen;
             TopMost = true;
             Deactivate += FormMain_Deactivate;
-            Load += FormMain_Load;
             Paint += FormMain_Paint;
             Move += FormMain_Move;
             contextMenuMain.ResumeLayout(false);
@@ -203,10 +203,10 @@
         private Panel panel1;
         private Button btnScreen;
         private ContextMenuStrip contextMenuMain;
-        private ToolStripMenuItem mit600_337;
-        private ToolStripMenuItem mit600_600;
-        private ToolStripMenuItem mit600_700;
-        private ToolStripMenuItem mit960_600;
+        private ToolStripMenuItem mitSize01;
+        private ToolStripMenuItem mitSize02;
+        private ToolStripMenuItem mitSize03;
+        private ToolStripMenuItem mitSize04;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem mitTakeScreen;
         private Label lblInfo;

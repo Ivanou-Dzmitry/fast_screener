@@ -20,37 +20,36 @@ namespace screener3
         public static int NewWidth = 0;
         public static int NewHeight = 0;
 
+        //all monitors
         public static int VirtScreenWidth = 0;
         public static int VirtScreenHeight = 0;
 
         public static int clientWidth, clientHeight;
 
         //Min size
-        public const int MinWidth = 200;
-        public const int MinHeight = 100;
+        public const int MIN_WIDTH = 200;
+        public const int MIN_HEIGHT = 100;
 
-        private Color alphaColor = Color.FromArgb(255, 0, 255, 0);
+        //alpha color to remove 
+        private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 254, 1);
 
+        //default guidlines color
         public static Color guidlinesColor = Color.LightGray;
 
+        //for guidlines
         private bool drawGuidlines;
 
 
-
         //screen sizes
-        public int[,] resArray = { { 600, 600, 600, 960 }, { 337, 600, 700, 600 } };
+        public static int[,] resArray = { { 600, 600, 600, 960 }, { 337, 600, 700, 600 } };
 
         public FormMain()
         {
             InitializeComponent();
 
             //set transparent
-            this.BackColor = alphaColor;
-            this.TransparencyKey = alphaColor;
-
-            //transparency panel
-            panel1.BackColor = Color.FromArgb(0, 0, 255, 0);
-
+            this.BackColor = ALPHA_KEY_COLOR;
+            this.TransparencyKey = ALPHA_KEY_COLOR;
 
             drawGuidlinesStatus();
 
@@ -69,24 +68,24 @@ namespace screener3
             foreach (Screen screen in Screen.AllScreens)
                 VirtScreenRect = Rectangle.Union(VirtScreenRect, screen.Bounds);
 
+            //Get virtual screen size
             VirtScreenWidth = VirtScreenRect.Width;
             VirtScreenHeight = VirtScreenRect.Height;
-
 
         }
 
         private void btnMainMenu_Click(object sender, EventArgs e)
         {
             contextMenuMain.Show(Cursor.Position.X, Cursor.Position.Y);
-
         }
 
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        private void mitSize01_Click(object sender, EventArgs e)
         {
             this.ClientSize = new System.Drawing.Size(resArray[0, 0], resArray[1, 0]);
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
+
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
@@ -109,10 +108,7 @@ namespace screener3
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
 
-        private void toolStripMenuItem5_Click(object sender, EventArgs e)
-        {
-            CaptureMyScreen();
-        }
+
 
         private void FormMain_Move(object sender, EventArgs e)
         {
@@ -205,7 +201,7 @@ namespace screener3
             toolForm.ShowDialog();
 
 
-            if ((NewWidth >= MinWidth) && (NewHeight >= MinHeight))
+            if ((NewWidth >= MIN_WIDTH) && (NewHeight >= MIN_HEIGHT))
             {
 
                 this.ClientSize = new System.Drawing.Size(NewWidth, NewHeight);
@@ -223,13 +219,6 @@ namespace screener3
             this.Refresh();
         }
 
-
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-
-
-
-        }
 
         private void FormMain_Paint(object sender, PaintEventArgs e)
         {
@@ -291,5 +280,12 @@ namespace screener3
             drawGuidlinesStatus();
             this.Refresh();
         }
+
+        private void mitTakeScreen_Click(object sender, EventArgs e)
+        {
+            CaptureMyScreen();
+        }
+
+
     }
 }
