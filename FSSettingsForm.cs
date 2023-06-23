@@ -1,88 +1,76 @@
 ﻿
+using Microsoft.VisualBasic;
+using System.Diagnostics;
 using System.Reflection.Emit;
 using System.Windows.Forms;
 
 namespace screener3
 {
-    public partial class FormTool : Form
+    public partial class FormSet : Form
     {
 
         public Color guidlinesColor;
-        private int MaxRows = 4;
+
         private string limitsText = "Limits (WxH): max " + FormMain.VirtScreenWidth.ToString() + "x" + FormMain.VirtScreenHeight.ToString() + ", min 200x100";
 
-
-        public FormTool()
+        public FormSet()
         {
             InitializeComponent();
 
             picboxGuidlineColorSample.BackColor = FormMain.guidlinesColor;
 
-            tbWidth.Text = FormMain.clientWidth.ToString();
-            tbHeight.Text = FormMain.clientHeight.ToString();
 
-            string text1 = "";
-
-            for (int col = 0; col < FormMain.resArray.GetLength(0) - 1; col++)
-                for (int row = 0; row < FormMain.resArray.GetLength(1); row++)
-                    this.dataGridSize.Rows.Add(FormMain.resArray[col, row], FormMain.resArray[col + 1, row]);
+            if (FormMain.GuidlinesType == 1)
+            {
+                rbGuidType01.Checked = true;
+            }
 
 
-            lbTest.Text = text1;
+            if (FormMain.GuidlinesType == 2)
+            {
+                rbGuidType02.Checked = true;
+            }
+
+
+            if (FormMain.GuidlinesType == 3)
+            {
+                rbGuidType03.Checked = true;
+            }
+
+
+
+            //get current work resolution
+            for (int col = 0; col < 1; col++)
+                for (int row = 0; row < FormMain.RES_WORKED.GetLength(1); row++)
+                    this.dataGridSize.Rows.Add(FormMain.RES_WORKED[col, row], FormMain.RES_WORKED[1, row]);
+
 
         }
 
-        private void tbWidth_TextChanged(object sender, EventArgs e)
-        {
-            if (System.Text.RegularExpressions.Regex.IsMatch(tbWidth.Text, "[^0-9]"))
-            {
-                tbWidth.Text = tbWidth.Text.Remove(tbWidth.Text.Length - 1);
-            }
-
-            if (Int32.TryParse(tbWidth.Text, out int numValueW) == true && numValueW > FormMain.VirtScreenWidth)
-            {
-                tbWidth.Text = tbWidth.Text.Remove(tbWidth.Text.Length - 1);
-            }
-        }
-
-        private void tbHeight_TextChanged(object sender, EventArgs e)
-        {
-            if (System.Text.RegularExpressions.Regex.IsMatch(tbHeight.Text, "[^0-9]"))
-            {
-                tbHeight.Text = tbHeight.Text.Remove(tbHeight.Text.Length - 1);
-            }
-
-            if (Int32.TryParse(tbHeight.Text, out int numValueH) == true && numValueH > FormMain.VirtScreenHeight)
-            {
-                tbHeight.Text = tbHeight.Text.Remove(tbHeight.Text.Length - 1);
-            }
-        }
-
-        private void FormTool_Deactivate(object sender, EventArgs e)
-        {
-
-            if (Int32.TryParse(tbWidth.Text, out int numValueW))
-            {
-                FormMain.NewWidth = numValueW;
-            }
-            else
-            {
-                FormMain.NewWidth = 0;
-            }
-
-            if (Int32.TryParse(tbHeight.Text, out int numValueH))
-            {
-                FormMain.NewHeight = numValueH;
-            }
-            else
-            {
-                FormMain.NewHeight = 0;
-            }
-
-        }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            //set data update
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 4; j++)
+                    FormMain.RES_WORKED[i, j] = dataGridSize.Rows[j].Cells[i].Value;
+
+
+            if (rbGuidType01.Checked == true)
+            {
+                FormMain.GuidlinesType = 1;
+            }
+
+            if (rbGuidType02.Checked == true)
+            {
+                FormMain.GuidlinesType = 2;
+            }
+
+            if (rbGuidType03.Checked == true)
+            {
+                FormMain.GuidlinesType = 3;
+            }
+
             Close();
         }
 
@@ -91,13 +79,6 @@ namespace screener3
             lblInfo.Text = limitsText;
         }
 
-        private void lblInfo_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-
         private void picboxGuidlineColorSample_Click(object sender, EventArgs e)
         {
             if (colorDialogGlines.ShowDialog() == DialogResult.OK)
@@ -105,11 +86,6 @@ namespace screener3
                 picboxGuidlineColorSample.BackColor = colorDialogGlines.Color;
                 FormMain.guidlinesColor = colorDialogGlines.Color;
             }
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
 
 
@@ -151,7 +127,36 @@ namespace screener3
             }
         }
 
-        private void dataGridSize_KeyPress(object sender, KeyPressEventArgs e)
+        private void rbGuidType03_CheckedChanged(object sender, EventArgs e)
+        {
+
+
+            if (rbGuidType03.Checked == true)
+            {
+                pnlGMargin.Enabled = true;
+            }
+            else
+            {
+                pnlGMargin.Enabled = false;
+            }
+        }
+
+        private void rbGuidType01_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rbGuidType02_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rbGuidType01_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridSize_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }

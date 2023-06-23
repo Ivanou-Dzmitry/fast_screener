@@ -39,9 +39,12 @@ namespace screener3
         //for guidlines
         private bool drawGuidlines;
 
+        //1 - 3x3, 2 - 4x4, 3 - custom
+        public static int GuidlinesType;
 
         //screen sizes
-        public static int[,] resArray = { { 600, 600, 600, 960 }, { 337, 600, 700, 600 } };
+        public static object[,] RES_DEFAULT = { { 600, 600, 600, 960 }, { 337, 600, 700, 600 } };
+        public static object[,] RES_WORKED = new object[2, 4];
 
         public FormMain()
         {
@@ -53,15 +56,18 @@ namespace screener3
 
             drawGuidlinesStatus();
 
-            // Set client size
-            this.ClientSize = new System.Drawing.Size(resArray[0, 0], resArray[1, 0]);
+            //copy daefault data
+            RES_WORKED = RES_DEFAULT;
 
+            // Set client size
+            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
+
+            //set client size
             clientWidth = this.ClientSize.Width;
             clientHeight = this.ClientSize.Height;
 
             //Update form name
             this.Text = TextUpdater(PROG_NAME, clientWidth, clientHeight);
-
 
             Rectangle VirtScreenRect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
 
@@ -72,6 +78,8 @@ namespace screener3
             VirtScreenWidth = VirtScreenRect.Width;
             VirtScreenHeight = VirtScreenRect.Height;
 
+            FormMain.GuidlinesType = 1;
+
         }
 
         private void btnMainMenu_Click(object sender, EventArgs e)
@@ -81,7 +89,7 @@ namespace screener3
 
         private void mitSize01_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(resArray[0, 0], resArray[1, 0]);
+            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
@@ -89,21 +97,21 @@ namespace screener3
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(resArray[0, 1], resArray[1, 1]);
+            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 1]), Convert.ToInt32(Convert.ToInt32(RES_WORKED[1, 1])));
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(resArray[0, 2], resArray[1, 2]);
+            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(Convert.ToInt32(RES_WORKED[0, 2])), Convert.ToInt32(RES_WORKED[1, 2]));
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(resArray[0, 3], resArray[1, 3]);
+            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 3]), Convert.ToInt32(Convert.ToInt32(RES_WORKED[1, 3])));
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
@@ -129,7 +137,7 @@ namespace screener3
         {
             string FinalText = "";
 
-            FinalText = (Text + "Size: " + Width.ToString() + "x" + Height.ToString() + "px");
+            FinalText = (Text + "Size (px): " + Width.ToString() + "x" + Height.ToString());
 
             toolTipMain.SetToolTip(btnScreen, "Take screenshot " + ". Size: " + Width.ToString() + "x" + Height.ToString() + "px");
 
@@ -195,26 +203,15 @@ namespace screener3
         private void mitCustomRes_Click(object sender, EventArgs e)
         {
             // Create a new instance of the Form2 class
-            FormTool toolForm = new FormTool();
+            FormSet toolForm = new FormSet();
 
             // Show the settings form
             toolForm.ShowDialog();
 
-
-            if ((NewWidth >= MIN_WIDTH) && (NewHeight >= MIN_HEIGHT))
-            {
-
-                this.ClientSize = new System.Drawing.Size(NewWidth, NewHeight);
-
-                this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
-
-            }
-            else
-            {
-                lblInfo.Text = "Ñan't set size! It doesn't fit within the limits.";
-                lblInfo.BackColor = Color.DarkRed;
-                lblInfo.Visible = true;
-            }
+            mitSize01.Text = RES_WORKED[0, 0].ToString() + "x" + RES_WORKED[1, 0].ToString();
+            mitSize02.Text = RES_WORKED[0, 1].ToString() + "x" + RES_WORKED[1, 1].ToString();
+            mitSize03.Text = RES_WORKED[0, 2].ToString() + "x" + RES_WORKED[1, 2].ToString();
+            mitSize04.Text = RES_WORKED[0, 3].ToString() + "x" + RES_WORKED[1, 3].ToString();
 
             this.Refresh();
         }
@@ -238,25 +235,55 @@ namespace screener3
 
         private void DrawLines(PaintEventArgs e, Color lineColor)
         {
-            int p1, p2, p3, p4;
 
-            p1 = this.ClientSize.Width / 3;
-            p2 = this.ClientSize.Height / 3;
+            int point01Top, point01Left, point02Top, point02Left, point03Top, point03Left;
 
-            p3 = (this.ClientSize.Width / 3) * 2;
-            p4 = (this.ClientSize.Height / 3) * 2;
+            if (GuidlinesType == 1)
+            {
+                point01Top = this.ClientSize.Width / 3;
+                point01Left = this.ClientSize.Height / 3;
 
-            //Color lineColor = Color.FromArgb(128, 0, 254, 0);
+                point02Top = (this.ClientSize.Width / 3) * 2;
+                point02Left = (this.ClientSize.Height / 3) * 2;
 
-            Pen pen = new Pen(lineColor);
+                Pen pen = new Pen(lineColor);
 
-            //vertical
-            e.Graphics.DrawLine(pen, p1, 0, p1, this.ClientSize.Height);
-            e.Graphics.DrawLine(pen, p3, 0, p3, this.ClientSize.Height);
+                //vertical
+                e.Graphics.DrawLine(pen, point01Top, 0, point01Top, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, point02Top, 0, point02Top, this.ClientSize.Height);
 
-            //horizontal
-            e.Graphics.DrawLine(pen, 0, p2, this.ClientSize.Width, p2);
-            e.Graphics.DrawLine(pen, 0, p4, this.ClientSize.Width, p4);
+                //horizontal
+                e.Graphics.DrawLine(pen, 0, point01Left, this.ClientSize.Width, point01Left);
+                e.Graphics.DrawLine(pen, 0, point02Left, this.ClientSize.Width, point02Left);
+            }
+            else
+            {
+
+                point01Top = this.ClientSize.Width / 4;
+                point01Left = this.ClientSize.Height / 4;
+
+                point02Top = (this.ClientSize.Width / 4) * 2;
+                point02Left = (this.ClientSize.Height / 4) * 2;
+
+                point03Top = (this.ClientSize.Width / 4) * 3;
+                point03Left = (this.ClientSize.Height / 4) * 3;
+
+                Pen pen = new Pen(lineColor);
+
+                //vertical
+                e.Graphics.DrawLine(pen, point01Top, 0, point01Top, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, point02Top, 0, point02Top, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, point03Top, 0, point03Top, this.ClientSize.Height);
+
+                //horizontal
+                e.Graphics.DrawLine(pen, 0, point01Left, this.ClientSize.Width, point01Left);
+                e.Graphics.DrawLine(pen, 0, point02Left, this.ClientSize.Width, point02Left);
+                e.Graphics.DrawLine(pen, 0, point03Left, this.ClientSize.Width, point03Left);
+
+            }
+
+
+
         }
 
 

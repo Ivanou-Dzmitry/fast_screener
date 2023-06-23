@@ -1,6 +1,6 @@
 ﻿namespace screener3
 {
-    partial class FormTool
+    partial class FormSet
     {
         /// <summary>
         /// Required designer variable.
@@ -29,11 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTool));
-            gboxNewSize = new GroupBox();
-            tbHeight = new TextBox();
-            lbTest = new Label();
-            tbWidth = new TextBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSet));
             lblInfo = new Label();
             toolTipTool = new ToolTip(components);
             picboxGuidlineColorSample = new PictureBox();
@@ -44,7 +40,7 @@
             rbGuidType03 = new RadioButton();
             rbGuidType02 = new RadioButton();
             rbGuidType01 = new RadioButton();
-            panel2 = new Panel();
+            pnlGMargin = new Panel();
             textBox1 = new TextBox();
             textBox4 = new TextBox();
             textBox2 = new TextBox();
@@ -54,64 +50,14 @@
             colWidth = new DataGridViewTextBoxColumn();
             colHeight = new DataGridViewTextBoxColumn();
             gboxSizes = new GroupBox();
-            gboxNewSize.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).BeginInit();
             panel1.SuspendLayout();
             gboxGuidlines.SuspendLayout();
             panel3.SuspendLayout();
-            panel2.SuspendLayout();
+            pnlGMargin.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridSize).BeginInit();
             gboxSizes.SuspendLayout();
             SuspendLayout();
-            // 
-            // gboxNewSize
-            // 
-            gboxNewSize.Controls.Add(tbHeight);
-            gboxNewSize.Controls.Add(lbTest);
-            gboxNewSize.Controls.Add(tbWidth);
-            gboxNewSize.Dock = DockStyle.Top;
-            gboxNewSize.Location = new Point(0, 0);
-            gboxNewSize.Name = "gboxNewSize";
-            gboxNewSize.Size = new Size(384, 56);
-            gboxNewSize.TabIndex = 0;
-            gboxNewSize.TabStop = false;
-            gboxNewSize.Text = "New Size";
-            // 
-            // tbHeight
-            // 
-            tbHeight.Location = new Point(72, 24);
-            tbHeight.Margin = new Padding(8);
-            tbHeight.MaxLength = 4;
-            tbHeight.Name = "tbHeight";
-            tbHeight.PlaceholderText = "Height";
-            tbHeight.Size = new Size(50, 23);
-            tbHeight.TabIndex = 2;
-            toolTipTool.SetToolTip(tbHeight, "Set screenshot height");
-            tbHeight.WordWrap = false;
-            tbHeight.TextChanged += tbHeight_TextChanged;
-            // 
-            // lbTest
-            // 
-            lbTest.AutoSize = true;
-            lbTest.Location = new Point(128, 24);
-            lbTest.Name = "lbTest";
-            lbTest.Size = new Size(52, 15);
-            lbTest.TabIndex = 5;
-            lbTest.Text = "labelTest";
-            // 
-            // tbWidth
-            // 
-            tbWidth.CharacterCasing = CharacterCasing.Lower;
-            tbWidth.Location = new Point(8, 24);
-            tbWidth.Margin = new Padding(8);
-            tbWidth.MaxLength = 4;
-            tbWidth.Name = "tbWidth";
-            tbWidth.PlaceholderText = "Width";
-            tbWidth.Size = new Size(50, 23);
-            tbWidth.TabIndex = 1;
-            toolTipTool.SetToolTip(tbWidth, "Set sreenshot width");
-            tbWidth.WordWrap = false;
-            tbWidth.TextChanged += tbWidth_TextChanged;
             // 
             // lblInfo
             // 
@@ -125,7 +71,6 @@
             lblInfo.Size = new Size(88, 19);
             lblInfo.TabIndex = 3;
             lblInfo.Text = "Maximum size";
-            lblInfo.Click += lblInfo_Click;
             // 
             // picboxGuidlineColorSample
             // 
@@ -143,14 +88,14 @@
             // 
             panel1.Controls.Add(btnOK);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 376);
+            panel1.Location = new Point(0, 321);
             panel1.Name = "panel1";
-            panel1.Size = new Size(384, 48);
+            panel1.Size = new Size(334, 40);
             panel1.TabIndex = 1;
             // 
             // btnOK
             // 
-            btnOK.Location = new Point(297, 13);
+            btnOK.Location = new Point(248, 8);
             btnOK.Name = "btnOK";
             btnOK.Size = new Size(75, 23);
             btnOK.TabIndex = 0;
@@ -161,26 +106,27 @@
             // gboxGuidlines
             // 
             gboxGuidlines.Controls.Add(panel3);
-            gboxGuidlines.Controls.Add(panel2);
+            gboxGuidlines.Controls.Add(pnlGMargin);
             gboxGuidlines.Dock = DockStyle.Top;
-            gboxGuidlines.Location = new Point(0, 56);
+            gboxGuidlines.Location = new Point(0, 0);
             gboxGuidlines.Name = "gboxGuidlines";
-            gboxGuidlines.Size = new Size(384, 152);
+            gboxGuidlines.Size = new Size(334, 152);
             gboxGuidlines.TabIndex = 2;
             gboxGuidlines.TabStop = false;
             gboxGuidlines.Text = "Guidlines";
             // 
             // panel3
             // 
+            panel3.AutoSize = true;
             panel3.Controls.Add(rbGuidType03);
             panel3.Controls.Add(rbGuidType02);
             panel3.Controls.Add(rbGuidType01);
             panel3.Controls.Add(picboxGuidlineColorSample);
             panel3.Dock = DockStyle.Left;
-            panel3.Location = new Point(3, 19);
+            panel3.Location = new Point(114, 19);
             panel3.Name = "panel3";
-            panel3.Size = new Size(173, 130);
-            panel3.TabIndex = 8;
+            panel3.Size = new Size(78, 130);
+            panel3.TabIndex = 1;
             // 
             // rbGuidType03
             // 
@@ -191,6 +137,7 @@
             rbGuidType03.TabIndex = 7;
             rbGuidType03.Text = "Custom";
             rbGuidType03.UseVisualStyleBackColor = true;
+            rbGuidType03.CheckedChanged += rbGuidType03_CheckedChanged;
             // 
             // rbGuidType02
             // 
@@ -201,6 +148,7 @@
             rbGuidType02.TabIndex = 6;
             rbGuidType02.Text = "4x4";
             rbGuidType02.UseVisualStyleBackColor = true;
+            rbGuidType02.Click += rbGuidType02_Click;
             // 
             // rbGuidType01
             // 
@@ -213,50 +161,58 @@
             rbGuidType01.TabStop = true;
             rbGuidType01.Text = "3x3";
             rbGuidType01.UseVisualStyleBackColor = true;
+            rbGuidType01.CheckedChanged += rbGuidType01_CheckedChanged;
+            rbGuidType01.Click += rbGuidType01_Click;
             // 
-            // panel2
+            // pnlGMargin
             // 
-            panel2.Controls.Add(textBox1);
-            panel2.Controls.Add(textBox4);
-            panel2.Controls.Add(textBox2);
-            panel2.Controls.Add(textBox3);
-            panel2.Dock = DockStyle.Right;
-            panel2.Location = new Point(184, 19);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(197, 130);
-            panel2.TabIndex = 6;
+            pnlGMargin.AutoSize = true;
+            pnlGMargin.Controls.Add(textBox1);
+            pnlGMargin.Controls.Add(textBox4);
+            pnlGMargin.Controls.Add(textBox2);
+            pnlGMargin.Controls.Add(textBox3);
+            pnlGMargin.Dock = DockStyle.Left;
+            pnlGMargin.Enabled = false;
+            pnlGMargin.Location = new Point(3, 19);
+            pnlGMargin.Name = "pnlGMargin";
+            pnlGMargin.Size = new Size(111, 130);
+            pnlGMargin.TabIndex = 6;
             // 
             // textBox1
             // 
-            textBox1.Enabled = false;
             textBox1.Location = new Point(8, 5);
             textBox1.Name = "textBox1";
+            textBox1.PlaceholderText = "Top";
             textBox1.Size = new Size(100, 23);
             textBox1.TabIndex = 0;
+            textBox1.Text = "10";
             // 
             // textBox4
             // 
-            textBox4.Enabled = false;
             textBox4.Location = new Point(8, 101);
             textBox4.Name = "textBox4";
+            textBox4.PlaceholderText = "Right";
             textBox4.Size = new Size(100, 23);
             textBox4.TabIndex = 3;
+            textBox4.Text = "10";
             // 
             // textBox2
             // 
-            textBox2.Enabled = false;
             textBox2.Location = new Point(8, 37);
             textBox2.Name = "textBox2";
+            textBox2.PlaceholderText = "Bottom";
             textBox2.Size = new Size(100, 23);
             textBox2.TabIndex = 1;
+            textBox2.Text = "10";
             // 
             // textBox3
             // 
-            textBox3.Enabled = false;
             textBox3.Location = new Point(8, 69);
             textBox3.Name = "textBox3";
+            textBox3.PlaceholderText = "Left";
             textBox3.Size = new Size(100, 23);
             textBox3.TabIndex = 2;
+            textBox3.Text = "10";
             // 
             // dataGridSize
             // 
@@ -274,60 +230,58 @@
             dataGridSize.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dataGridSize.RowTemplate.Height = 25;
             dataGridSize.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            dataGridSize.Size = new Size(378, 125);
+            dataGridSize.Size = new Size(328, 125);
             dataGridSize.TabIndex = 5;
-            dataGridSize.CellContentClick += dataGridView1_CellContentClick;
+            dataGridSize.CellContentClick += dataGridSize_CellContentClick;
             dataGridSize.CellValidating += dataGridSize_CellValidating;
-            dataGridSize.KeyPress += dataGridSize_KeyPress;
             // 
             // colWidth
             // 
             colWidth.HeaderText = "Width, px";
             colWidth.Name = "colWidth";
+            colWidth.Width = 125;
             // 
             // colHeight
             // 
             colHeight.HeaderText = "Height, px";
             colHeight.Name = "colHeight";
+            colHeight.Width = 125;
             // 
             // gboxSizes
             // 
             gboxSizes.Controls.Add(lblInfo);
             gboxSizes.Controls.Add(dataGridSize);
             gboxSizes.Dock = DockStyle.Top;
-            gboxSizes.Location = new Point(0, 208);
+            gboxSizes.Location = new Point(0, 152);
             gboxSizes.Name = "gboxSizes";
-            gboxSizes.Size = new Size(384, 168);
+            gboxSizes.Size = new Size(334, 168);
             gboxSizes.TabIndex = 6;
             gboxSizes.TabStop = false;
             gboxSizes.Text = "Sizes";
             // 
-            // FormTool
+            // FormSet
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(384, 424);
+            ClientSize = new Size(334, 361);
             Controls.Add(gboxSizes);
             Controls.Add(gboxGuidlines);
             Controls.Add(panel1);
-            Controls.Add(gboxNewSize);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "FormTool";
+            Name = "FormSet";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Settings";
             TopMost = true;
             Activated += FormTool_Activated;
-            Deactivate += FormTool_Deactivate;
-            gboxNewSize.ResumeLayout(false);
-            gboxNewSize.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).EndInit();
             panel1.ResumeLayout(false);
             gboxGuidlines.ResumeLayout(false);
+            gboxGuidlines.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
+            pnlGMargin.ResumeLayout(false);
+            pnlGMargin.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridSize).EndInit();
             gboxSizes.ResumeLayout(false);
             gboxSizes.PerformLayout();
@@ -335,11 +289,7 @@
         }
 
         #endregion
-
-        private GroupBox gboxNewSize;
         private ToolTip toolTipTool;
-        private TextBox tbWidth;
-        private TextBox tbHeight;
         private Panel panel1;
         private Button btnOK;
         private Label lblInfo;
@@ -352,8 +302,7 @@
         private PictureBox picboxGuidlineColorSample;
         private DataGridView dataGridSize;
         private GroupBox gboxSizes;
-        private Label lbTest;
-        private Panel panel2;
+        private Panel pnlGMargin;
         private Panel panel3;
         private RadioButton rbGuidType03;
         private RadioButton rbGuidType02;
