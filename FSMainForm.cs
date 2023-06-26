@@ -1,10 +1,12 @@
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 
 
 namespace screener3
@@ -31,16 +33,19 @@ namespace screener3
         public const int MIN_HEIGHT = 100;
 
         //alpha color to remove 
-        private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 254, 1);
+        private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 0, 1, 0);
 
         //default guidlines color
         public static Color guidlinesColor = Color.LightGray;
+        public static Color arrowColor = Color.Aqua;
 
         //for guidlines
-        private bool drawGuidlines;
+        private bool drawGuidlines, drawArrows;
 
         //1 - 3x3, 2 - 4x4, 3 - custom
         public static int GuidlinesType;
+
+        static Point relativePoint;
 
         //screen sizes
         public static object[,] RES_DEFAULT = { { 600, 600, 600, 960 }, { 337, 600, 700, 600 } };
@@ -55,6 +60,7 @@ namespace screener3
             this.TransparencyKey = ALPHA_KEY_COLOR;
 
             drawGuidlinesStatus();
+            drawArrowStatus();
 
             //copy daefault data
             RES_WORKED = RES_DEFAULT;
@@ -137,7 +143,7 @@ namespace screener3
         {
             string FinalText = "";
 
-            FinalText = (Text + "Size (px): " + Width.ToString() + "x" + Height.ToString());
+            FinalText = (Text + "WxH, px: " + Width.ToString() + "x" + Height.ToString());
 
             toolTipMain.SetToolTip(btnScreen, "Take screenshot " + ". Size: " + Width.ToString() + "x" + Height.ToString() + "px");
 
@@ -155,7 +161,8 @@ namespace screener3
         private void CaptureMyScreen()
         {
 
-            this.Hide();
+            //this.Hide();
+            pnlToolbarMain.Visible = false;
 
             //Creating a new Bitmap object
             Bitmap captureBitmap = new Bitmap(this.ClientSize.Width, this.ClientSize.Height, PixelFormat.Format32bppArgb);
@@ -187,7 +194,9 @@ namespace screener3
 
             Clipboard.SetImage(captureBitmap);
 
-            this.Show();
+            //this.Show();
+            pnlToolbarMain.Visible = true;
+
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
 
@@ -198,6 +207,20 @@ namespace screener3
         private void FormMain_Deactivate(object sender, EventArgs e)
         {
             lblInfo.Visible = false;
+
+            this.Refresh();
+
+            if (drawArrows == true)
+            {
+                Graphics tempGraphics;
+
+                tempGraphics = this.CreateGraphics();
+
+                relativePoint = this.PointToClient(Cursor.Position);
+
+                DrawArrow(tempGraphics, relativePoint, arrowColor, 45);
+            }
+
         }
 
         private void mitCustomRes_Click(object sender, EventArgs e)
@@ -224,12 +247,6 @@ namespace screener3
                 DrawLines(e, guidlinesColor);
             }
 
-        }
-
-        private void ClearDrawings(PaintEventArgs e, Color colorToClear)
-        {
-            // Clear screen with teal background.
-            e.Graphics.Clear(colorToClear);
         }
 
 
@@ -283,8 +300,9 @@ namespace screener3
             }
 
 
-
         }
+
+
 
 
         private void drawGuidlinesStatus()
@@ -300,6 +318,21 @@ namespace screener3
                 drawGuidlines = true;
             }
 
+
+        }
+
+        private void drawArrowStatus()
+        {
+            if (mitShowArrows.CheckState == CheckState.Checked)
+            {
+                mitShowArrows.CheckState = CheckState.Unchecked;
+                drawArrows = false;
+            }
+            else
+            {
+                mitShowArrows.CheckState = CheckState.Checked;
+                drawArrows = true;
+            }
         }
 
         private void mitShowGuidlines_Click(object sender, EventArgs e)
@@ -308,11 +341,38 @@ namespace screener3
             this.Refresh();
         }
 
+
+        private void mitShowArrows_Click(object sender, EventArgs e)
+        {
+            drawArrowStatus();
+            this.Refresh();
+        }
+
+
         private void mitTakeScreen_Click(object sender, EventArgs e)
         {
             CaptureMyScreen();
         }
 
+        public static void DrawArrow(Graphics g, Point relativePoint, Color color, int Angle)
+        {
 
+            Point startPoint = new Point(relativePoint.X + 50, relativePoint.Y + 50);
+            Point endPoint = new Point(relativePoint.X, relativePoint.Y);
+
+            var arrowPen = new Pen(color, 1);
+
+            arrowPen.CustomEndCap = new AdjustableArrowCap(8, 8);
+
+            g.DrawLine(arrowPen, startPoint, endPoint);
+
+
+        }
+
+        private void FormMain_MouseHover(object sender, EventArgs e)
+        {
+
+        }
     }
+
 }

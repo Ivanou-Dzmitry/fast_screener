@@ -38,15 +38,16 @@
             mitSize04 = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             mitShowGuidlines = new ToolStripMenuItem();
+            mitShowArrows = new ToolStripMenuItem();
             mitSettings = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             mitTakeScreen = new ToolStripMenuItem();
-            panel1 = new Panel();
+            pnlToolbarMain = new Panel();
             btnScreen = new Button();
             lblInfo = new Label();
             toolTipMain = new ToolTip(components);
             contextMenuMain.SuspendLayout();
-            panel1.SuspendLayout();
+            pnlToolbarMain.SuspendLayout();
             SuspendLayout();
             // 
             // btnMainMenu
@@ -63,9 +64,9 @@
             // 
             // contextMenuMain
             // 
-            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitShowGuidlines, mitSettings, toolStripSeparator1, mitTakeScreen });
+            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitShowGuidlines, mitShowArrows, mitSettings, toolStripSeparator1, mitTakeScreen });
             contextMenuMain.Name = "contextMenuStrip1";
-            contextMenuMain.Size = new Size(231, 170);
+            contextMenuMain.Size = new Size(231, 192);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
             // mitSize01
@@ -110,10 +111,20 @@
             mitShowGuidlines.Checked = true;
             mitShowGuidlines.CheckState = CheckState.Checked;
             mitShowGuidlines.Name = "mitShowGuidlines";
-            mitShowGuidlines.ShortcutKeys = Keys.Control | Keys.Alt | Keys.A;
+            mitShowGuidlines.ShortcutKeys = Keys.Control | Keys.Alt | Keys.G;
             mitShowGuidlines.Size = new Size(230, 22);
             mitShowGuidlines.Text = "Show Guidlines";
             mitShowGuidlines.Click += mitShowGuidlines_Click;
+            // 
+            // mitShowArrows
+            // 
+            mitShowArrows.Checked = true;
+            mitShowArrows.CheckState = CheckState.Checked;
+            mitShowArrows.Name = "mitShowArrows";
+            mitShowArrows.ShortcutKeys = Keys.Control | Keys.Alt | Keys.A;
+            mitShowArrows.Size = new Size(230, 22);
+            mitShowArrows.Text = "Show Arrows";
+            mitShowArrows.Click += mitShowArrows_Click;
             // 
             // mitSettings
             // 
@@ -136,17 +147,16 @@
             mitTakeScreen.Text = "Take Screenshot";
             mitTakeScreen.Click += mitTakeScreen_Click;
             // 
-            // panel1
+            // pnlToolbarMain
             // 
-            panel1.AutoSize = true;
-            panel1.BackColor = Color.Transparent;
-            panel1.Controls.Add(btnScreen);
-            panel1.Controls.Add(btnMainMenu);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(584, 39);
-            panel1.TabIndex = 1;
+            pnlToolbarMain.AutoSize = true;
+            pnlToolbarMain.BackColor = Color.Transparent;
+            pnlToolbarMain.Controls.Add(btnScreen);
+            pnlToolbarMain.Controls.Add(btnMainMenu);
+            pnlToolbarMain.Location = new Point(0, 0);
+            pnlToolbarMain.Name = "pnlToolbarMain";
+            pnlToolbarMain.Size = new Size(80, 39);
+            pnlToolbarMain.TabIndex = 1;
             // 
             // btnScreen
             // 
@@ -180,7 +190,7 @@
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(584, 298);
             Controls.Add(lblInfo);
-            Controls.Add(panel1);
+            Controls.Add(pnlToolbarMain);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
@@ -190,9 +200,10 @@
             TopMost = true;
             Deactivate += FormMain_Deactivate;
             Paint += FormMain_Paint;
+            MouseHover += FormMain_MouseHover;
             Move += FormMain_Move;
             contextMenuMain.ResumeLayout(false);
-            panel1.ResumeLayout(false);
+            pnlToolbarMain.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -200,7 +211,7 @@
         #endregion
 
         private Button btnMainMenu;
-        private Panel panel1;
+        private Panel pnlToolbarMain;
         private Button btnScreen;
         private ContextMenuStrip contextMenuMain;
         private ToolStripMenuItem mitSize01;
@@ -214,5 +225,6 @@
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem mitSettings;
         private ToolStripMenuItem mitShowGuidlines;
+        private ToolStripMenuItem mitShowArrows;
     }
 }

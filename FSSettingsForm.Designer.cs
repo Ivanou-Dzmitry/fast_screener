@@ -37,6 +37,7 @@
             btnOK = new Button();
             gboxGuidlines = new GroupBox();
             panel3 = new Panel();
+            picboxArrowColorSample = new PictureBox();
             rbGuidType03 = new RadioButton();
             rbGuidType02 = new RadioButton();
             rbGuidType01 = new RadioButton();
@@ -54,6 +55,7 @@
             panel1.SuspendLayout();
             gboxGuidlines.SuspendLayout();
             panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).BeginInit();
             pnlGMargin.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridSize).BeginInit();
             gboxSizes.SuspendLayout();
@@ -78,7 +80,7 @@
             picboxGuidlineColorSample.BorderStyle = BorderStyle.FixedSingle;
             picboxGuidlineColorSample.Location = new Point(8, 88);
             picboxGuidlineColorSample.Name = "picboxGuidlineColorSample";
-            picboxGuidlineColorSample.Size = new Size(24, 24);
+            picboxGuidlineColorSample.Size = new Size(32, 32);
             picboxGuidlineColorSample.TabIndex = 4;
             picboxGuidlineColorSample.TabStop = false;
             toolTipTool.SetToolTip(picboxGuidlineColorSample, "Set guidlines color");
@@ -117,16 +119,28 @@
             // 
             // panel3
             // 
-            panel3.AutoSize = true;
+            panel3.Controls.Add(picboxArrowColorSample);
             panel3.Controls.Add(rbGuidType03);
             panel3.Controls.Add(rbGuidType02);
             panel3.Controls.Add(rbGuidType01);
             panel3.Controls.Add(picboxGuidlineColorSample);
             panel3.Dock = DockStyle.Left;
-            panel3.Location = new Point(114, 19);
+            panel3.Location = new Point(3, 19);
             panel3.Name = "panel3";
-            panel3.Size = new Size(78, 130);
+            panel3.Size = new Size(109, 130);
             panel3.TabIndex = 1;
+            // 
+            // picboxArrowColorSample
+            // 
+            picboxArrowColorSample.BackColor = Color.Cyan;
+            picboxArrowColorSample.BorderStyle = BorderStyle.FixedSingle;
+            picboxArrowColorSample.Location = new Point(56, 88);
+            picboxArrowColorSample.Name = "picboxArrowColorSample";
+            picboxArrowColorSample.Size = new Size(32, 32);
+            picboxArrowColorSample.TabIndex = 8;
+            picboxArrowColorSample.TabStop = false;
+            toolTipTool.SetToolTip(picboxArrowColorSample, "Set arrow color");
+            picboxArrowColorSample.Click += picboxArrowColorSample_Click;
             // 
             // rbGuidType03
             // 
@@ -148,7 +162,6 @@
             rbGuidType02.TabIndex = 6;
             rbGuidType02.Text = "4x4";
             rbGuidType02.UseVisualStyleBackColor = true;
-            rbGuidType02.Click += rbGuidType02_Click;
             // 
             // rbGuidType01
             // 
@@ -161,21 +174,18 @@
             rbGuidType01.TabStop = true;
             rbGuidType01.Text = "3x3";
             rbGuidType01.UseVisualStyleBackColor = true;
-            rbGuidType01.CheckedChanged += rbGuidType01_CheckedChanged;
-            rbGuidType01.Click += rbGuidType01_Click;
             // 
             // pnlGMargin
             // 
-            pnlGMargin.AutoSize = true;
             pnlGMargin.Controls.Add(textBox1);
             pnlGMargin.Controls.Add(textBox4);
             pnlGMargin.Controls.Add(textBox2);
             pnlGMargin.Controls.Add(textBox3);
-            pnlGMargin.Dock = DockStyle.Left;
+            pnlGMargin.Dock = DockStyle.Right;
             pnlGMargin.Enabled = false;
-            pnlGMargin.Location = new Point(3, 19);
+            pnlGMargin.Location = new Point(120, 19);
             pnlGMargin.Name = "pnlGMargin";
-            pnlGMargin.Size = new Size(111, 130);
+            pnlGMargin.Size = new Size(211, 130);
             pnlGMargin.TabIndex = 6;
             // 
             // textBox1
@@ -232,7 +242,6 @@
             dataGridSize.SelectionMode = DataGridViewSelectionMode.CellSelect;
             dataGridSize.Size = new Size(328, 125);
             dataGridSize.TabIndex = 5;
-            dataGridSize.CellContentClick += dataGridSize_CellContentClick;
             dataGridSize.CellValidating += dataGridSize_CellValidating;
             // 
             // colWidth
@@ -277,9 +286,9 @@
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).EndInit();
             panel1.ResumeLayout(false);
             gboxGuidlines.ResumeLayout(false);
-            gboxGuidlines.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).EndInit();
             pnlGMargin.ResumeLayout(false);
             pnlGMargin.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridSize).EndInit();
@@ -309,5 +318,6 @@
         private RadioButton rbGuidType01;
         private DataGridViewTextBoxColumn colWidth;
         private DataGridViewTextBoxColumn colHeight;
+        private PictureBox picboxArrowColorSample;
     }
 }

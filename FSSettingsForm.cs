@@ -141,24 +141,13 @@ namespace screener3
             }
         }
 
-        private void rbGuidType01_Click(object sender, EventArgs e)
+        private void picboxArrowColorSample_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void rbGuidType02_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void rbGuidType01_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dataGridSize_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
+            if (colorDialogGlines.ShowDialog() == DialogResult.OK)
+            {
+                picboxArrowColorSample.BackColor = colorDialogGlines.Color;
+                FormMain.arrowColor = colorDialogGlines.Color;
+            }
         }
     }
 }
