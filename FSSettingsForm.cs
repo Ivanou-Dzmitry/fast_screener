@@ -18,6 +18,7 @@ namespace screener3
             InitializeComponent();
 
             picboxGuidlineColorSample.BackColor = FormMain.guidlinesColor;
+            picboxArrowColorSample.BackColor = FormMain.arrowColor;
 
 
             if (FormMain.GuidlinesType == 1)

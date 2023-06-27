@@ -1,12 +1,7 @@
-using System.Diagnostics;
-using System.Drawing;
+using System.Configuration;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Reflection;
-using System.Windows.Forms;
-using System.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
+using static System.Windows.Forms.AxHost;
 
 
 namespace screener3
@@ -51,6 +46,8 @@ namespace screener3
         public static object[,] RES_DEFAULT = { { 600, 600, 600, 960 }, { 337, 600, 700, 600 } };
         public static object[,] RES_WORKED = new object[2, 4];
 
+        public static string[] tempStringArray = new string[] { "" };
+
         public FormMain()
         {
             InitializeComponent();
@@ -59,11 +56,41 @@ namespace screener3
             this.BackColor = ALPHA_KEY_COLOR;
             this.TransparencyKey = ALPHA_KEY_COLOR;
 
-            drawGuidlinesStatus();
-            drawArrowStatus();
 
             //copy daefault data
-            RES_WORKED = RES_DEFAULT;
+            //RES_WORKED = RES_DEFAULT;
+
+            string sAttr;
+
+
+            for (int i = 1; i < 5; i++)
+            {
+
+                sAttr = ConfigurationManager.AppSettings["resolution_" + i.ToString()];
+                tempStringArray = sAttr.Split(",");
+
+                try
+                {
+                    RES_WORKED[0, i - 1] = int.Parse(tempStringArray[0]);
+                }
+                catch
+                {
+                    RES_WORKED[0, i - 1] = RES_DEFAULT[0, i - 1];
+                }
+
+                try
+                {
+                    RES_WORKED[1, i - 1] = int.Parse(tempStringArray[1]);
+                }
+                catch
+                {
+                    RES_WORKED[1, i - 1] = RES_DEFAULT[1, i - 1];
+                }
+
+
+            }
+
+            MenuItemUpdate();
 
             // Set client size
             this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
@@ -84,8 +111,47 @@ namespace screener3
             VirtScreenWidth = VirtScreenRect.Width;
             VirtScreenHeight = VirtScreenRect.Height;
 
-            FormMain.GuidlinesType = 1;
 
+            sAttr = ConfigurationManager.AppSettings["guidlines_color"];
+            guidlinesColor = System.Drawing.ColorTranslator.FromHtml(sAttr);
+
+            sAttr = ConfigurationManager.AppSettings["arrow_color"];
+            arrowColor = System.Drawing.ColorTranslator.FromHtml(sAttr);
+
+
+            try
+            {
+                sAttr = ConfigurationManager.AppSettings["guidline_type"];
+                FormMain.GuidlinesType = int.Parse(sAttr);
+            }
+            catch
+            {
+                FormMain.GuidlinesType = 1;
+            }
+
+            sAttr = ConfigurationManager.AppSettings["draw_guidlines"];
+            drawGuidlines = Convert.ToBoolean(sAttr);
+
+            if (drawGuidlines == true)
+            {
+                mitShowGuidlines.Checked = true;
+            }
+            else
+            {
+                mitShowGuidlines.Checked = false;
+            }
+
+            sAttr = ConfigurationManager.AppSettings["draw_arrows"];
+            drawArrows = Convert.ToBoolean(sAttr);
+
+            if (drawArrows == true)
+            {
+                mitShowArrows.Checked = true;
+            }
+            else
+            {
+                mitShowArrows.Checked = false;
+            }
         }
 
         private void btnMainMenu_Click(object sender, EventArgs e)
@@ -223,26 +289,12 @@ namespace screener3
 
         }
 
-        private void mitCustomRes_Click(object sender, EventArgs e)
-        {
-            // Create a new instance of the Form2 class
-            FormSet toolForm = new FormSet();
 
-            // Show the settings form
-            toolForm.ShowDialog();
-
-            mitSize01.Text = RES_WORKED[0, 0].ToString() + "x" + RES_WORKED[1, 0].ToString();
-            mitSize02.Text = RES_WORKED[0, 1].ToString() + "x" + RES_WORKED[1, 1].ToString();
-            mitSize03.Text = RES_WORKED[0, 2].ToString() + "x" + RES_WORKED[1, 2].ToString();
-            mitSize04.Text = RES_WORKED[0, 3].ToString() + "x" + RES_WORKED[1, 3].ToString();
-
-            this.Refresh();
-        }
 
 
         private void FormMain_Paint(object sender, PaintEventArgs e)
         {
-            if (drawGuidlines == true)
+            if ((drawGuidlines == true) && (mitShowGuidlines.CheckState == CheckState.Checked))
             {
                 DrawLines(e, guidlinesColor);
             }
@@ -318,7 +370,6 @@ namespace screener3
                 drawGuidlines = true;
             }
 
-
         }
 
         private void drawArrowStatus()
@@ -357,7 +408,7 @@ namespace screener3
         public static void DrawArrow(Graphics g, Point relativePoint, Color color, int Angle)
         {
 
-            Point startPoint = new Point(relativePoint.X + 50, relativePoint.Y + 50);
+            Point startPoint = new Point(relativePoint.X - 50, relativePoint.Y + 50);
             Point endPoint = new Point(relativePoint.X, relativePoint.Y);
 
             var arrowPen = new Pen(color, 1);
@@ -369,9 +420,53 @@ namespace screener3
 
         }
 
-        private void FormMain_MouseHover(object sender, EventArgs e)
-        {
 
+        private static void SetSetting(string key, string value)
+        {
+            Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            configuration.AppSettings.Settings[key].Value = value;
+            configuration.Save(ConfigurationSaveMode.Full, true);
+            ConfigurationManager.RefreshSection(configuration.AppSettings.SectionInformation.Name);
+
+        }
+
+        private void mitExit_Click(object sender, EventArgs e)
+        {
+            SetSetting("guidlines_color", ColorTranslator.ToHtml(guidlinesColor));
+            SetSetting("arrow_color", ColorTranslator.ToHtml(arrowColor));
+
+            SetSetting("guidline_type", GuidlinesType.ToString());
+
+            SetSetting("draw_guidlines", drawGuidlines.ToString().ToLower());
+            SetSetting("draw_arrows", drawArrows.ToString().ToLower());
+
+            for (int i = 1; i < 5; i++)
+            {
+                SetSetting("resolution_" + i.ToString(), RES_WORKED[0, i - 1] + "," + RES_WORKED[1, i - 1]);
+            }
+
+            Close();
+        }
+
+        private void mitSettings_Click(object sender, EventArgs e)
+        {
+            // Create a new instance of the Form2 class
+            FormSet toolForm = new FormSet();
+
+            // Show the settings form
+            toolForm.ShowDialog();
+
+            MenuItemUpdate();
+
+            this.Refresh();
+        }
+
+        private void MenuItemUpdate()
+        {
+            mitSize01.Text = RES_WORKED[0, 0].ToString() + "x" + RES_WORKED[1, 0].ToString();
+            mitSize02.Text = RES_WORKED[0, 1].ToString() + "x" + RES_WORKED[1, 1].ToString();
+            mitSize03.Text = RES_WORKED[0, 2].ToString() + "x" + RES_WORKED[1, 2].ToString();
+            mitSize04.Text = RES_WORKED[0, 3].ToString() + "x" + RES_WORKED[1, 3].ToString();
         }
     }
 

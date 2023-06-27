@@ -42,6 +42,7 @@
             mitSettings = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             mitTakeScreen = new ToolStripMenuItem();
+            mitExit = new ToolStripMenuItem();
             pnlToolbarMain = new Panel();
             btnScreen = new Button();
             lblInfo = new Label();
@@ -64,9 +65,9 @@
             // 
             // contextMenuMain
             // 
-            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitShowGuidlines, mitShowArrows, mitSettings, toolStripSeparator1, mitTakeScreen });
+            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitShowGuidlines, mitShowArrows, mitSettings, toolStripSeparator1, mitTakeScreen, mitExit });
             contextMenuMain.Name = "contextMenuStrip1";
-            contextMenuMain.Size = new Size(231, 192);
+            contextMenuMain.Size = new Size(231, 214);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
             // mitSize01
@@ -131,7 +132,7 @@
             mitSettings.Name = "mitSettings";
             mitSettings.Size = new Size(230, 22);
             mitSettings.Text = "Settings";
-            mitSettings.Click += mitCustomRes_Click;
+            mitSettings.Click += mitSettings_Click;
             // 
             // toolStripSeparator1
             // 
@@ -146,6 +147,13 @@
             mitTakeScreen.Size = new Size(230, 22);
             mitTakeScreen.Text = "Take Screenshot";
             mitTakeScreen.Click += mitTakeScreen_Click;
+            // 
+            // mitExit
+            // 
+            mitExit.Name = "mitExit";
+            mitExit.Size = new Size(230, 22);
+            mitExit.Text = "Exit";
+            mitExit.Click += mitExit_Click;
             // 
             // pnlToolbarMain
             // 
@@ -200,7 +208,6 @@
             TopMost = true;
             Deactivate += FormMain_Deactivate;
             Paint += FormMain_Paint;
-            MouseHover += FormMain_MouseHover;
             Move += FormMain_Move;
             contextMenuMain.ResumeLayout(false);
             pnlToolbarMain.ResumeLayout(false);
@@ -226,5 +233,6 @@
         private ToolStripMenuItem mitSettings;
         private ToolStripMenuItem mitShowGuidlines;
         private ToolStripMenuItem mitShowArrows;
+        private ToolStripMenuItem mitExit;
     }
 }
