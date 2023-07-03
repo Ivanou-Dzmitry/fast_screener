@@ -21,21 +21,37 @@ namespace screener3
             picboxArrowColorSample.BackColor = FormMain.arrowColor;
 
 
-            if (FormMain.GuidlinesType == 1)
+            switch (FormMain.GuidlinesType)
             {
-                rbGuidType01.Checked = true;
+                case 1:
+                    rbGuidType01.Checked = true;
+                    break;
+                case 2:
+                    rbGuidType02.Checked = true;
+                    break;
+                case 3:
+                    rbGuidType03.Checked = true;
+                    break;
             }
 
 
-            if (FormMain.GuidlinesType == 2)
+            switch (FormMain.ArrowsType)
             {
-                rbGuidType02.Checked = true;
-            }
+                case 1:
+                    rbArrowType01.Checked = true;
+                    break;
+                case 2:
+                    rbArrowType02.Checked = true;
+                    break;
+                case 3:
+                    rbArrowType03.Checked = true;
+                    break;
+                case 4:
+                    rbArrowType04.Checked = true;
+                    break;
 
-
-            if (FormMain.GuidlinesType == 3)
-            {
-                rbGuidType03.Checked = true;
+                default:
+                    break;
             }
 
 
@@ -72,6 +88,28 @@ namespace screener3
                 FormMain.GuidlinesType = 3;
             }
 
+
+            if (rbArrowType01.Checked == true)
+            {
+                FormMain.ArrowsType = 1;
+            }
+
+            if (rbArrowType02.Checked == true)
+            {
+                FormMain.ArrowsType = 2;
+            }
+
+            if (rbArrowType03.Checked == true)
+            {
+                FormMain.ArrowsType = 3;
+            }
+
+            if (rbArrowType04.Checked == true)
+            {
+                FormMain.ArrowsType = 4;
+            }
+
+
             Close();
         }
 
@@ -104,7 +142,7 @@ namespace screener3
                 else
                 {
                     // the input is numeric 
-                    lblInfo.BackColor = Color.DarkSeaGreen;
+                    lblInfo.BackColor = SystemColors.Control;
                     lblInfo.Text = limitsText;
                 }
             }
@@ -122,7 +160,7 @@ namespace screener3
                 {
                     // the input is numeric 
 
-                    lblInfo.BackColor = Color.DarkSeaGreen;
+                    lblInfo.BackColor = SystemColors.Control;
                     lblInfo.Text = limitsText;
                 }
             }
@@ -149,6 +187,33 @@ namespace screener3
                 picboxArrowColorSample.BackColor = colorDialogGlines.Color;
                 FormMain.arrowColor = colorDialogGlines.Color;
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void FormSet_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rbArrowType04_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

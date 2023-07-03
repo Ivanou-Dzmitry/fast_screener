@@ -1,6 +1,7 @@
 using System.Configuration;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Net;
 using static System.Windows.Forms.AxHost;
 
 
@@ -27,8 +28,10 @@ namespace screener3
         public const int MIN_WIDTH = 200;
         public const int MIN_HEIGHT = 100;
 
+        public const int ARROW_LENGHT = 50;
+
         //alpha color to remove 
-        private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 0, 1, 0);
+        private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 255, 1);
 
         //default guidlines color
         public static Color guidlinesColor = Color.LightGray;
@@ -38,7 +41,7 @@ namespace screener3
         private bool drawGuidlines, drawArrows;
 
         //1 - 3x3, 2 - 4x4, 3 - custom
-        public static int GuidlinesType;
+        public static int GuidlinesType, ArrowsType, StartResW = 0, StartResH = 0;
 
         static Point relativePoint;
 
@@ -60,14 +63,14 @@ namespace screener3
             //copy daefault data
             //RES_WORKED = RES_DEFAULT;
 
-            string sAttr;
+            string tempValueFromConfig;
 
 
             for (int i = 1; i < 5; i++)
             {
 
-                sAttr = ConfigurationManager.AppSettings["resolution_" + i.ToString()];
-                tempStringArray = sAttr.Split(",");
+                tempValueFromConfig = ConfigurationManager.AppSettings["resolution_" + i.ToString()];
+                tempStringArray = tempValueFromConfig.Split(",");
 
                 try
                 {
@@ -92,8 +95,24 @@ namespace screener3
 
             MenuItemUpdate();
 
+            //resolution on close
+            tempValueFromConfig = ConfigurationManager.AppSettings["res_on_close"];
+            tempStringArray = tempValueFromConfig.Split(",");
+
+
             // Set client size
-            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
+            try
+            {
+                StartResW = Convert.ToInt32(tempStringArray[0]);
+                StartResH = Convert.ToInt32(tempStringArray[1]);
+                this.ClientSize = new System.Drawing.Size(StartResW, StartResH);
+            }
+            catch
+            {
+                this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
+
+            }
+
 
             //set client size
             clientWidth = this.ClientSize.Width;
@@ -112,25 +131,25 @@ namespace screener3
             VirtScreenHeight = VirtScreenRect.Height;
 
 
-            sAttr = ConfigurationManager.AppSettings["guidlines_color"];
-            guidlinesColor = System.Drawing.ColorTranslator.FromHtml(sAttr);
+            tempValueFromConfig = ConfigurationManager.AppSettings["guidlines_color"];
+            guidlinesColor = System.Drawing.ColorTranslator.FromHtml(tempValueFromConfig);
 
-            sAttr = ConfigurationManager.AppSettings["arrow_color"];
-            arrowColor = System.Drawing.ColorTranslator.FromHtml(sAttr);
+            tempValueFromConfig = ConfigurationManager.AppSettings["arrow_color"];
+            arrowColor = System.Drawing.ColorTranslator.FromHtml(tempValueFromConfig);
 
 
             try
             {
-                sAttr = ConfigurationManager.AppSettings["guidline_type"];
-                FormMain.GuidlinesType = int.Parse(sAttr);
+                tempValueFromConfig = ConfigurationManager.AppSettings["guidline_type"];
+                FormMain.GuidlinesType = int.Parse(tempValueFromConfig);
             }
             catch
             {
                 FormMain.GuidlinesType = 1;
             }
 
-            sAttr = ConfigurationManager.AppSettings["draw_guidlines"];
-            drawGuidlines = Convert.ToBoolean(sAttr);
+            tempValueFromConfig = ConfigurationManager.AppSettings["draw_guidlines"];
+            drawGuidlines = Convert.ToBoolean(tempValueFromConfig);
 
             if (drawGuidlines == true)
             {
@@ -141,8 +160,8 @@ namespace screener3
                 mitShowGuidlines.Checked = false;
             }
 
-            sAttr = ConfigurationManager.AppSettings["draw_arrows"];
-            drawArrows = Convert.ToBoolean(sAttr);
+            tempValueFromConfig = ConfigurationManager.AppSettings["draw_arrows"];
+            drawArrows = Convert.ToBoolean(tempValueFromConfig);
 
             if (drawArrows == true)
             {
@@ -152,6 +171,21 @@ namespace screener3
             {
                 mitShowArrows.Checked = false;
             }
+
+            tempValueFromConfig = ConfigurationManager.AppSettings["arrows_type"];
+            try
+            {
+                ArrowsType = int.Parse(tempValueFromConfig);
+            }
+            catch
+            {
+
+                ArrowsType = 1;
+            }
+
+
+            tempValueFromConfig = ConfigurationManager.AppSettings["res_on_close"];
+
         }
 
         private void btnMainMenu_Click(object sender, EventArgs e)
@@ -408,8 +442,31 @@ namespace screener3
         public static void DrawArrow(Graphics g, Point relativePoint, Color color, int Angle)
         {
 
-            Point startPoint = new Point(relativePoint.X - 50, relativePoint.Y + 50);
+            Point startPoint = new Point(0, 0);
             Point endPoint = new Point(relativePoint.X, relativePoint.Y);
+
+            switch (ArrowsType)
+            {
+                case 1:
+                    startPoint = new Point(relativePoint.X - ARROW_LENGHT, relativePoint.Y + ARROW_LENGHT);
+
+                    break;
+
+                case 2:
+                    startPoint = new Point(relativePoint.X + ARROW_LENGHT, relativePoint.Y + ARROW_LENGHT);
+
+                    break;
+
+                case 3:
+                    startPoint = new Point(relativePoint.X - ARROW_LENGHT, relativePoint.Y - ARROW_LENGHT);
+
+                    break;
+                case 4:
+                    startPoint = new Point(relativePoint.X + ARROW_LENGHT, relativePoint.Y - ARROW_LENGHT);
+
+                    break;
+            }
+
 
             var arrowPen = new Pen(color, 1);
 
@@ -436,14 +493,19 @@ namespace screener3
             SetSetting("arrow_color", ColorTranslator.ToHtml(arrowColor));
 
             SetSetting("guidline_type", GuidlinesType.ToString());
+            SetSetting("arrows_type", ArrowsType.ToString());
 
             SetSetting("draw_guidlines", drawGuidlines.ToString().ToLower());
             SetSetting("draw_arrows", drawArrows.ToString().ToLower());
+
+
 
             for (int i = 1; i < 5; i++)
             {
                 SetSetting("resolution_" + i.ToString(), RES_WORKED[0, i - 1] + "," + RES_WORKED[1, i - 1]);
             }
+
+            SetSetting("res_on_close", this.ClientSize.Width.ToString() + "," + this.ClientSize.Height.ToString());
 
             Close();
         }
