@@ -46,6 +46,7 @@ namespace screener3
         //screen sizes
         public static object[,] RES_DEFAULT = { { 600, 600, 600, 960 }, { 337, 600, 700, 600 } };
         public static object[,] RES_WORKED = new object[2, 4];
+        public static object[] CUSTOM_GRID = new object[] { 0, 0, 0, 0 };
 
         public static string[] tempStringArray = new string[] { "" };
 
@@ -173,6 +174,24 @@ namespace screener3
             {
 
                 ArrowsType = 1;
+            }
+
+            //resolution on close
+            tempValueFromConfig = ConfigurationManager.AppSettings["custom_grid"];
+            tempStringArray = tempValueFromConfig.Split(",");
+
+            for (int i = 0; i < 4; i++)
+            {
+                try
+                {
+                    CUSTOM_GRID[i] = int.Parse(tempStringArray[i]);
+                }
+                catch
+                {
+                    CUSTOM_GRID[i] = 10;
+                }
+
+
             }
 
         }
@@ -328,49 +347,66 @@ namespace screener3
         private void DrawLines(PaintEventArgs e, Color lineColor)
         {
 
-            int point01Top, point01Left, point02Top, point02Left, point03Top, point03Left;
+            int initialPointVertical, initialPointHorizontal;
 
             if (GuidlinesType == 1)
             {
-                point01Top = this.ClientSize.Width / 3;
-                point01Left = this.ClientSize.Height / 3;
-
-                point02Top = (this.ClientSize.Width / 3) * 2;
-                point02Left = (this.ClientSize.Height / 3) * 2;
+                initialPointVertical = this.ClientSize.Width / 3;
+                initialPointHorizontal = this.ClientSize.Height / 3;
 
                 Pen pen = new Pen(lineColor);
 
                 //vertical
-                e.Graphics.DrawLine(pen, point01Top, 0, point01Top, this.ClientSize.Height);
-                e.Graphics.DrawLine(pen, point02Top, 0, point02Top, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, initialPointVertical, 0, initialPointVertical, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, initialPointVertical * 2, 0, initialPointVertical * 2, this.ClientSize.Height);
 
                 //horizontal
-                e.Graphics.DrawLine(pen, 0, point01Left, this.ClientSize.Width, point01Left);
-                e.Graphics.DrawLine(pen, 0, point02Left, this.ClientSize.Width, point02Left);
+                e.Graphics.DrawLine(pen, 0, initialPointHorizontal, this.ClientSize.Width, initialPointHorizontal);
+                e.Graphics.DrawLine(pen, 0, initialPointHorizontal * 2, this.ClientSize.Width, initialPointHorizontal * 2);
             }
-            else
+
+            if (GuidlinesType == 2)
             {
 
-                point01Top = this.ClientSize.Width / 4;
-                point01Left = this.ClientSize.Height / 4;
-
-                point02Top = (this.ClientSize.Width / 4) * 2;
-                point02Left = (this.ClientSize.Height / 4) * 2;
-
-                point03Top = (this.ClientSize.Width / 4) * 3;
-                point03Left = (this.ClientSize.Height / 4) * 3;
+                initialPointVertical = this.ClientSize.Width / 4;
+                initialPointHorizontal = this.ClientSize.Height / 4;
 
                 Pen pen = new Pen(lineColor);
 
                 //vertical
-                e.Graphics.DrawLine(pen, point01Top, 0, point01Top, this.ClientSize.Height);
-                e.Graphics.DrawLine(pen, point02Top, 0, point02Top, this.ClientSize.Height);
-                e.Graphics.DrawLine(pen, point03Top, 0, point03Top, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, initialPointVertical, 0, initialPointVertical, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, initialPointVertical * 2, 0, initialPointVertical * 2, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, initialPointVertical * 3, 0, initialPointVertical * 3, this.ClientSize.Height);
 
                 //horizontal
-                e.Graphics.DrawLine(pen, 0, point01Left, this.ClientSize.Width, point01Left);
-                e.Graphics.DrawLine(pen, 0, point02Left, this.ClientSize.Width, point02Left);
-                e.Graphics.DrawLine(pen, 0, point03Left, this.ClientSize.Width, point03Left);
+                e.Graphics.DrawLine(pen, 0, initialPointHorizontal, this.ClientSize.Width, initialPointHorizontal);
+                e.Graphics.DrawLine(pen, 0, initialPointHorizontal * 2, this.ClientSize.Width, initialPointHorizontal * 2);
+                e.Graphics.DrawLine(pen, 0, initialPointHorizontal * 3, this.ClientSize.Width, initialPointHorizontal * 3);
+
+            }
+
+            if (GuidlinesType == 3)
+            {
+
+                int topIndent = Convert.ToInt32(CUSTOM_GRID[0]);
+                int bottonIndent = Convert.ToInt32(CUSTOM_GRID[1]);
+
+                int leftIndent = Convert.ToInt32(CUSTOM_GRID[2]);
+                int rightIndent = Convert.ToInt32(CUSTOM_GRID[3]);
+
+                Pen pen = new Pen(lineColor);
+
+                //top
+                e.Graphics.DrawLine(pen, 0, topIndent, this.ClientSize.Width, topIndent);
+
+                //bottom
+                e.Graphics.DrawLine(pen, 0, this.ClientSize.Height - bottonIndent, this.ClientSize.Width, this.ClientSize.Height - bottonIndent);
+
+                //left
+                e.Graphics.DrawLine(pen, leftIndent, 0, leftIndent, this.ClientSize.Height);
+
+                //right
+                e.Graphics.DrawLine(pen, this.ClientSize.Width - rightIndent, 0, this.ClientSize.Width - rightIndent, this.ClientSize.Height);
 
             }
 
@@ -505,6 +541,8 @@ namespace screener3
             }
 
             SetSetting("res_on_close", this.ClientSize.Width.ToString() + "," + this.ClientSize.Height.ToString());
+
+            SetSetting("custom_grid", CUSTOM_GRID[0].ToString() + "," + CUSTOM_GRID[1].ToString() + "," + CUSTOM_GRID[2].ToString() + "," + CUSTOM_GRID[3].ToString());
 
             Close();
         }

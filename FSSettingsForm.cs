@@ -54,7 +54,10 @@ namespace screener3
                     break;
             }
 
-
+            tbGridlineTop.Text = FormMain.CUSTOM_GRID[0].ToString();
+            tbGridlineBottom.Text = FormMain.CUSTOM_GRID[1].ToString();
+            tbGridlineLeft.Text = FormMain.CUSTOM_GRID[2].ToString();
+            tbGridlineRight.Text = FormMain.CUSTOM_GRID[3].ToString();
 
             //get current work resolution
             for (int col = 0; col < 1; col++)
@@ -107,6 +110,48 @@ namespace screener3
             if (rbArrowType04.Checked == true)
             {
                 FormMain.ArrowsType = 4;
+            }
+
+
+
+            try
+            {
+                FormMain.CUSTOM_GRID[0] = int.Parse(tbGridlineTop.Text);
+            }
+            catch
+            {
+
+                FormMain.CUSTOM_GRID[0] = 10;
+            }
+
+            try
+            {
+                FormMain.CUSTOM_GRID[1] = int.Parse(tbGridlineBottom.Text);
+            }
+            catch
+            {
+
+                FormMain.CUSTOM_GRID[1] = 10;
+            }
+
+            try
+            {
+                FormMain.CUSTOM_GRID[2] = int.Parse(tbGridlineLeft.Text);
+            }
+            catch
+            {
+
+                FormMain.CUSTOM_GRID[2] = 10;
+            }
+
+            try
+            {
+                FormMain.CUSTOM_GRID[3] = int.Parse(tbGridlineRight.Text);
+            }
+            catch
+            {
+
+                FormMain.CUSTOM_GRID[3] = 10;
             }
 
 
@@ -189,31 +234,54 @@ namespace screener3
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
 
+
+
+        private void tbGridlineTop_TextChanged(object sender, EventArgs e)
+        {
+            if (System.Text.RegularExpressions.Regex.IsMatch(tbGridlineTop.Text, "[^0-9]"))
+            {
+                tbGridlineTop.Text = tbGridlineTop.Text.Remove(tbGridlineTop.Text.Length - 1);
+            }
+
+            if (Int32.TryParse(tbGridlineTop.Text, out int numValueH) == true && numValueH > FormMain.clientHeight / 2)
+            {
+                tbGridlineTop.Text = tbGridlineTop.Text.Remove(tbGridlineTop.Text.Length - 1);
+            }
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void tbGridlineBottom_TextChanged(object sender, EventArgs e)
         {
+            if (System.Text.RegularExpressions.Regex.IsMatch(tbGridlineBottom.Text, "[^0-9]"))
+            {
+                tbGridlineBottom.Text = tbGridlineBottom.Text.Remove(tbGridlineBottom.Text.Length - 1);
+            }
+
+            if (Int32.TryParse(tbGridlineBottom.Text, out int numValueH) == true && numValueH > FormMain.clientHeight / 2)
+            {
+                tbGridlineBottom.Text = tbGridlineBottom.Text.Remove(tbGridlineBottom.Text.Length - 1);
+            }
         }
 
-        private void textBox3_TextChanged(object sender, EventArgs e)
+        private void tbGridlineLeft_TextChanged(object sender, EventArgs e)
         {
+            if (System.Text.RegularExpressions.Regex.IsMatch(tbGridlineLeft.Text, "[^0-9]"))
+            {
+                tbGridlineLeft.Text = tbGridlineLeft.Text.Remove(tbGridlineLeft.Text.Length - 1);
+            }
+
+            if (Int32.TryParse(tbGridlineLeft.Text, out int numValueW) == true && numValueW > FormMain.clientWidth / 2)
+            {
+                tbGridlineLeft.Text = tbGridlineLeft.Text.Remove(tbGridlineLeft.Text.Length - 1);
+            }
         }
 
-        private void textBox4_TextChanged(object sender, EventArgs e)
+        private void tbGridlineRight_TextChanged(object sender, EventArgs e)
         {
-        }
-
-        private void FormSet_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void rbArrowType04_CheckedChanged(object sender, EventArgs e)
-        {
-
+            if (System.Text.RegularExpressions.Regex.IsMatch(tbGridlineRight.Text, "[^0-9]"))
+            {
+                tbGridlineRight.Text = tbGridlineRight.Text.Remove(tbGridlineRight.Text.Length - 1);
+            }
         }
     }
 }

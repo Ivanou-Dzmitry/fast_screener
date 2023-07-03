@@ -54,7 +54,7 @@
             // btnMainMenu
             // 
             btnMainMenu.ContextMenuStrip = contextMenuMain;
-            btnMainMenu.Image = FastScreener.Properties.Resources.menu;
+            btnMainMenu.Image = fast_screener.Properties.Resources.menu;
             btnMainMenu.Location = new Point(12, 12);
             btnMainMenu.Name = "btnMainMenu";
             btnMainMenu.Size = new Size(24, 24);
@@ -168,7 +168,7 @@
             // 
             // btnScreen
             // 
-            btnScreen.Image = FastScreener.Properties.Resources.scr;
+            btnScreen.Image = fast_screener.Properties.Resources.scr;
             btnScreen.Location = new Point(50, 12);
             btnScreen.Name = "btnScreen";
             btnScreen.Size = new Size(24, 24);

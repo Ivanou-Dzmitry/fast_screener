@@ -34,14 +34,18 @@
             toolTipTool = new ToolTip(components);
             picboxGuidlineColorSample = new PictureBox();
             picboxArrowColorSample = new PictureBox();
+            rbArrowType04 = new RadioButton();
+            rbArrowType03 = new RadioButton();
+            rbArrowType02 = new RadioButton();
+            rbArrowType01 = new RadioButton();
             panel1 = new Panel();
             btnOK = new Button();
             gboxGuidlines = new GroupBox();
             pnlGMargin = new Panel();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
-            textBox3 = new TextBox();
-            textBox4 = new TextBox();
+            tbGridlineTop = new TextBox();
+            tbGridlineBottom = new TextBox();
+            tbGridlineLeft = new TextBox();
+            tbGridlineRight = new TextBox();
             rbGuidType02 = new RadioButton();
             rbGuidType03 = new RadioButton();
             rbGuidType01 = new RadioButton();
@@ -52,10 +56,7 @@
             gboxSizes = new GroupBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             gboxArrows = new GroupBox();
-            rbArrowType04 = new RadioButton();
-            rbArrowType03 = new RadioButton();
-            rbArrowType02 = new RadioButton();
-            rbArrowType01 = new RadioButton();
+            checkBox1 = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).BeginInit();
             panel1.SuspendLayout();
@@ -103,6 +104,51 @@
             toolTipTool.SetToolTip(picboxArrowColorSample, "Set arrow color");
             picboxArrowColorSample.Click += picboxArrowColorSample_Click;
             // 
+            // rbArrowType04
+            // 
+            rbArrowType04.Image = fast_screener.Properties.Resources.arrow_type04;
+            rbArrowType04.Location = new Point(56, 48);
+            rbArrowType04.Name = "rbArrowType04";
+            rbArrowType04.Size = new Size(40, 24);
+            rbArrowType04.TabIndex = 12;
+            rbArrowType04.TabStop = true;
+            toolTipTool.SetToolTip(rbArrowType04, "Arrow type 4");
+            rbArrowType04.UseVisualStyleBackColor = true;
+            // 
+            // rbArrowType03
+            // 
+            rbArrowType03.Image = fast_screener.Properties.Resources.arrow_type03;
+            rbArrowType03.Location = new Point(56, 24);
+            rbArrowType03.Name = "rbArrowType03";
+            rbArrowType03.Size = new Size(40, 24);
+            rbArrowType03.TabIndex = 11;
+            rbArrowType03.TabStop = true;
+            toolTipTool.SetToolTip(rbArrowType03, "Arrow type 3");
+            rbArrowType03.UseVisualStyleBackColor = true;
+            // 
+            // rbArrowType02
+            // 
+            rbArrowType02.Image = fast_screener.Properties.Resources.arrow_type02;
+            rbArrowType02.Location = new Point(8, 48);
+            rbArrowType02.Name = "rbArrowType02";
+            rbArrowType02.Size = new Size(40, 24);
+            rbArrowType02.TabIndex = 10;
+            rbArrowType02.TabStop = true;
+            toolTipTool.SetToolTip(rbArrowType02, "Arrow type 2");
+            rbArrowType02.UseVisualStyleBackColor = true;
+            // 
+            // rbArrowType01
+            // 
+            rbArrowType01.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            rbArrowType01.Image = fast_screener.Properties.Resources.arrow_type01;
+            rbArrowType01.Location = new Point(8, 24);
+            rbArrowType01.Name = "rbArrowType01";
+            rbArrowType01.Size = new Size(40, 24);
+            rbArrowType01.TabIndex = 9;
+            rbArrowType01.TabStop = true;
+            toolTipTool.SetToolTip(rbArrowType01, "Arrow type 1");
+            rbArrowType01.UseVisualStyleBackColor = true;
+            // 
             // panel1
             // 
             panel1.Controls.Add(btnOK);
@@ -139,10 +185,11 @@
             // 
             // pnlGMargin
             // 
-            pnlGMargin.Controls.Add(textBox1);
-            pnlGMargin.Controls.Add(textBox2);
-            pnlGMargin.Controls.Add(textBox3);
-            pnlGMargin.Controls.Add(textBox4);
+            pnlGMargin.Controls.Add(checkBox1);
+            pnlGMargin.Controls.Add(tbGridlineTop);
+            pnlGMargin.Controls.Add(tbGridlineBottom);
+            pnlGMargin.Controls.Add(tbGridlineLeft);
+            pnlGMargin.Controls.Add(tbGridlineRight);
             pnlGMargin.Dock = DockStyle.Right;
             pnlGMargin.Enabled = false;
             pnlGMargin.Location = new Point(80, 19);
@@ -150,45 +197,45 @@
             pnlGMargin.Size = new Size(84, 132);
             pnlGMargin.TabIndex = 8;
             // 
-            // textBox1
+            // tbGridlineTop
             // 
-            textBox1.Location = new Point(8, 8);
-            textBox1.Name = "textBox1";
-            textBox1.PlaceholderText = "Top";
-            textBox1.Size = new Size(72, 23);
-            textBox1.TabIndex = 0;
-            textBox1.Text = "10";
-            textBox1.TextChanged += textBox1_TextChanged;
+            tbGridlineTop.Location = new Point(8, 8);
+            tbGridlineTop.Name = "tbGridlineTop";
+            tbGridlineTop.PlaceholderText = "Top";
+            tbGridlineTop.Size = new Size(40, 23);
+            tbGridlineTop.TabIndex = 0;
+            tbGridlineTop.Text = "10";
+            tbGridlineTop.TextChanged += tbGridlineTop_TextChanged;
             // 
-            // textBox2
+            // tbGridlineBottom
             // 
-            textBox2.Location = new Point(8, 40);
-            textBox2.Name = "textBox2";
-            textBox2.PlaceholderText = "Bottom";
-            textBox2.Size = new Size(72, 23);
-            textBox2.TabIndex = 1;
-            textBox2.Text = "10";
-            textBox2.TextChanged += textBox2_TextChanged;
+            tbGridlineBottom.Location = new Point(8, 40);
+            tbGridlineBottom.Name = "tbGridlineBottom";
+            tbGridlineBottom.PlaceholderText = "Bottom";
+            tbGridlineBottom.Size = new Size(40, 23);
+            tbGridlineBottom.TabIndex = 1;
+            tbGridlineBottom.Text = "10";
+            tbGridlineBottom.TextChanged += tbGridlineBottom_TextChanged;
             // 
-            // textBox3
+            // tbGridlineLeft
             // 
-            textBox3.Location = new Point(8, 72);
-            textBox3.Name = "textBox3";
-            textBox3.PlaceholderText = "Left";
-            textBox3.Size = new Size(72, 23);
-            textBox3.TabIndex = 2;
-            textBox3.Text = "10";
-            textBox3.TextChanged += textBox3_TextChanged;
+            tbGridlineLeft.Location = new Point(8, 72);
+            tbGridlineLeft.Name = "tbGridlineLeft";
+            tbGridlineLeft.PlaceholderText = "Left";
+            tbGridlineLeft.Size = new Size(40, 23);
+            tbGridlineLeft.TabIndex = 2;
+            tbGridlineLeft.Text = "10";
+            tbGridlineLeft.TextChanged += tbGridlineLeft_TextChanged;
             // 
-            // textBox4
+            // tbGridlineRight
             // 
-            textBox4.Location = new Point(8, 104);
-            textBox4.Name = "textBox4";
-            textBox4.PlaceholderText = "Right";
-            textBox4.Size = new Size(72, 23);
-            textBox4.TabIndex = 3;
-            textBox4.Text = "10";
-            textBox4.TextChanged += textBox4_TextChanged;
+            tbGridlineRight.Location = new Point(8, 104);
+            tbGridlineRight.Name = "tbGridlineRight";
+            tbGridlineRight.PlaceholderText = "Right";
+            tbGridlineRight.Size = new Size(40, 23);
+            tbGridlineRight.TabIndex = 3;
+            tbGridlineRight.Text = "10";
+            tbGridlineRight.TextChanged += tbGridlineRight_TextChanged;
             // 
             // rbGuidType02
             // 
@@ -298,51 +345,15 @@
             gboxArrows.TabStop = false;
             gboxArrows.Text = "Arrows";
             // 
-            // rbArrowType04
+            // checkBox1
             // 
-            rbArrowType04.Image = FastScreener.Properties.Resources.arrow_type04;
-            rbArrowType04.Location = new Point(56, 48);
-            rbArrowType04.Name = "rbArrowType04";
-            rbArrowType04.Size = new Size(40, 24);
-            rbArrowType04.TabIndex = 12;
-            rbArrowType04.TabStop = true;
-            toolTipTool.SetToolTip(rbArrowType04, "Arrow type 4");
-            rbArrowType04.UseVisualStyleBackColor = true;
-            rbArrowType04.CheckedChanged += rbArrowType04_CheckedChanged;
-            // 
-            // rbArrowType03
-            // 
-            rbArrowType03.Image = FastScreener.Properties.Resources.arrow_type03;
-            rbArrowType03.Location = new Point(56, 24);
-            rbArrowType03.Name = "rbArrowType03";
-            rbArrowType03.Size = new Size(40, 24);
-            rbArrowType03.TabIndex = 11;
-            rbArrowType03.TabStop = true;
-            toolTipTool.SetToolTip(rbArrowType03, "Arrow type 3");
-            rbArrowType03.UseVisualStyleBackColor = true;
-            // 
-            // rbArrowType02
-            // 
-            rbArrowType02.Image = FastScreener.Properties.Resources.arrow_type02;
-            rbArrowType02.Location = new Point(8, 48);
-            rbArrowType02.Name = "rbArrowType02";
-            rbArrowType02.Size = new Size(40, 24);
-            rbArrowType02.TabIndex = 10;
-            rbArrowType02.TabStop = true;
-            toolTipTool.SetToolTip(rbArrowType02, "Arrow type 2");
-            rbArrowType02.UseVisualStyleBackColor = true;
-            // 
-            // rbArrowType01
-            // 
-            rbArrowType01.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            rbArrowType01.Image = FastScreener.Properties.Resources.arrow_type01;
-            rbArrowType01.Location = new Point(8, 24);
-            rbArrowType01.Name = "rbArrowType01";
-            rbArrowType01.Size = new Size(40, 24);
-            rbArrowType01.TabIndex = 9;
-            rbArrowType01.TabStop = true;
-            toolTipTool.SetToolTip(rbArrowType01, "Arrow type 1");
-            rbArrowType01.UseVisualStyleBackColor = true;
+            checkBox1.Appearance = Appearance.Button;
+            checkBox1.Location = new Point(56, 8);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(23, 23);
+            checkBox1.TabIndex = 13;
+            checkBox1.Text = "L";
+            checkBox1.UseVisualStyleBackColor = true;
             // 
             // FormSet
             // 
@@ -359,7 +370,6 @@
             Text = "Settings";
             TopMost = true;
             Activated += FormTool_Activated;
-            Load += FormSet_Load;
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).EndInit();
             ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).EndInit();
             panel1.ResumeLayout(false);
@@ -381,10 +391,10 @@
         private Button btnOK;
         private Label lblInfo;
         private GroupBox gboxGuidlines;
-        private TextBox textBox4;
-        private TextBox textBox3;
-        private TextBox textBox2;
-        private TextBox textBox1;
+        private TextBox tbGridlineRight;
+        private TextBox tbGridlineLeft;
+        private TextBox tbGridlineBottom;
+        private TextBox tbGridlineTop;
         private ColorDialog colorDialogGlines;
         private PictureBox picboxGuidlineColorSample;
         private DataGridView dataGridSize;
@@ -402,5 +412,6 @@
         private RadioButton rbArrowType01;
         private RadioButton rbArrowType03;
         private RadioButton rbArrowType04;
+        private CheckBox checkBox1;
     }
 }
