@@ -201,13 +201,16 @@
             Controls.Add(pnlToolbarMain);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            KeyPreview = true;
             MaximizeBox = false;
             MinimumSize = new Size(90, 50);
             Name = "FormMain";
             StartPosition = FormStartPosition.CenterScreen;
             TopMost = true;
             Deactivate += FormMain_Deactivate;
+            Shown += FormMain_Shown;
             Paint += FormMain_Paint;
+            KeyDown += FormMain_KeyDown;
             Move += FormMain_Move;
             contextMenuMain.ResumeLayout(false);
             pnlToolbarMain.ResumeLayout(false);

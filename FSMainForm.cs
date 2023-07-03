@@ -1,13 +1,11 @@
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Net;
-using static System.Windows.Forms.AxHost;
-
+using System.Runtime.InteropServices;
 
 namespace screener3
 {
-
 
 
     public partial class FormMain : Form
@@ -59,12 +57,7 @@ namespace screener3
             this.BackColor = ALPHA_KEY_COLOR;
             this.TransparencyKey = ALPHA_KEY_COLOR;
 
-
-            //copy daefault data
-            //RES_WORKED = RES_DEFAULT;
-
             string tempValueFromConfig;
-
 
             for (int i = 1; i < 5; i++)
             {
@@ -89,7 +82,6 @@ namespace screener3
                 {
                     RES_WORKED[1, i - 1] = RES_DEFAULT[1, i - 1];
                 }
-
 
             }
 
@@ -183,9 +175,6 @@ namespace screener3
                 ArrowsType = 1;
             }
 
-
-            tempValueFromConfig = ConfigurationManager.AppSettings["res_on_close"];
-
         }
 
         private void btnMainMenu_Click(object sender, EventArgs e)
@@ -243,7 +232,7 @@ namespace screener3
         {
             string FinalText = "";
 
-            FinalText = (Text + "WxH, px: " + Width.ToString() + "x" + Height.ToString());
+            FinalText = (Width.ToString() + "x" + Height.ToString());
 
             toolTipMain.SetToolTip(btnScreen, "Take screenshot " + ". Size: " + Width.ToString() + "x" + Height.ToString() + "px");
 
@@ -393,30 +382,39 @@ namespace screener3
 
         private void drawGuidlinesStatus()
         {
+
+            lblInfo.Visible = true;
+
             if (mitShowGuidlines.CheckState == CheckState.Checked)
             {
                 mitShowGuidlines.CheckState = CheckState.Unchecked;
                 drawGuidlines = false;
+                lblInfo.Text = "Guidlines turned OFF";
             }
             else
             {
                 mitShowGuidlines.CheckState = CheckState.Checked;
                 drawGuidlines = true;
+                lblInfo.Text = "Guidlines turned ON";
             }
 
         }
 
         private void drawArrowStatus()
         {
+            lblInfo.Visible = true;
+
             if (mitShowArrows.CheckState == CheckState.Checked)
             {
                 mitShowArrows.CheckState = CheckState.Unchecked;
                 drawArrows = false;
+                lblInfo.Text = "Arrows turned OFF";
             }
             else
             {
                 mitShowArrows.CheckState = CheckState.Checked;
                 drawArrows = true;
+                lblInfo.Text = "Arrows turned ON";
             }
         }
 
@@ -424,6 +422,7 @@ namespace screener3
         {
             drawGuidlinesStatus();
             this.Refresh();
+
         }
 
 
@@ -529,6 +528,40 @@ namespace screener3
             mitSize02.Text = RES_WORKED[0, 1].ToString() + "x" + RES_WORKED[1, 1].ToString();
             mitSize03.Text = RES_WORKED[0, 2].ToString() + "x" + RES_WORKED[1, 2].ToString();
             mitSize04.Text = RES_WORKED[0, 3].ToString() + "x" + RES_WORKED[1, 3].ToString();
+        }
+
+
+        private void FormMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.D1)
+            {
+                ArrowsType = 1;
+            }
+
+            if (e.Control && e.KeyCode == Keys.D2)
+            {
+                ArrowsType = 2;
+            }
+
+
+            if (e.Control && e.KeyCode == Keys.D3)
+            {
+                ArrowsType = 3;
+            }
+
+
+            if (e.Control && e.KeyCode == Keys.D4)
+            {
+                ArrowsType = 4;
+            }
+        }
+
+        private void FormMain_Shown(object sender, EventArgs e)
+        {
+            this.TopLevel = true;
+            this.TopMost = true;
+            this.Focus();
+            this.TopMost = true;
         }
     }
 
