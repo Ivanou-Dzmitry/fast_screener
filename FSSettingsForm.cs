@@ -1,4 +1,5 @@
 ﻿
+using fast_screener.Properties;
 using Microsoft.VisualBasic;
 using System.Diagnostics;
 using System.Reflection.Emit;
@@ -64,7 +65,16 @@ namespace screener3
                 for (int row = 0; row < FormMain.RES_WORKED.GetLength(1); row++)
                     this.dataGridSize.Rows.Add(FormMain.RES_WORKED[col, row], FormMain.RES_WORKED[1, row]);
 
-
+            if (FormMain.indentValueLock == true)
+            {
+                cbLock.Checked = true;
+                cbLock_Click(this, EventArgs.Empty);
+            }
+            else
+            {
+                cbLock.Checked = false;
+                cbLock_Click(this, EventArgs.Empty);
+            }
         }
 
 
@@ -239,6 +249,7 @@ namespace screener3
 
         private void tbGridlineTop_TextChanged(object sender, EventArgs e)
         {
+
             if (System.Text.RegularExpressions.Regex.IsMatch(tbGridlineTop.Text, "[^0-9]"))
             {
                 tbGridlineTop.Text = tbGridlineTop.Text.Remove(tbGridlineTop.Text.Length - 1);
@@ -247,6 +258,15 @@ namespace screener3
             if (Int32.TryParse(tbGridlineTop.Text, out int numValueH) == true && numValueH > FormMain.clientHeight / 2)
             {
                 tbGridlineTop.Text = tbGridlineTop.Text.Remove(tbGridlineTop.Text.Length - 1);
+
+            }
+
+            if (FormMain.indentValueLock == true)
+            {
+                tbGridlineBottom.Text = tbGridlineTop.Text;
+
+                tbGridlineLeft.Text = tbGridlineTop.Text;
+                tbGridlineRight.Text = tbGridlineTop.Text;
             }
         }
 
@@ -282,6 +302,36 @@ namespace screener3
             {
                 tbGridlineRight.Text = tbGridlineRight.Text.Remove(tbGridlineRight.Text.Length - 1);
             }
+
+            if (Int32.TryParse(tbGridlineRight.Text, out int numValueW) == true && numValueW > FormMain.clientWidth / 2)
+            {
+                tbGridlineRight.Text = tbGridlineRight.Text.Remove(tbGridlineRight.Text.Length - 1);
+            }
+        }
+
+        private void cbLock_Click(object sender, EventArgs e)
+        {
+            if (!cbLock.Checked)
+            {
+                cbLock.Image = Resources.unlocked;
+                FormMain.indentValueLock = false;
+
+                tbGridlineBottom.Enabled = true;
+                tbGridlineLeft.Enabled = true;
+                tbGridlineRight.Enabled = true;
+            }
+            else
+            {
+                cbLock.Image = Resources.locked;
+                FormMain.indentValueLock = true;
+
+                tbGridlineTop_TextChanged(sender, e);
+
+                tbGridlineBottom.Enabled = false;
+                tbGridlineLeft.Enabled = false;
+                tbGridlineRight.Enabled = false;
+            }
+
         }
     }
 }

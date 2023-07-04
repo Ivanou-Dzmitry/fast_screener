@@ -42,6 +42,7 @@
             btnOK = new Button();
             gboxGuidlines = new GroupBox();
             pnlGMargin = new Panel();
+            cbLock = new CheckBox();
             tbGridlineTop = new TextBox();
             tbGridlineBottom = new TextBox();
             tbGridlineLeft = new TextBox();
@@ -56,7 +57,6 @@
             gboxSizes = new GroupBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             gboxArrows = new GroupBox();
-            checkBox1 = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).BeginInit();
             panel1.SuspendLayout();
@@ -185,7 +185,7 @@
             // 
             // pnlGMargin
             // 
-            pnlGMargin.Controls.Add(checkBox1);
+            pnlGMargin.Controls.Add(cbLock);
             pnlGMargin.Controls.Add(tbGridlineTop);
             pnlGMargin.Controls.Add(tbGridlineBottom);
             pnlGMargin.Controls.Add(tbGridlineLeft);
@@ -196,6 +196,18 @@
             pnlGMargin.Name = "pnlGMargin";
             pnlGMargin.Size = new Size(84, 132);
             pnlGMargin.TabIndex = 8;
+            // 
+            // cbLock
+            // 
+            cbLock.Appearance = Appearance.Button;
+            cbLock.Image = fast_screener.Properties.Resources.unlocked;
+            cbLock.Location = new Point(56, 8);
+            cbLock.Name = "cbLock";
+            cbLock.Size = new Size(23, 23);
+            cbLock.TabIndex = 13;
+            toolTipTool.SetToolTip(cbLock, "Lock values");
+            cbLock.UseVisualStyleBackColor = true;
+            cbLock.Click += cbLock_Click;
             // 
             // tbGridlineTop
             // 
@@ -345,16 +357,6 @@
             gboxArrows.TabStop = false;
             gboxArrows.Text = "Arrows";
             // 
-            // checkBox1
-            // 
-            checkBox1.Appearance = Appearance.Button;
-            checkBox1.Location = new Point(56, 8);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(23, 23);
-            checkBox1.TabIndex = 13;
-            checkBox1.Text = "L";
-            checkBox1.UseVisualStyleBackColor = true;
-            // 
             // FormSet
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -412,6 +414,6 @@
         private RadioButton rbArrowType01;
         private RadioButton rbArrowType03;
         private RadioButton rbArrowType04;
-        private CheckBox checkBox1;
+        private CheckBox cbLock;
     }
 }

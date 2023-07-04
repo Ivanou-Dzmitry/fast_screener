@@ -38,6 +38,8 @@ namespace screener3
         //for guidlines
         private bool drawGuidlines, drawArrows;
 
+        public static bool indentValueLock = false;
+
         //1 - 3x3, 2 - 4x4, 3 - custom
         public static int GuidlinesType, ArrowsType, StartResW = 0, StartResH = 0;
 
@@ -193,6 +195,9 @@ namespace screener3
 
 
             }
+
+            tempValueFromConfig = ConfigurationManager.AppSettings["ident_value_lock"];
+            indentValueLock = Convert.ToBoolean(tempValueFromConfig);
 
         }
 
@@ -543,6 +548,8 @@ namespace screener3
             SetSetting("res_on_close", this.ClientSize.Width.ToString() + "," + this.ClientSize.Height.ToString());
 
             SetSetting("custom_grid", CUSTOM_GRID[0].ToString() + "," + CUSTOM_GRID[1].ToString() + "," + CUSTOM_GRID[2].ToString() + "," + CUSTOM_GRID[3].ToString());
+
+            SetSetting("ident_value_lock", indentValueLock.ToString().ToLower());
 
             Close();
         }
