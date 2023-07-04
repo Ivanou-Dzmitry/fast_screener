@@ -68,7 +68,7 @@
             // 
             contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitShowGuidlines, mitShowArrows, mitSaveFile, mitSettings, toolStripSeparator1, mitTakeScreen, mitExit });
             contextMenuMain.Name = "contextMenuStrip1";
-            contextMenuMain.Size = new Size(231, 236);
+            contextMenuMain.Size = new Size(231, 258);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
             // mitSize01
@@ -115,7 +115,7 @@
             mitShowGuidlines.Name = "mitShowGuidlines";
             mitShowGuidlines.ShortcutKeys = Keys.Control | Keys.Alt | Keys.G;
             mitShowGuidlines.Size = new Size(230, 22);
-            mitShowGuidlines.Text = "Show Guidlines";
+            mitShowGuidlines.Text = "Show Grid";
             mitShowGuidlines.Click += mitShowGuidlines_Click;
             // 
             // mitShowArrows
@@ -125,7 +125,7 @@
             mitShowArrows.Name = "mitShowArrows";
             mitShowArrows.ShortcutKeys = Keys.Control | Keys.Alt | Keys.A;
             mitShowArrows.Size = new Size(230, 22);
-            mitShowArrows.Text = "Show Arrows";
+            mitShowArrows.Text = "Show Arrow";
             mitShowArrows.Click += mitShowArrows_Click;
             // 
             // mitSaveFile
@@ -137,6 +137,7 @@
             // 
             // mitSettings
             // 
+            mitSettings.Image = fast_screener.Properties.Resources.settings;
             mitSettings.Name = "mitSettings";
             mitSettings.Size = new Size(230, 22);
             mitSettings.Text = "Settings";
@@ -159,6 +160,7 @@
             // mitExit
             // 
             mitExit.Name = "mitExit";
+            mitExit.ShortcutKeys = Keys.Alt | Keys.F4;
             mitExit.Size = new Size(230, 22);
             mitExit.Text = "Exit";
             mitExit.Click += mitExit_Click;

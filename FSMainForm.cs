@@ -219,7 +219,7 @@ namespace screener3
 
         private void mitSize01_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
+            this.ClientSize = new Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
@@ -227,21 +227,21 @@ namespace screener3
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 1]), Convert.ToInt32(Convert.ToInt32(RES_WORKED[1, 1])));
+            this.ClientSize = new Size(Convert.ToInt32(RES_WORKED[0, 1]), Convert.ToInt32(Convert.ToInt32(RES_WORKED[1, 1])));
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(Convert.ToInt32(RES_WORKED[0, 2])), Convert.ToInt32(RES_WORKED[1, 2]));
+            this.ClientSize = new Size(Convert.ToInt32(Convert.ToInt32(RES_WORKED[0, 2])), Convert.ToInt32(RES_WORKED[1, 2]));
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 3]), Convert.ToInt32(Convert.ToInt32(RES_WORKED[1, 3])));
+            this.ClientSize = new Size(Convert.ToInt32(RES_WORKED[0, 3]), Convert.ToInt32(Convert.ToInt32(RES_WORKED[1, 3])));
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
         }
@@ -287,6 +287,16 @@ namespace screener3
 
             //this.Hide();
             pnlToolbarMain.Visible = false;
+            lblInfo.Visible = false;
+
+            bool gridIsOn = false;
+
+            if (mitShowGuidlines.Checked == true)
+            {
+                gridIsOn = true;
+                mitShowGuidlines.PerformClick();
+                lblInfo.Visible = false; 
+            }
 
             //Creating a new Bitmap object
             Bitmap captureBitmap = new Bitmap(this.ClientSize.Width, this.ClientSize.Height, PixelFormat.Format32bppArgb);
@@ -355,14 +365,20 @@ namespace screener3
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
 
+            //turn on grid again
+            if (gridIsOn == true)
+            {
+                mitShowGuidlines.PerformClick();
+            }
 
             lblInfo.Text = "Screenshot copied to clipboard";
 
             if (saveToFile == true)
             {
                 lblInfo.Text = lblInfo.Text + " and saved to file: " + Environment.NewLine + URLString;
-
             }
+
+
 
         }
 
@@ -384,8 +400,6 @@ namespace screener3
             }
 
         }
-
-
 
 
         private void FormMain_Paint(object sender, PaintEventArgs e)
@@ -623,7 +637,7 @@ namespace screener3
 
             SetSetting("ident_value_lock", indentValueLock.ToString().ToLower());
 
-            
+
         }
 
         private void mitSettings_Click(object sender, EventArgs e)
