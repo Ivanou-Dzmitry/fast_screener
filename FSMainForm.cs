@@ -1,8 +1,9 @@
 using System.Configuration;
-using System.Diagnostics;
+using System.Data.SqlTypes;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
+
+
 
 namespace screener3
 {
@@ -12,6 +13,8 @@ namespace screener3
     {
         //Name
         public const string PROG_NAME = "F.S. ";
+
+        public const string SUBPATH = "screenshots";
 
         public static int NewWidth = 0;
         public static int NewHeight = 0;
@@ -36,7 +39,7 @@ namespace screener3
         public static Color arrowColor = Color.Aqua;
 
         //for guidlines
-        private bool drawGuidlines, drawArrows;
+        private bool drawGuidlines, drawArrows, saveToFile;
 
         public static bool indentValueLock = false;
 
@@ -199,6 +202,14 @@ namespace screener3
             tempValueFromConfig = ConfigurationManager.AppSettings["ident_value_lock"];
             indentValueLock = Convert.ToBoolean(tempValueFromConfig);
 
+            tempValueFromConfig = ConfigurationManager.AppSettings["save_to_file"];
+            saveToFile = Convert.ToBoolean(tempValueFromConfig);
+
+            if (saveToFile == true)
+            {
+                mitSaveFile.Checked = true;
+            }
+
         }
 
         private void btnMainMenu_Click(object sender, EventArgs e)
@@ -301,8 +312,39 @@ namespace screener3
             //Copying Image from The Screen
             captureGraphics.CopyFromScreen(posX, posY, 0, 0, captureRectangle.Size);
 
+            string URLString = "";
+
             //Saving the Image File (I am here Saving it in My E drive).
-            //captureBitmap.Save(@"D:\Capture.jpg", ImageFormat.Jpeg);
+            if (saveToFile == true)
+            {
+                string appExeDir = Directory.GetCurrentDirectory();
+
+                //check directory for files
+                bool exists = Directory.Exists(appExeDir + "\\" + SUBPATH);
+
+                // create if not exists
+                if (!exists)
+                    Directory.CreateDirectory(appExeDir + "\\" + SUBPATH);
+
+                //datatime for random_name
+                string currentTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+                //full filename
+                string fileName = currentTime + "_screenshot.png";
+
+                //full path to file
+                URLString = appExeDir + "\\" + SUBPATH + "\\" + fileName;
+
+                try
+                {
+                    captureBitmap.Save(URLString, ImageFormat.Png);
+                }
+                catch
+                {
+                    MessageBox.Show("Can't save screenshot to file! Path: " + URLString, "FastScreener Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            }
 
 
             Clipboard.SetImage(captureBitmap);
@@ -313,7 +355,14 @@ namespace screener3
 
             this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
 
+
             lblInfo.Text = "Screenshot copied to clipboard";
+
+            if (saveToFile == true)
+            {
+                lblInfo.Text = lblInfo.Text + " and saved to file: " + Environment.NewLine + URLString;
+
+            }
 
         }
 
@@ -419,8 +468,6 @@ namespace screener3
         }
 
 
-
-
         private void drawGuidlinesStatus()
         {
 
@@ -456,6 +503,24 @@ namespace screener3
                 mitShowArrows.CheckState = CheckState.Checked;
                 drawArrows = true;
                 lblInfo.Text = "Arrows turned ON";
+            }
+        }
+
+        private void saveToFileStatus()
+        {
+            lblInfo.Visible = true;
+
+            if (mitSaveFile.CheckState == CheckState.Checked)
+            {
+                mitSaveFile.CheckState = CheckState.Unchecked;
+                saveToFile = false;
+                lblInfo.Text = "Save to file turned OFF";
+            }
+            else
+            {
+                mitSaveFile.CheckState = CheckState.Checked;
+                saveToFile = true;
+                lblInfo.Text = "Save to file turned ON";
             }
         }
 
@@ -529,6 +594,13 @@ namespace screener3
 
         private void mitExit_Click(object sender, EventArgs e)
         {
+
+            SaveConfig();
+            Close();
+        }
+
+        private void SaveConfig()
+        {
             SetSetting("guidlines_color", ColorTranslator.ToHtml(guidlinesColor));
             SetSetting("arrow_color", ColorTranslator.ToHtml(arrowColor));
 
@@ -537,7 +609,7 @@ namespace screener3
 
             SetSetting("draw_guidlines", drawGuidlines.ToString().ToLower());
             SetSetting("draw_arrows", drawArrows.ToString().ToLower());
-
+            SetSetting("save_to_file", saveToFile.ToString().ToLower());
 
 
             for (int i = 1; i < 5; i++)
@@ -551,7 +623,7 @@ namespace screener3
 
             SetSetting("ident_value_lock", indentValueLock.ToString().ToLower());
 
-            Close();
+            
         }
 
         private void mitSettings_Click(object sender, EventArgs e)
@@ -563,6 +635,8 @@ namespace screener3
             toolForm.ShowDialog();
 
             MenuItemUpdate();
+
+            SaveConfig();
 
             this.Refresh();
         }
@@ -608,6 +682,13 @@ namespace screener3
             this.Focus();
             this.TopMost = true;
         }
+
+        private void mitSaveFile_Click(object sender, EventArgs e)
+        {
+            saveToFileStatus();
+        }
+
+
     }
 
 }

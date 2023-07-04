@@ -39,6 +39,7 @@
             toolStripSeparator2 = new ToolStripSeparator();
             mitShowGuidlines = new ToolStripMenuItem();
             mitShowArrows = new ToolStripMenuItem();
+            mitSaveFile = new ToolStripMenuItem();
             mitSettings = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             mitTakeScreen = new ToolStripMenuItem();
@@ -65,9 +66,9 @@
             // 
             // contextMenuMain
             // 
-            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitShowGuidlines, mitShowArrows, mitSettings, toolStripSeparator1, mitTakeScreen, mitExit });
+            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitShowGuidlines, mitShowArrows, mitSaveFile, mitSettings, toolStripSeparator1, mitTakeScreen, mitExit });
             contextMenuMain.Name = "contextMenuStrip1";
-            contextMenuMain.Size = new Size(231, 214);
+            contextMenuMain.Size = new Size(231, 236);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
             // mitSize01
@@ -127,6 +128,13 @@
             mitShowArrows.Text = "Show Arrows";
             mitShowArrows.Click += mitShowArrows_Click;
             // 
+            // mitSaveFile
+            // 
+            mitSaveFile.Name = "mitSaveFile";
+            mitSaveFile.Size = new Size(230, 22);
+            mitSaveFile.Text = "Save To File";
+            mitSaveFile.Click += mitSaveFile_Click;
+            // 
             // mitSettings
             // 
             mitSettings.Name = "mitSettings";
@@ -179,17 +187,16 @@
             // 
             // lblInfo
             // 
-            lblInfo.AutoSize = true;
             lblInfo.BackColor = Color.SteelBlue;
             lblInfo.Dock = DockStyle.Bottom;
-            lblInfo.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            lblInfo.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             lblInfo.ForeColor = Color.White;
-            lblInfo.Location = new Point(0, 281);
+            lblInfo.Location = new Point(0, 264);
             lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(192, 17);
+            lblInfo.Size = new Size(584, 34);
             lblInfo.TabIndex = 2;
             lblInfo.Text = "Screenshot copied to clipboard";
-            lblInfo.TextAlign = ContentAlignment.BottomCenter;
+            lblInfo.TextAlign = ContentAlignment.MiddleLeft;
             lblInfo.Visible = false;
             // 
             // FormMain
@@ -237,5 +244,6 @@
         private ToolStripMenuItem mitShowGuidlines;
         private ToolStripMenuItem mitShowArrows;
         private ToolStripMenuItem mitExit;
+        private ToolStripMenuItem mitSaveFile;
     }
 }

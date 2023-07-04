@@ -38,11 +38,11 @@
             rbArrowType03 = new RadioButton();
             rbArrowType02 = new RadioButton();
             rbArrowType01 = new RadioButton();
+            cbLock = new CheckBox();
             panel1 = new Panel();
             btnOK = new Button();
             gboxGuidlines = new GroupBox();
             pnlGMargin = new Panel();
-            cbLock = new CheckBox();
             tbGridlineTop = new TextBox();
             tbGridlineBottom = new TextBox();
             tbGridlineLeft = new TextBox();
@@ -149,6 +149,18 @@
             toolTipTool.SetToolTip(rbArrowType01, "Arrow type 1");
             rbArrowType01.UseVisualStyleBackColor = true;
             // 
+            // cbLock
+            // 
+            cbLock.Appearance = Appearance.Button;
+            cbLock.Image = fast_screener.Properties.Resources.unlocked;
+            cbLock.Location = new Point(56, 8);
+            cbLock.Name = "cbLock";
+            cbLock.Size = new Size(23, 23);
+            cbLock.TabIndex = 13;
+            toolTipTool.SetToolTip(cbLock, "Lock values");
+            cbLock.UseVisualStyleBackColor = true;
+            cbLock.Click += cbLock_Click;
+            // 
             // panel1
             // 
             panel1.Controls.Add(btnOK);
@@ -181,7 +193,7 @@
             gboxGuidlines.Size = new Size(167, 154);
             gboxGuidlines.TabIndex = 2;
             gboxGuidlines.TabStop = false;
-            gboxGuidlines.Text = "Guidlines";
+            gboxGuidlines.Text = "Grid";
             // 
             // pnlGMargin
             // 
@@ -196,18 +208,6 @@
             pnlGMargin.Name = "pnlGMargin";
             pnlGMargin.Size = new Size(84, 132);
             pnlGMargin.TabIndex = 8;
-            // 
-            // cbLock
-            // 
-            cbLock.Appearance = Appearance.Button;
-            cbLock.Image = fast_screener.Properties.Resources.unlocked;
-            cbLock.Location = new Point(56, 8);
-            cbLock.Name = "cbLock";
-            cbLock.Size = new Size(23, 23);
-            cbLock.TabIndex = 13;
-            toolTipTool.SetToolTip(cbLock, "Lock values");
-            cbLock.UseVisualStyleBackColor = true;
-            cbLock.Click += cbLock_Click;
             // 
             // tbGridlineTop
             // 
@@ -355,7 +355,7 @@
             gboxArrows.Size = new Size(155, 154);
             gboxArrows.TabIndex = 3;
             gboxArrows.TabStop = false;
-            gboxArrows.Text = "Arrows";
+            gboxArrows.Text = "Arrow";
             // 
             // FormSet
             // 
