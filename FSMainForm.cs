@@ -32,7 +32,7 @@ namespace screener3
         private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 255, 1);
 
         //default guidlines color
-        public static Color guidlinesColor = Color.LightGray;
+        public static Color gridLinesColor = Color.LightGray;
         public static Color arrowColor = Color.Aqua;
 
         //for guidlines
@@ -130,7 +130,7 @@ namespace screener3
 
 
             tempValueFromConfig = ConfigurationManager.AppSettings["guidlines_color"];
-            guidlinesColor = System.Drawing.ColorTranslator.FromHtml(tempValueFromConfig);
+            gridLinesColor = System.Drawing.ColorTranslator.FromHtml(tempValueFromConfig);
 
             tempValueFromConfig = ConfigurationManager.AppSettings["arrow_color"];
             arrowColor = System.Drawing.ColorTranslator.FromHtml(tempValueFromConfig);
@@ -305,7 +305,8 @@ namespace screener3
             if (mitShowGuidlines.Checked == true)
             {
                 gridIsOn = true;
-                mitShowGuidlines.PerformClick();
+                // mitShowGuidlines.PerformClick();
+                DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), ALPHA_KEY_COLOR);
                 lblInfo.Visible = false;
             }
 
@@ -379,7 +380,8 @@ namespace screener3
             //turn on grid again
             if (gridIsOn == true)
             {
-                mitShowGuidlines.PerformClick();
+                DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), gridLinesColor);
+                // mitShowGuidlines.PerformClick();
             }
 
             lblInfo.Text = "Screenshot copied to clipboard";
@@ -395,21 +397,18 @@ namespace screener3
 
         private void FormMain_Deactivate(object sender, EventArgs e)
         {
+            
             lblInfo.Visible = false;
 
             this.Refresh();
 
             if (drawArrows == true)
             {
-                Graphics tempGraphics;
-
-                tempGraphics = this.CreateGraphics();
-
+               
                 relativePoint = this.PointToClient(Cursor.Position);
 
-                DrawArrow(tempGraphics, relativePoint, arrowColor, 45);
+                DrawArrow(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), relativePoint, arrowColor);
             }
-
 
         }
 
@@ -418,13 +417,13 @@ namespace screener3
         {
             if ((drawGuidlines == true) && (mitShowGuidlines.CheckState == CheckState.Checked))
             {
-                DrawLines(e, guidlinesColor);
+                DrawGrid(e, gridLinesColor);
             }
 
         }
 
-
-        private void DrawLines(PaintEventArgs e, Color lineColor)
+        //draw grid
+        private void DrawGrid(PaintEventArgs e, Color lineColor)
         {
 
             int initialPointVertical, initialPointHorizontal;
@@ -490,6 +489,48 @@ namespace screener3
 
             }
 
+
+        }
+
+        //draw arrow
+        public static void DrawArrow(PaintEventArgs e, Point relativePoint, Color color)
+        {
+            //DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), gridLinesColor);
+
+            Point startPoint = new Point(0, 0);
+            Point endPoint = new Point(relativePoint.X, relativePoint.Y);
+
+            switch (ArrowType)
+            {
+                case 1:
+                    startPoint = new Point(relativePoint.X - arrowLenght, relativePoint.Y + arrowLenght);
+
+                    break;
+
+                case 2:
+                    startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y + arrowLenght);
+
+                    break;
+
+                case 3:
+                    startPoint = new Point(relativePoint.X - arrowLenght, relativePoint.Y - arrowLenght);
+
+                    break;
+                case 4:
+                    startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y - arrowLenght);
+
+                    break;
+            }
+
+
+            var arrowPen = new Pen(color, 1);
+
+            int ArrowSize = 8;
+
+            arrowPen.CustomEndCap = new AdjustableArrowCap(ArrowSize, ArrowSize);
+
+            
+            e.Graphics.DrawLine(arrowPen, startPoint, endPoint);
 
         }
 
@@ -570,43 +611,7 @@ namespace screener3
             CaptureMyScreen();
         }
 
-        public static void DrawArrow(Graphics g, Point relativePoint, Color color, int Angle)
-        {
-
-            Point startPoint = new Point(0, 0);
-            Point endPoint = new Point(relativePoint.X, relativePoint.Y);
-
-            switch (ArrowType)
-            {
-                case 1:
-                    startPoint = new Point(relativePoint.X - arrowLenght, relativePoint.Y + arrowLenght);
-
-                    break;
-
-                case 2:
-                    startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y + arrowLenght);
-
-                    break;
-
-                case 3:
-                    startPoint = new Point(relativePoint.X - arrowLenght, relativePoint.Y - arrowLenght);
-
-                    break;
-                case 4:
-                    startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y - arrowLenght);
-
-                    break;
-            }
-
-
-            var arrowPen = new Pen(color, 1);
-
-            arrowPen.CustomEndCap = new AdjustableArrowCap(8, 8);
-
-            g.DrawLine(arrowPen, startPoint, endPoint);
-
-
-        }
+ 
 
 
         private static void SetSetting(string key, string value)
@@ -627,7 +632,7 @@ namespace screener3
 
         private void SaveConfig()
         {
-            SetSetting("guidlines_color", ColorTranslator.ToHtml(guidlinesColor));
+            SetSetting("guidlines_color", ColorTranslator.ToHtml(gridLinesColor));
             SetSetting("arrow_color", ColorTranslator.ToHtml(arrowColor));
 
             SetSetting("guidline_type", GridType.ToString());

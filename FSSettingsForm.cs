@@ -18,7 +18,7 @@ namespace screener3
         {
             InitializeComponent();
 
-            picboxGuidlineColorSample.BackColor = FormMain.guidlinesColor;
+            picboxGuidlineColorSample.BackColor = FormMain.gridLinesColor;
             picboxArrowColorSample.BackColor = FormMain.arrowColor;
 
 
@@ -201,7 +201,7 @@ namespace screener3
             if (colorDialogGlines.ShowDialog() == DialogResult.OK)
             {
                 picboxGuidlineColorSample.BackColor = colorDialogGlines.Color;
-                FormMain.guidlinesColor = colorDialogGlines.Color;
+                FormMain.gridLinesColor = colorDialogGlines.Color;
             }
         }
 
