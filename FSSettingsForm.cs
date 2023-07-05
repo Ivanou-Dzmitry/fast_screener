@@ -22,7 +22,7 @@ namespace screener3
             picboxArrowColorSample.BackColor = FormMain.arrowColor;
 
 
-            switch (FormMain.GuidlinesType)
+            switch (FormMain.GridType)
             {
                 case 1:
                     rbGuidType01.Checked = true;
@@ -36,7 +36,7 @@ namespace screener3
             }
 
 
-            switch (FormMain.ArrowsType)
+            switch (FormMain.ArrowType)
             {
                 case 1:
                     rbArrowType01.Checked = true;
@@ -75,6 +75,28 @@ namespace screener3
                 cbLock.Checked = false;
                 cbLock_Click(this, EventArgs.Empty);
             }
+
+            int arrowLenght = Convert.ToInt32(CalcHypo(FormMain.clientWidth, FormMain.clientHeight));
+
+
+            trackBarArrowLenght.Maximum = arrowLenght;
+            trackBarArrowLenght.TickFrequency = arrowLenght / 10;
+
+            string trackBarArrowLenghtToolTip = "Arrow lenght. Min 30, Max " + arrowLenght.ToString();
+
+            toolTipTool.SetToolTip(trackBarArrowLenght, trackBarArrowLenghtToolTip);
+
+            lbArrowLenght.Text = "Arrow Lenght: " + trackBarArrowLenght.Value.ToString();
+
+            try
+            {
+                trackBarArrowLenght.Value = FormMain.arrowLenght;
+            }
+            catch
+            {
+                trackBarArrowLenght.Value = trackBarArrowLenght.Maximum;
+            }
+
         }
 
 
@@ -88,38 +110,38 @@ namespace screener3
 
             if (rbGuidType01.Checked == true)
             {
-                FormMain.GuidlinesType = 1;
+                FormMain.GridType = 1;
             }
 
             if (rbGuidType02.Checked == true)
             {
-                FormMain.GuidlinesType = 2;
+                FormMain.GridType = 2;
             }
 
             if (rbGuidType03.Checked == true)
             {
-                FormMain.GuidlinesType = 3;
+                FormMain.GridType = 3;
             }
 
 
             if (rbArrowType01.Checked == true)
             {
-                FormMain.ArrowsType = 1;
+                FormMain.ArrowType = 1;
             }
 
             if (rbArrowType02.Checked == true)
             {
-                FormMain.ArrowsType = 2;
+                FormMain.ArrowType = 2;
             }
 
             if (rbArrowType03.Checked == true)
             {
-                FormMain.ArrowsType = 3;
+                FormMain.ArrowType = 3;
             }
 
             if (rbArrowType04.Checked == true)
             {
-                FormMain.ArrowsType = 4;
+                FormMain.ArrowType = 4;
             }
 
 
@@ -164,6 +186,7 @@ namespace screener3
                 FormMain.CUSTOM_GRID[3] = 10;
             }
 
+            FormMain.arrowLenght = trackBarArrowLenght.Value;
 
             Close();
         }
@@ -331,6 +354,27 @@ namespace screener3
                 tbGridlineLeft.Enabled = false;
                 tbGridlineRight.Enabled = false;
             }
+
+        }
+
+        private void trackBarArrowLenght_ValueChanged(object sender, EventArgs e)
+        {
+
+            lbArrowLenght.Text = "Arrow Lenght: " + trackBarArrowLenght.Value.ToString();
+        }
+
+        private double CalcHypo(int width, int height)
+        {
+            double side1, side2, hypo;
+            side1 = Convert.ToDouble(width);
+            side2 = Convert.ToDouble(height);
+            hypo = Math.Sqrt(Math.Pow(side1, 2) + Math.Pow(side2, 2));
+
+            return hypo;
+        }
+
+        private void lbIndent_Click(object sender, EventArgs e)
+        {
 
         }
     }

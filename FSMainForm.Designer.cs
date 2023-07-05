@@ -37,12 +37,14 @@
             mitSize03 = new ToolStripMenuItem();
             mitSize04 = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
+            mitTakeScreen = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
             mitShowGuidlines = new ToolStripMenuItem();
             mitShowArrows = new ToolStripMenuItem();
             mitSaveFile = new ToolStripMenuItem();
             mitSettings = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
-            mitTakeScreen = new ToolStripMenuItem();
+            aboutToolStripMenuItem = new ToolStripMenuItem();
             mitExit = new ToolStripMenuItem();
             pnlToolbarMain = new Panel();
             btnScreen = new Button();
@@ -66,9 +68,9 @@
             // 
             // contextMenuMain
             // 
-            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitShowGuidlines, mitShowArrows, mitSaveFile, mitSettings, toolStripSeparator1, mitTakeScreen, mitExit });
+            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitTakeScreen, toolStripSeparator3, mitShowGuidlines, mitShowArrows, mitSaveFile, mitSettings, toolStripSeparator1, aboutToolStripMenuItem, mitExit });
             contextMenuMain.Name = "contextMenuStrip1";
-            contextMenuMain.Size = new Size(231, 258);
+            contextMenuMain.Size = new Size(231, 286);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
             // mitSize01
@@ -107,6 +109,20 @@
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
             toolStripSeparator2.Size = new Size(227, 6);
+            // 
+            // mitTakeScreen
+            // 
+            mitTakeScreen.Image = (Image)resources.GetObject("mitTakeScreen.Image");
+            mitTakeScreen.Name = "mitTakeScreen";
+            mitTakeScreen.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
+            mitTakeScreen.Size = new Size(230, 22);
+            mitTakeScreen.Text = "Take Screenshot";
+            mitTakeScreen.Click += mitTakeScreen_Click;
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(227, 6);
             // 
             // mitShowGuidlines
             // 
@@ -148,14 +164,12 @@
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(227, 6);
             // 
-            // mitTakeScreen
+            // aboutToolStripMenuItem
             // 
-            mitTakeScreen.Image = (Image)resources.GetObject("mitTakeScreen.Image");
-            mitTakeScreen.Name = "mitTakeScreen";
-            mitTakeScreen.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
-            mitTakeScreen.Size = new Size(230, 22);
-            mitTakeScreen.Text = "Take Screenshot";
-            mitTakeScreen.Click += mitTakeScreen_Click;
+            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            aboutToolStripMenuItem.Size = new Size(230, 22);
+            aboutToolStripMenuItem.Text = "About";
+            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // mitExit
             // 
@@ -247,5 +261,7 @@
         private ToolStripMenuItem mitShowArrows;
         private ToolStripMenuItem mitExit;
         private ToolStripMenuItem mitSaveFile;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripMenuItem aboutToolStripMenuItem;
     }
 }

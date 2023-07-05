@@ -1,13 +1,10 @@
 using System.Configuration;
-using System.Data.SqlTypes;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-
-
+using System.Runtime.InteropServices;
 
 namespace screener3
 {
-
 
     public partial class FormMain : Form
     {
@@ -29,7 +26,7 @@ namespace screener3
         public const int MIN_WIDTH = 200;
         public const int MIN_HEIGHT = 100;
 
-        public const int ARROW_LENGHT = 50;
+        public static int arrowLenght;
 
         //alpha color to remove 
         private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 255, 1);
@@ -44,7 +41,7 @@ namespace screener3
         public static bool indentValueLock = false;
 
         //1 - 3x3, 2 - 4x4, 3 - custom
-        public static int GuidlinesType, ArrowsType, StartResW = 0, StartResH = 0;
+        public static int GridType, ArrowType, StartResW = 0, StartResH = 0;
 
         static Point relativePoint;
 
@@ -55,6 +52,7 @@ namespace screener3
 
         public static string[] tempStringArray = new string[] { "" };
 
+
         public FormMain()
         {
             InitializeComponent();
@@ -63,8 +61,10 @@ namespace screener3
             this.BackColor = ALPHA_KEY_COLOR;
             this.TransparencyKey = ALPHA_KEY_COLOR;
 
+            //temp value for read
             string tempValueFromConfig;
 
+            //add resolution
             for (int i = 1; i < 5; i++)
             {
 
@@ -103,11 +103,11 @@ namespace screener3
             {
                 StartResW = Convert.ToInt32(tempStringArray[0]);
                 StartResH = Convert.ToInt32(tempStringArray[1]);
-                this.ClientSize = new System.Drawing.Size(StartResW, StartResH);
+                this.ClientSize = new Size(StartResW, StartResH);
             }
             catch
             {
-                this.ClientSize = new System.Drawing.Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
+                this.ClientSize = new Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
 
             }
 
@@ -139,11 +139,11 @@ namespace screener3
             try
             {
                 tempValueFromConfig = ConfigurationManager.AppSettings["guidline_type"];
-                FormMain.GuidlinesType = int.Parse(tempValueFromConfig);
+                FormMain.GridType = int.Parse(tempValueFromConfig);
             }
             catch
             {
-                FormMain.GuidlinesType = 1;
+                FormMain.GridType = 1;
             }
 
             tempValueFromConfig = ConfigurationManager.AppSettings["draw_guidlines"];
@@ -173,13 +173,24 @@ namespace screener3
             tempValueFromConfig = ConfigurationManager.AppSettings["arrows_type"];
             try
             {
-                ArrowsType = int.Parse(tempValueFromConfig);
+                ArrowType = int.Parse(tempValueFromConfig);
             }
             catch
             {
 
-                ArrowsType = 1;
+                ArrowType = 1;
             }
+
+            tempValueFromConfig = ConfigurationManager.AppSettings["arrow_lenght"];
+            try
+            {
+                arrowLenght = int.Parse(tempValueFromConfig);
+            }
+            catch
+            {
+                arrowLenght = 50;
+            }
+
 
             //resolution on close
             tempValueFromConfig = ConfigurationManager.AppSettings["custom_grid"];
@@ -269,7 +280,7 @@ namespace screener3
 
             FinalText = (Width.ToString() + "x" + Height.ToString());
 
-            toolTipMain.SetToolTip(btnScreen, "Take screenshot " + ". Size: " + Width.ToString() + "x" + Height.ToString() + "px");
+            toolTipMain.SetToolTip(btnScreen, "Take screenshot. Size: " + Width.ToString() + "x" + Height.ToString() + "px");
 
             lblInfo.Text = "Size setted to " + Width.ToString() + "x" + Height.ToString() + "px";
 
@@ -295,7 +306,7 @@ namespace screener3
             {
                 gridIsOn = true;
                 mitShowGuidlines.PerformClick();
-                lblInfo.Visible = false; 
+                lblInfo.Visible = false;
             }
 
             //Creating a new Bitmap object
@@ -399,6 +410,7 @@ namespace screener3
                 DrawArrow(tempGraphics, relativePoint, arrowColor, 45);
             }
 
+
         }
 
 
@@ -417,7 +429,7 @@ namespace screener3
 
             int initialPointVertical, initialPointHorizontal;
 
-            if (GuidlinesType == 1)
+            if (GridType == 1)
             {
                 initialPointVertical = this.ClientSize.Width / 3;
                 initialPointHorizontal = this.ClientSize.Height / 3;
@@ -433,7 +445,7 @@ namespace screener3
                 e.Graphics.DrawLine(pen, 0, initialPointHorizontal * 2, this.ClientSize.Width, initialPointHorizontal * 2);
             }
 
-            if (GuidlinesType == 2)
+            if (GridType == 2)
             {
 
                 initialPointVertical = this.ClientSize.Width / 4;
@@ -453,7 +465,7 @@ namespace screener3
 
             }
 
-            if (GuidlinesType == 3)
+            if (GridType == 3)
             {
 
                 int topIndent = Convert.ToInt32(CUSTOM_GRID[0]);
@@ -482,7 +494,7 @@ namespace screener3
         }
 
 
-        private void drawGuidlinesStatus()
+        private void drawGridStatus()
         {
 
             lblInfo.Visible = true;
@@ -540,7 +552,7 @@ namespace screener3
 
         private void mitShowGuidlines_Click(object sender, EventArgs e)
         {
-            drawGuidlinesStatus();
+            drawGridStatus();
             this.Refresh();
 
         }
@@ -564,24 +576,24 @@ namespace screener3
             Point startPoint = new Point(0, 0);
             Point endPoint = new Point(relativePoint.X, relativePoint.Y);
 
-            switch (ArrowsType)
+            switch (ArrowType)
             {
                 case 1:
-                    startPoint = new Point(relativePoint.X - ARROW_LENGHT, relativePoint.Y + ARROW_LENGHT);
+                    startPoint = new Point(relativePoint.X - arrowLenght, relativePoint.Y + arrowLenght);
 
                     break;
 
                 case 2:
-                    startPoint = new Point(relativePoint.X + ARROW_LENGHT, relativePoint.Y + ARROW_LENGHT);
+                    startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y + arrowLenght);
 
                     break;
 
                 case 3:
-                    startPoint = new Point(relativePoint.X - ARROW_LENGHT, relativePoint.Y - ARROW_LENGHT);
+                    startPoint = new Point(relativePoint.X - arrowLenght, relativePoint.Y - arrowLenght);
 
                     break;
                 case 4:
-                    startPoint = new Point(relativePoint.X + ARROW_LENGHT, relativePoint.Y - ARROW_LENGHT);
+                    startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y - arrowLenght);
 
                     break;
             }
@@ -618,8 +630,9 @@ namespace screener3
             SetSetting("guidlines_color", ColorTranslator.ToHtml(guidlinesColor));
             SetSetting("arrow_color", ColorTranslator.ToHtml(arrowColor));
 
-            SetSetting("guidline_type", GuidlinesType.ToString());
-            SetSetting("arrows_type", ArrowsType.ToString());
+            SetSetting("guidline_type", GridType.ToString());
+            SetSetting("arrows_type", ArrowType.ToString());
+            SetSetting("arrow_lenght", arrowLenght.ToString());
 
             SetSetting("draw_guidlines", drawGuidlines.ToString().ToLower());
             SetSetting("draw_arrows", drawArrows.ToString().ToLower());
@@ -642,6 +655,10 @@ namespace screener3
 
         private void mitSettings_Click(object sender, EventArgs e)
         {
+
+            clientWidth = this.ClientSize.Width;
+            clientHeight = this.ClientSize.Height;
+
             // Create a new instance of the Form2 class
             FormSet toolForm = new FormSet();
 
@@ -668,25 +685,27 @@ namespace screener3
         {
             if (e.Control && e.KeyCode == Keys.D1)
             {
-                ArrowsType = 1;
+                ArrowType = 1;
             }
 
             if (e.Control && e.KeyCode == Keys.D2)
             {
-                ArrowsType = 2;
+                ArrowType = 2;
             }
 
 
             if (e.Control && e.KeyCode == Keys.D3)
             {
-                ArrowsType = 3;
+                ArrowType = 3;
             }
 
 
             if (e.Control && e.KeyCode == Keys.D4)
             {
-                ArrowsType = 4;
+                ArrowType = 4;
             }
+
+
         }
 
         private void FormMain_Shown(object sender, EventArgs e)
@@ -702,7 +721,11 @@ namespace screener3
             saveToFileStatus();
         }
 
-
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string aboutText = "Author: Dzmitry Ivanou" + "\n" + "e-mail: frosofco@gmail.com" + "\n" + "https://github.com/Ivanou-Dzmitry/fast_screener";
+            MessageBox.Show(aboutText, "About FastScreener 0.1");
+        }
     }
 
 }

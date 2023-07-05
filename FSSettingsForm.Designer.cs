@@ -39,10 +39,12 @@
             rbArrowType02 = new RadioButton();
             rbArrowType01 = new RadioButton();
             cbLock = new CheckBox();
+            trackBarArrowLenght = new TrackBar();
             panel1 = new Panel();
             btnOK = new Button();
             gboxGuidlines = new GroupBox();
             pnlGMargin = new Panel();
+            lbIndent = new Label();
             tbGridlineTop = new TextBox();
             tbGridlineBottom = new TextBox();
             tbGridlineLeft = new TextBox();
@@ -57,8 +59,10 @@
             gboxSizes = new GroupBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             gboxArrows = new GroupBox();
+            lbArrowLenght = new Label();
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)trackBarArrowLenght).BeginInit();
             panel1.SuspendLayout();
             gboxGuidlines.SuspendLayout();
             pnlGMargin.SuspendLayout();
@@ -84,7 +88,7 @@
             // 
             picboxGuidlineColorSample.BackColor = Color.White;
             picboxGuidlineColorSample.BorderStyle = BorderStyle.FixedSingle;
-            picboxGuidlineColorSample.Location = new Point(8, 112);
+            picboxGuidlineColorSample.Location = new Point(8, 128);
             picboxGuidlineColorSample.Name = "picboxGuidlineColorSample";
             picboxGuidlineColorSample.Size = new Size(32, 32);
             picboxGuidlineColorSample.TabIndex = 4;
@@ -96,7 +100,7 @@
             // 
             picboxArrowColorSample.BackColor = Color.Cyan;
             picboxArrowColorSample.BorderStyle = BorderStyle.FixedSingle;
-            picboxArrowColorSample.Location = new Point(8, 112);
+            picboxArrowColorSample.Location = new Point(8, 128);
             picboxArrowColorSample.Name = "picboxArrowColorSample";
             picboxArrowColorSample.Size = new Size(32, 32);
             picboxArrowColorSample.TabIndex = 8;
@@ -153,7 +157,7 @@
             // 
             cbLock.Appearance = Appearance.Button;
             cbLock.Image = fast_screener.Properties.Resources.unlocked;
-            cbLock.Location = new Point(56, 8);
+            cbLock.Location = new Point(56, 24);
             cbLock.Name = "cbLock";
             cbLock.Size = new Size(23, 23);
             cbLock.TabIndex = 13;
@@ -161,11 +165,28 @@
             cbLock.UseVisualStyleBackColor = true;
             cbLock.Click += cbLock_Click;
             // 
+            // trackBarArrowLenght
+            // 
+            trackBarArrowLenght.AutoSize = false;
+            trackBarArrowLenght.LargeChange = 10;
+            trackBarArrowLenght.Location = new Point(8, 80);
+            trackBarArrowLenght.Maximum = 200;
+            trackBarArrowLenght.Minimum = 30;
+            trackBarArrowLenght.Name = "trackBarArrowLenght";
+            trackBarArrowLenght.Size = new Size(144, 24);
+            trackBarArrowLenght.TabIndex = 13;
+            trackBarArrowLenght.Tag = "";
+            trackBarArrowLenght.TickFrequency = 10;
+            trackBarArrowLenght.TickStyle = TickStyle.None;
+            toolTipTool.SetToolTip(trackBarArrowLenght, "Arrow lenght");
+            trackBarArrowLenght.Value = 50;
+            trackBarArrowLenght.ValueChanged += trackBarArrowLenght_ValueChanged;
+            // 
             // panel1
             // 
             panel1.Controls.Add(btnOK);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 338);
+            panel1.Location = new Point(0, 360);
             panel1.Name = "panel1";
             panel1.Size = new Size(334, 40);
             panel1.TabIndex = 1;
@@ -190,13 +211,14 @@
             gboxGuidlines.Dock = DockStyle.Fill;
             gboxGuidlines.Location = new Point(3, 3);
             gboxGuidlines.Name = "gboxGuidlines";
-            gboxGuidlines.Size = new Size(167, 154);
+            gboxGuidlines.Size = new Size(167, 170);
             gboxGuidlines.TabIndex = 2;
             gboxGuidlines.TabStop = false;
             gboxGuidlines.Text = "Grid";
             // 
             // pnlGMargin
             // 
+            pnlGMargin.Controls.Add(lbIndent);
             pnlGMargin.Controls.Add(cbLock);
             pnlGMargin.Controls.Add(tbGridlineTop);
             pnlGMargin.Controls.Add(tbGridlineBottom);
@@ -206,12 +228,23 @@
             pnlGMargin.Enabled = false;
             pnlGMargin.Location = new Point(80, 19);
             pnlGMargin.Name = "pnlGMargin";
-            pnlGMargin.Size = new Size(84, 132);
+            pnlGMargin.Size = new Size(84, 148);
             pnlGMargin.TabIndex = 8;
+            // 
+            // lbIndent
+            // 
+            lbIndent.AutoSize = true;
+            lbIndent.Location = new Point(5, 0);
+            lbIndent.Margin = new Padding(0);
+            lbIndent.Name = "lbIndent";
+            lbIndent.Size = new Size(51, 15);
+            lbIndent.TabIndex = 14;
+            lbIndent.Text = "Padding";
+            lbIndent.Click += lbIndent_Click;
             // 
             // tbGridlineTop
             // 
-            tbGridlineTop.Location = new Point(8, 8);
+            tbGridlineTop.Location = new Point(8, 24);
             tbGridlineTop.Name = "tbGridlineTop";
             tbGridlineTop.PlaceholderText = "Top";
             tbGridlineTop.Size = new Size(40, 23);
@@ -221,7 +254,7 @@
             // 
             // tbGridlineBottom
             // 
-            tbGridlineBottom.Location = new Point(8, 40);
+            tbGridlineBottom.Location = new Point(8, 56);
             tbGridlineBottom.Name = "tbGridlineBottom";
             tbGridlineBottom.PlaceholderText = "Bottom";
             tbGridlineBottom.Size = new Size(40, 23);
@@ -231,7 +264,7 @@
             // 
             // tbGridlineLeft
             // 
-            tbGridlineLeft.Location = new Point(8, 72);
+            tbGridlineLeft.Location = new Point(8, 88);
             tbGridlineLeft.Name = "tbGridlineLeft";
             tbGridlineLeft.PlaceholderText = "Left";
             tbGridlineLeft.Size = new Size(40, 23);
@@ -241,7 +274,7 @@
             // 
             // tbGridlineRight
             // 
-            tbGridlineRight.Location = new Point(8, 104);
+            tbGridlineRight.Location = new Point(8, 120);
             tbGridlineRight.Name = "tbGridlineRight";
             tbGridlineRight.PlaceholderText = "Right";
             tbGridlineRight.Size = new Size(40, 23);
@@ -319,7 +352,7 @@
             gboxSizes.Controls.Add(lblInfo);
             gboxSizes.Controls.Add(dataGridSize);
             gboxSizes.Dock = DockStyle.Bottom;
-            gboxSizes.Location = new Point(0, 168);
+            gboxSizes.Location = new Point(0, 190);
             gboxSizes.Name = "gboxSizes";
             gboxSizes.Size = new Size(334, 170);
             gboxSizes.TabIndex = 6;
@@ -339,11 +372,13 @@
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 45F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(334, 160);
+            tableLayoutPanel1.Size = new Size(334, 176);
             tableLayoutPanel1.TabIndex = 7;
             // 
             // gboxArrows
             // 
+            gboxArrows.Controls.Add(lbArrowLenght);
+            gboxArrows.Controls.Add(trackBarArrowLenght);
             gboxArrows.Controls.Add(rbArrowType04);
             gboxArrows.Controls.Add(rbArrowType03);
             gboxArrows.Controls.Add(rbArrowType02);
@@ -352,16 +387,25 @@
             gboxArrows.Dock = DockStyle.Fill;
             gboxArrows.Location = new Point(176, 3);
             gboxArrows.Name = "gboxArrows";
-            gboxArrows.Size = new Size(155, 154);
+            gboxArrows.Size = new Size(155, 170);
             gboxArrows.TabIndex = 3;
             gboxArrows.TabStop = false;
             gboxArrows.Text = "Arrow";
+            // 
+            // lbArrowLenght
+            // 
+            lbArrowLenght.AutoSize = true;
+            lbArrowLenght.Location = new Point(8, 104);
+            lbArrowLenght.Name = "lbArrowLenght";
+            lbArrowLenght.Size = new Size(109, 15);
+            lbArrowLenght.TabIndex = 14;
+            lbArrowLenght.Text = "Arrow Lenght: 9999";
             // 
             // FormSet
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(334, 378);
+            ClientSize = new Size(334, 400);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(gboxSizes);
             Controls.Add(panel1);
@@ -374,6 +418,7 @@
             Activated += FormTool_Activated;
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).EndInit();
             ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).EndInit();
+            ((System.ComponentModel.ISupportInitialize)trackBarArrowLenght).EndInit();
             panel1.ResumeLayout(false);
             gboxGuidlines.ResumeLayout(false);
             gboxGuidlines.PerformLayout();
@@ -384,6 +429,7 @@
             gboxSizes.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             gboxArrows.ResumeLayout(false);
+            gboxArrows.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -415,5 +461,8 @@
         private RadioButton rbArrowType03;
         private RadioButton rbArrowType04;
         private CheckBox cbLock;
+        private TrackBar trackBarArrowLenght;
+        private Label lbArrowLenght;
+        private Label lbIndent;
     }
 }
