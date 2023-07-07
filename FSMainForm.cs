@@ -1,7 +1,9 @@
+using fast_screener;
+using Microsoft.VisualBasic.Devices;
 using System.Configuration;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
+using System.Net.NetworkInformation;
 
 namespace screener3
 {
@@ -51,6 +53,12 @@ namespace screener3
         public static object[] CUSTOM_GRID = new object[] { 0, 0, 0, 0 };
 
         public static string[] tempStringArray = new string[] { "" };
+
+        // Create the Mouse Hook
+        MouseHook mouseHook = new MouseHook();
+
+        // Create the Keyboard Hook
+        KeyboardHook keyboardHook = new KeyboardHook();
 
 
         public FormMain()
@@ -221,7 +229,46 @@ namespace screener3
                 mitSaveFile.Checked = true;
             }
 
+
+
+            // Capture the events
+            mouseHook.MiddleButtonDown += new MouseHook.MouseHookCallback(mouseHook_MMB);
+
+
+            //Installing the Mouse Hooks
+            mouseHook.Install();
+            // Using the Keyboard Hook:
+
+            // Capture the events
+            keyboardHook.KeyDown += new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
+
+            //Installing the Keyboard Hooks
+            keyboardHook.Install();
+
+            // Handle the ApplicationExit event to know when the application is exiting.
+            Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
         }
+
+        private void keyboardHook_KeyDown(KeyboardHook.VKeys key)
+        {
+
+            if (key == KeyboardHook.VKeys.F4)
+            {
+                CaptureMyScreen();
+            }
+
+        }
+
+        private void mouseHook_MMB(MouseHook.MSLLHOOKSTRUCT mouse)
+        {
+            if (drawArrows == true)
+            {
+                relativePoint = this.PointToClient(Cursor.Position);
+
+                DrawArrow(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), relativePoint, arrowColor);
+            }
+        }
+
 
         private void btnMainMenu_Click(object sender, EventArgs e)
         {
@@ -397,18 +444,18 @@ namespace screener3
 
         private void FormMain_Deactivate(object sender, EventArgs e)
         {
-            
+
             lblInfo.Visible = false;
 
-            this.Refresh();
+            //this.Refresh();
 
+            /*
             if (drawArrows == true)
             {
-               
                 relativePoint = this.PointToClient(Cursor.Position);
 
                 DrawArrow(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), relativePoint, arrowColor);
-            }
+            }*/
 
         }
 
@@ -529,7 +576,7 @@ namespace screener3
 
             arrowPen.CustomEndCap = new AdjustableArrowCap(ArrowSize, ArrowSize);
 
-            
+
             e.Graphics.DrawLine(arrowPen, startPoint, endPoint);
 
         }
@@ -611,7 +658,7 @@ namespace screener3
             CaptureMyScreen();
         }
 
- 
+
 
 
         private static void SetSetting(string key, string value)
@@ -730,6 +777,22 @@ namespace screener3
         {
             string aboutText = "Author: Dzmitry Ivanou" + "\n" + "e-mail: frosofco@gmail.com" + "\n" + "https://github.com/Ivanou-Dzmitry/fast_screener";
             MessageBox.Show(aboutText, "About FastScreener 0.1");
+        }
+
+        private void OnApplicationExit(object sender, EventArgs e)
+        {
+            keyboardHook.KeyDown -= new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
+            keyboardHook.Uninstall();
+
+            mouseHook.MiddleButtonDown -= new MouseHook.MouseHookCallback(mouseHook_MMB);
+            mouseHook.Uninstall();
+
+            SaveConfig();
+        }
+
+        private void FormMain_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

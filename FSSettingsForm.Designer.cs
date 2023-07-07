@@ -240,7 +240,7 @@
             lbIndent.Size = new Size(51, 15);
             lbIndent.TabIndex = 14;
             lbIndent.Text = "Padding";
-            lbIndent.Click += lbIndent_Click;
+        
             // 
             // tbGridlineTop
             // 

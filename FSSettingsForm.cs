@@ -1,4 +1,5 @@
 ﻿
+using fast_screener;
 using fast_screener.Properties;
 using Microsoft.VisualBasic;
 using System.Diagnostics;
@@ -97,12 +98,14 @@ namespace screener3
                 trackBarArrowLenght.Value = trackBarArrowLenght.Maximum;
             }
 
+            // Handle the ApplicationExit event to know when the application is exiting.
+            Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
+
         }
 
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void SettingCloseActions()
         {
-            //set data update
             for (int i = 0; i < 2; i++)
                 for (int j = 0; j < 4; j++)
                     FormMain.RES_WORKED[i, j] = dataGridSize.Rows[j].Cells[i].Value;
@@ -187,6 +190,14 @@ namespace screener3
             }
 
             FormMain.arrowLenght = trackBarArrowLenght.Value;
+
+        }
+
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            //set data update
+            SettingCloseActions();
 
             Close();
         }
@@ -373,9 +384,11 @@ namespace screener3
             return hypo;
         }
 
-        private void lbIndent_Click(object sender, EventArgs e)
+        private void OnApplicationExit(object sender, EventArgs e)
         {
-
+            //set data update
+            SettingCloseActions();
         }
+
     }
 }

@@ -70,14 +70,14 @@
             // 
             contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitTakeScreen, toolStripSeparator3, mitShowGuidlines, mitShowArrows, mitSaveFile, mitSettings, toolStripSeparator1, aboutToolStripMenuItem, mitExit });
             contextMenuMain.Name = "contextMenuStrip1";
-            contextMenuMain.Size = new Size(231, 286);
+            contextMenuMain.Size = new Size(204, 286);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
             // mitSize01
             // 
             mitSize01.Name = "mitSize01";
             mitSize01.ShortcutKeys = Keys.Alt | Keys.D1;
-            mitSize01.Size = new Size(230, 22);
+            mitSize01.Size = new Size(203, 22);
             mitSize01.Text = "600x377";
             mitSize01.Click += mitSize01_Click;
             // 
@@ -85,7 +85,7 @@
             // 
             mitSize02.Name = "mitSize02";
             mitSize02.ShortcutKeys = Keys.Alt | Keys.D2;
-            mitSize02.Size = new Size(230, 22);
+            mitSize02.Size = new Size(203, 22);
             mitSize02.Text = "600x600";
             mitSize02.Click += toolStripMenuItem3_Click;
             // 
@@ -93,7 +93,7 @@
             // 
             mitSize03.Name = "mitSize03";
             mitSize03.ShortcutKeys = Keys.Alt | Keys.D3;
-            mitSize03.Size = new Size(230, 22);
+            mitSize03.Size = new Size(203, 22);
             mitSize03.Text = "600x700";
             mitSize03.Click += toolStripMenuItem4_Click;
             // 
@@ -101,28 +101,28 @@
             // 
             mitSize04.Name = "mitSize04";
             mitSize04.ShortcutKeys = Keys.Alt | Keys.D4;
-            mitSize04.Size = new Size(230, 22);
+            mitSize04.Size = new Size(203, 22);
             mitSize04.Text = "960x600";
             mitSize04.Click += toolStripMenuItem1_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(227, 6);
+            toolStripSeparator2.Size = new Size(200, 6);
             // 
             // mitTakeScreen
             // 
             mitTakeScreen.Image = (Image)resources.GetObject("mitTakeScreen.Image");
             mitTakeScreen.Name = "mitTakeScreen";
-            mitTakeScreen.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
-            mitTakeScreen.Size = new Size(230, 22);
+            mitTakeScreen.ShortcutKeys = Keys.F4;
+            mitTakeScreen.Size = new Size(203, 22);
             mitTakeScreen.Text = "Take Screenshot";
             mitTakeScreen.Click += mitTakeScreen_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(227, 6);
+            toolStripSeparator3.Size = new Size(200, 6);
             // 
             // mitShowGuidlines
             // 
@@ -130,7 +130,7 @@
             mitShowGuidlines.CheckState = CheckState.Checked;
             mitShowGuidlines.Name = "mitShowGuidlines";
             mitShowGuidlines.ShortcutKeys = Keys.Control | Keys.Alt | Keys.G;
-            mitShowGuidlines.Size = new Size(230, 22);
+            mitShowGuidlines.Size = new Size(203, 22);
             mitShowGuidlines.Text = "Show Grid";
             mitShowGuidlines.Click += mitShowGuidlines_Click;
             // 
@@ -140,14 +140,14 @@
             mitShowArrows.CheckState = CheckState.Checked;
             mitShowArrows.Name = "mitShowArrows";
             mitShowArrows.ShortcutKeys = Keys.Control | Keys.Alt | Keys.A;
-            mitShowArrows.Size = new Size(230, 22);
+            mitShowArrows.Size = new Size(203, 22);
             mitShowArrows.Text = "Show Arrow";
             mitShowArrows.Click += mitShowArrows_Click;
             // 
             // mitSaveFile
             // 
             mitSaveFile.Name = "mitSaveFile";
-            mitSaveFile.Size = new Size(230, 22);
+            mitSaveFile.Size = new Size(203, 22);
             mitSaveFile.Text = "Save To File";
             mitSaveFile.Click += mitSaveFile_Click;
             // 
@@ -155,19 +155,19 @@
             // 
             mitSettings.Image = fast_screener.Properties.Resources.settings;
             mitSettings.Name = "mitSettings";
-            mitSettings.Size = new Size(230, 22);
+            mitSettings.Size = new Size(203, 22);
             mitSettings.Text = "Settings";
             mitSettings.Click += mitSettings_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(227, 6);
+            toolStripSeparator1.Size = new Size(200, 6);
             // 
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(230, 22);
+            aboutToolStripMenuItem.Size = new Size(203, 22);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
@@ -175,7 +175,7 @@
             // 
             mitExit.Name = "mitExit";
             mitExit.ShortcutKeys = Keys.Alt | Keys.F4;
-            mitExit.Size = new Size(230, 22);
+            mitExit.Size = new Size(203, 22);
             mitExit.Text = "Exit";
             mitExit.Click += mitExit_Click;
             // 
@@ -232,6 +232,7 @@
             TopMost = true;
             Deactivate += FormMain_Deactivate;
             Shown += FormMain_Shown;
+            Click += FormMain_Click;
             Paint += FormMain_Paint;
             KeyDown += FormMain_KeyDown;
             Move += FormMain_Move;
