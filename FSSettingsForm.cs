@@ -81,8 +81,7 @@ namespace screener3
 
 
             trackBarArrowLenght.Maximum = arrowLenght;
-            trackBarArrowLenght.TickFrequency = arrowLenght / 10;
-
+            
             string trackBarArrowLenghtToolTip = "Arrow lenght. Min 30, Max " + arrowLenght.ToString();
 
             toolTipTool.SetToolTip(trackBarArrowLenght, trackBarArrowLenghtToolTip);
@@ -390,5 +389,9 @@ namespace screener3
             SettingCloseActions();
         }
 
+        private void lbArrowLenght_Click(object sender, EventArgs e)
+        {
+            trackBarArrowLenght.Value = 50;
+        }
     }
 }

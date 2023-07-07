@@ -168,16 +168,17 @@
             // trackBarArrowLenght
             // 
             trackBarArrowLenght.AutoSize = false;
-            trackBarArrowLenght.LargeChange = 10;
+            trackBarArrowLenght.LargeChange = 20;
             trackBarArrowLenght.Location = new Point(8, 80);
             trackBarArrowLenght.Maximum = 200;
             trackBarArrowLenght.Minimum = 30;
             trackBarArrowLenght.Name = "trackBarArrowLenght";
             trackBarArrowLenght.Size = new Size(144, 24);
+            trackBarArrowLenght.SmallChange = 10;
             trackBarArrowLenght.TabIndex = 13;
             trackBarArrowLenght.Tag = "";
-            trackBarArrowLenght.TickFrequency = 10;
-            trackBarArrowLenght.TickStyle = TickStyle.None;
+            trackBarArrowLenght.TickFrequency = 50;
+            trackBarArrowLenght.TickStyle = TickStyle.TopLeft;
             toolTipTool.SetToolTip(trackBarArrowLenght, "Arrow lenght");
             trackBarArrowLenght.Value = 50;
             trackBarArrowLenght.ValueChanged += trackBarArrowLenght_ValueChanged;
@@ -240,7 +241,6 @@
             lbIndent.Size = new Size(51, 15);
             lbIndent.TabIndex = 14;
             lbIndent.Text = "Padding";
-        
             // 
             // tbGridlineTop
             // 
@@ -395,11 +395,12 @@
             // lbArrowLenght
             // 
             lbArrowLenght.AutoSize = true;
-            lbArrowLenght.Location = new Point(8, 104);
+            lbArrowLenght.Location = new Point(8, 106);
             lbArrowLenght.Name = "lbArrowLenght";
             lbArrowLenght.Size = new Size(109, 15);
             lbArrowLenght.TabIndex = 14;
             lbArrowLenght.Text = "Arrow Lenght: 9999";
+            lbArrowLenght.Click += lbArrowLenght_Click;
             // 
             // FormSet
             // 

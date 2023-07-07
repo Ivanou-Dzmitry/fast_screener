@@ -19,31 +19,28 @@ namespace screener3
         public static int NewHeight = 0;
 
         //all monitors
-        public static int VirtScreenWidth = 0;
-        public static int VirtScreenHeight = 0;
+        public static int VirtScreenWidth = 0, VirtScreenHeight = 0;
 
         public static int clientWidth, clientHeight;
 
         //Min size
-        public const int MIN_WIDTH = 200;
-        public const int MIN_HEIGHT = 100;
+        public const int MIN_WIDTH = 200, MIN_HEIGHT = 100;
 
         public static int arrowLenght;
 
         //alpha color to remove 
-        private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 255, 1);
+        private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 0, 1);
 
         //default guidlines color
-        public static Color gridLinesColor = Color.LightGray;
-        public static Color arrowColor = Color.Aqua;
+        public static Color gridLinesColor = Color.LightGray, arrowColor = Color.Aqua, numberColor = Color.Yellow;
 
         //for guidlines
-        private bool drawGuidlines, drawArrows, saveToFile;
+        private bool drawGrid, drawArrows, saveToFile, drawNumber;
 
         public static bool indentValueLock = false;
 
         //1 - 3x3, 2 - 4x4, 3 - custom
-        public static int GridType, ArrowType, StartResW = 0, StartResH = 0;
+        public static int GridType, ArrowType, StartResW = 0, StartResH = 0, numbering = 1;
 
         static Point relativePoint;
 
@@ -68,6 +65,76 @@ namespace screener3
             //set transparent
             this.BackColor = ALPHA_KEY_COLOR;
             this.TransparencyKey = ALPHA_KEY_COLOR;
+
+            LoadSettings();
+
+            // Capture the events
+            mouseHook.MiddleButtonDown += new MouseHook.MouseHookCallback(mouseHook_MMB);
+
+            //Installing the Mouse Hooks
+            mouseHook.Install();
+            // Using the Keyboard Hook:
+
+            // Capture the events
+            keyboardHook.KeyDown += new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
+
+            //Installing the Keyboard Hooks
+            keyboardHook.Install();
+
+            // Handle the ApplicationExit event to know when the application is exiting.
+            Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
+        }
+
+        private void keyboardHook_KeyDown(KeyboardHook.VKeys key)
+        {
+
+            if (key == KeyboardHook.VKeys.F4)
+            {
+                CaptureMyScreen();
+            }
+
+        }
+
+        private void mouseHook_MMB(MouseHook.MSLLHOOKSTRUCT mouse)
+        {
+
+            relativePoint = this.PointToClient(Cursor.Position);
+
+            if (drawArrows == true)
+            {
+
+                DrawArrow(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), relativePoint, arrowColor);
+
+            }
+
+            if (drawNumber == true)
+            {
+                DrawNumber(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), relativePoint, numberColor, numbering.ToString());
+                numbering++;
+            }
+
+
+        }
+
+        public static void DrawNumber(PaintEventArgs e, Point relativePoint, Color color, String numberString)
+        {
+            int fontSize = 26;
+
+            Font drawFont = new Font("Arial", fontSize, FontStyle.Bold);
+            SolidBrush drawBrush = new SolidBrush(color);
+
+            StringFormat drawFormat = new StringFormat();
+
+            e.Graphics.DrawString(numberString, drawFont, drawBrush, relativePoint.X, relativePoint.Y - fontSize, drawFormat);
+
+            drawFont.Dispose();
+            drawBrush.Dispose();
+            e.Graphics.Dispose();
+
+        }
+
+        private void LoadSettings()
+        {
 
             //temp value for read
             string tempValueFromConfig;
@@ -155,9 +222,9 @@ namespace screener3
             }
 
             tempValueFromConfig = ConfigurationManager.AppSettings["draw_guidlines"];
-            drawGuidlines = Convert.ToBoolean(tempValueFromConfig);
+            drawGrid = Convert.ToBoolean(tempValueFromConfig);
 
-            if (drawGuidlines == true)
+            if (drawGrid == true)
             {
                 mitShowGuidlines.Checked = true;
             }
@@ -176,6 +243,18 @@ namespace screener3
             else
             {
                 mitShowArrows.Checked = false;
+            }
+
+            tempValueFromConfig = ConfigurationManager.AppSettings["draw_number"];
+            drawNumber = Convert.ToBoolean(tempValueFromConfig);
+
+            if (drawNumber == true)
+            {
+                mitAddNumber.Checked = true;
+            }
+            else
+            {
+                mitAddNumber.Checked = false;
             }
 
             tempValueFromConfig = ConfigurationManager.AppSettings["arrows_type"];
@@ -215,7 +294,6 @@ namespace screener3
                     CUSTOM_GRID[i] = 10;
                 }
 
-
             }
 
             tempValueFromConfig = ConfigurationManager.AppSettings["ident_value_lock"];
@@ -229,46 +307,7 @@ namespace screener3
                 mitSaveFile.Checked = true;
             }
 
-
-
-            // Capture the events
-            mouseHook.MiddleButtonDown += new MouseHook.MouseHookCallback(mouseHook_MMB);
-
-
-            //Installing the Mouse Hooks
-            mouseHook.Install();
-            // Using the Keyboard Hook:
-
-            // Capture the events
-            keyboardHook.KeyDown += new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
-
-            //Installing the Keyboard Hooks
-            keyboardHook.Install();
-
-            // Handle the ApplicationExit event to know when the application is exiting.
-            Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
         }
-
-        private void keyboardHook_KeyDown(KeyboardHook.VKeys key)
-        {
-
-            if (key == KeyboardHook.VKeys.F4)
-            {
-                CaptureMyScreen();
-            }
-
-        }
-
-        private void mouseHook_MMB(MouseHook.MSLLHOOKSTRUCT mouse)
-        {
-            if (drawArrows == true)
-            {
-                relativePoint = this.PointToClient(Cursor.Position);
-
-                DrawArrow(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), relativePoint, arrowColor);
-            }
-        }
-
 
         private void btnMainMenu_Click(object sender, EventArgs e)
         {
@@ -352,7 +391,7 @@ namespace screener3
             if (mitShowGuidlines.Checked == true)
             {
                 gridIsOn = true;
-                // mitShowGuidlines.PerformClick();
+
                 DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), ALPHA_KEY_COLOR);
                 lblInfo.Visible = false;
             }
@@ -418,7 +457,7 @@ namespace screener3
 
             Clipboard.SetImage(captureBitmap);
 
-            //this.Show();
+
             pnlToolbarMain.Visible = true;
 
 
@@ -428,7 +467,7 @@ namespace screener3
             if (gridIsOn == true)
             {
                 DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), gridLinesColor);
-                // mitShowGuidlines.PerformClick();
+
             }
 
             lblInfo.Text = "Screenshot copied to clipboard";
@@ -447,22 +486,12 @@ namespace screener3
 
             lblInfo.Visible = false;
 
-            //this.Refresh();
-
-            /*
-            if (drawArrows == true)
-            {
-                relativePoint = this.PointToClient(Cursor.Position);
-
-                DrawArrow(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), relativePoint, arrowColor);
-            }*/
-
         }
 
 
         private void FormMain_Paint(object sender, PaintEventArgs e)
         {
-            if ((drawGuidlines == true) && (mitShowGuidlines.CheckState == CheckState.Checked))
+            if ((drawGrid == true) && (mitShowGuidlines.CheckState == CheckState.Checked))
             {
                 DrawGrid(e, gridLinesColor);
             }
@@ -542,7 +571,6 @@ namespace screener3
         //draw arrow
         public static void DrawArrow(PaintEventArgs e, Point relativePoint, Color color)
         {
-            //DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), gridLinesColor);
 
             Point startPoint = new Point(0, 0);
             Point endPoint = new Point(relativePoint.X, relativePoint.Y);
@@ -569,16 +597,24 @@ namespace screener3
                     break;
             }
 
-
+            //Color arrow
             var arrowPen = new Pen(color, 1);
 
-            int ArrowSize = 8;
+            // for outline
+            var arrowPenOutline = new Pen(Color.Black, 2);
 
+            int ArrowSize = 6;
+
+            // for outline
+            arrowPenOutline.CustomEndCap = new AdjustableArrowCap(ArrowSize, ArrowSize + 1);
+
+            //color arrow
             arrowPen.CustomEndCap = new AdjustableArrowCap(ArrowSize, ArrowSize);
 
-
+            e.Graphics.DrawLine(arrowPenOutline, startPoint, endPoint);
             e.Graphics.DrawLine(arrowPen, startPoint, endPoint);
 
+            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
         }
 
 
@@ -590,13 +626,13 @@ namespace screener3
             if (mitShowGuidlines.CheckState == CheckState.Checked)
             {
                 mitShowGuidlines.CheckState = CheckState.Unchecked;
-                drawGuidlines = false;
+                drawGrid = false;
                 lblInfo.Text = "Guidlines turned OFF";
             }
             else
             {
                 mitShowGuidlines.CheckState = CheckState.Checked;
-                drawGuidlines = true;
+                drawGrid = true;
                 lblInfo.Text = "Guidlines turned ON";
             }
 
@@ -617,6 +653,24 @@ namespace screener3
                 mitShowArrows.CheckState = CheckState.Checked;
                 drawArrows = true;
                 lblInfo.Text = "Arrows turned ON";
+            }
+        }
+
+        private void drawNumberStatus()
+        {
+            lblInfo.Visible = true;
+
+            if (mitAddNumber.CheckState == CheckState.Checked)
+            {
+                mitAddNumber.CheckState = CheckState.Unchecked;
+                drawNumber = false;
+                lblInfo.Text = "Numbers turned OFF";
+            }
+            else
+            {
+                mitAddNumber.CheckState = CheckState.Checked;
+                drawNumber = true;
+                lblInfo.Text = "Numbers turned ON";
             }
         }
 
@@ -658,7 +712,11 @@ namespace screener3
             CaptureMyScreen();
         }
 
-
+        private void mitAddNumber_Click(object sender, EventArgs e)
+        {
+            drawNumberStatus();
+            this.Refresh();
+        }
 
 
         private static void SetSetting(string key, string value)
@@ -686,8 +744,9 @@ namespace screener3
             SetSetting("arrows_type", ArrowType.ToString());
             SetSetting("arrow_lenght", arrowLenght.ToString());
 
-            SetSetting("draw_guidlines", drawGuidlines.ToString().ToLower());
+            SetSetting("draw_guidlines", drawGrid.ToString().ToLower());
             SetSetting("draw_arrows", drawArrows.ToString().ToLower());
+            SetSetting("draw_number", drawNumber.ToString().ToLower());
             SetSetting("save_to_file", saveToFile.ToString().ToLower());
 
 
@@ -701,7 +760,6 @@ namespace screener3
             SetSetting("custom_grid", CUSTOM_GRID[0].ToString() + "," + CUSTOM_GRID[1].ToString() + "," + CUSTOM_GRID[2].ToString() + "," + CUSTOM_GRID[3].ToString());
 
             SetSetting("ident_value_lock", indentValueLock.ToString().ToLower());
-
 
         }
 
@@ -718,8 +776,6 @@ namespace screener3
             toolForm.ShowDialog();
 
             MenuItemUpdate();
-
-            SaveConfig();
 
             this.Refresh();
         }
@@ -790,10 +846,7 @@ namespace screener3
             SaveConfig();
         }
 
-        private void FormMain_Click(object sender, EventArgs e)
-        {
 
-        }
     }
 
 }
