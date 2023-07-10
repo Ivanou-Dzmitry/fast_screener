@@ -19,8 +19,9 @@ namespace screener3
         {
             InitializeComponent();
 
-            picboxGuidlineColorSample.BackColor = FormMain.gridLinesColor;
+            picboxGuidlineColorSample.BackColor = FormMain.gridColor;
             picboxArrowColorSample.BackColor = FormMain.arrowColor;
+            picboxNumberColorSample.BackColor = FormMain.numberColor;
 
 
             switch (FormMain.GridType)
@@ -61,6 +62,8 @@ namespace screener3
             tbGridlineLeft.Text = FormMain.CUSTOM_GRID[2].ToString();
             tbGridlineRight.Text = FormMain.CUSTOM_GRID[3].ToString();
 
+            tbNumberFontSize.Text = FormMain.numberFontSize.ToString();
+
             //get current work resolution
             for (int col = 0; col < 1; col++)
                 for (int row = 0; row < FormMain.RES_WORKED.GetLength(1); row++)
@@ -81,7 +84,7 @@ namespace screener3
 
 
             trackBarArrowLenght.Maximum = arrowLenght;
-            
+
             string trackBarArrowLenghtToolTip = "Arrow lenght. Min 30, Max " + arrowLenght.ToString();
 
             toolTipTool.SetToolTip(trackBarArrowLenght, trackBarArrowLenghtToolTip);
@@ -211,7 +214,7 @@ namespace screener3
             if (colorDialogGlines.ShowDialog() == DialogResult.OK)
             {
                 picboxGuidlineColorSample.BackColor = colorDialogGlines.Color;
-                FormMain.gridLinesColor = colorDialogGlines.Color;
+                FormMain.gridColor = colorDialogGlines.Color;
             }
         }
 
@@ -392,6 +395,28 @@ namespace screener3
         private void lbArrowLenght_Click(object sender, EventArgs e)
         {
             trackBarArrowLenght.Value = 50;
+        }
+
+        private void picboxNumberColorSample_Click(object sender, EventArgs e)
+        {
+            if (colorDialogGlines.ShowDialog() == DialogResult.OK)
+            {
+                picboxNumberColorSample.BackColor = colorDialogGlines.Color;
+                FormMain.numberColor = colorDialogGlines.Color;
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (System.Text.RegularExpressions.Regex.IsMatch(tbNumberFontSize.Text, "[^0-9]"))
+            {
+                tbNumberFontSize.Text = tbNumberFontSize.Text.Remove(tbNumberFontSize.Text.Length - 1);
+            }
+
+            if (Int32.TryParse(tbNumberFontSize.Text, out int numValueW) == true && numValueW < 8)
+            {
+                tbNumberFontSize.Text = tbNumberFontSize.Text.Remove(tbNumberFontSize.Text.Length - 1);
+            }
         }
     }
 }

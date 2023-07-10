@@ -40,6 +40,7 @@
             rbArrowType01 = new RadioButton();
             cbLock = new CheckBox();
             trackBarArrowLenght = new TrackBar();
+            picboxNumberColorSample = new PictureBox();
             panel1 = new Panel();
             btnOK = new Button();
             gboxGuidlines = new GroupBox();
@@ -60,9 +61,12 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             gboxArrows = new GroupBox();
             lbArrowLenght = new Label();
+            grboxNumbers = new GroupBox();
+            tbNumberFontSize = new TextBox();
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBarArrowLenght).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picboxNumberColorSample).BeginInit();
             panel1.SuspendLayout();
             gboxGuidlines.SuspendLayout();
             pnlGMargin.SuspendLayout();
@@ -70,6 +74,7 @@
             gboxSizes.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             gboxArrows.SuspendLayout();
+            grboxNumbers.SuspendLayout();
             SuspendLayout();
             // 
             // lblInfo
@@ -183,11 +188,23 @@
             trackBarArrowLenght.Value = 50;
             trackBarArrowLenght.ValueChanged += trackBarArrowLenght_ValueChanged;
             // 
+            // picboxNumberColorSample
+            // 
+            picboxNumberColorSample.BackColor = Color.Yellow;
+            picboxNumberColorSample.BorderStyle = BorderStyle.FixedSingle;
+            picboxNumberColorSample.Location = new Point(8, 56);
+            picboxNumberColorSample.Name = "picboxNumberColorSample";
+            picboxNumberColorSample.Size = new Size(32, 32);
+            picboxNumberColorSample.TabIndex = 4;
+            picboxNumberColorSample.TabStop = false;
+            toolTipTool.SetToolTip(picboxNumberColorSample, "Set numbers color");
+            picboxNumberColorSample.Click += picboxNumberColorSample_Click;
+            // 
             // panel1
             // 
             panel1.Controls.Add(btnOK);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 360);
+            panel1.Location = new Point(0, 457);
             panel1.Name = "panel1";
             panel1.Size = new Size(334, 40);
             panel1.TabIndex = 1;
@@ -212,7 +229,7 @@
             gboxGuidlines.Dock = DockStyle.Fill;
             gboxGuidlines.Location = new Point(3, 3);
             gboxGuidlines.Name = "gboxGuidlines";
-            gboxGuidlines.Size = new Size(167, 170);
+            gboxGuidlines.Size = new Size(161, 170);
             gboxGuidlines.TabIndex = 2;
             gboxGuidlines.TabStop = false;
             gboxGuidlines.Text = "Grid";
@@ -227,7 +244,7 @@
             pnlGMargin.Controls.Add(tbGridlineRight);
             pnlGMargin.Dock = DockStyle.Right;
             pnlGMargin.Enabled = false;
-            pnlGMargin.Location = new Point(80, 19);
+            pnlGMargin.Location = new Point(74, 19);
             pnlGMargin.Name = "pnlGMargin";
             pnlGMargin.Size = new Size(84, 148);
             pnlGMargin.TabIndex = 8;
@@ -352,7 +369,7 @@
             gboxSizes.Controls.Add(lblInfo);
             gboxSizes.Controls.Add(dataGridSize);
             gboxSizes.Dock = DockStyle.Bottom;
-            gboxSizes.Location = new Point(0, 190);
+            gboxSizes.Location = new Point(0, 287);
             gboxSizes.Name = "gboxSizes";
             gboxSizes.Size = new Size(334, 170);
             gboxSizes.TabIndex = 6;
@@ -362,17 +379,18 @@
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 51.7964058F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48.2035942F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.Controls.Add(gboxGuidlines, 0, 0);
             tableLayoutPanel1.Controls.Add(gboxArrows, 1, 0);
+            tableLayoutPanel1.Controls.Add(grboxNumbers, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 45F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(334, 176);
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 104F));
+            tableLayoutPanel1.Size = new Size(334, 280);
             tableLayoutPanel1.TabIndex = 7;
             // 
             // gboxArrows
@@ -385,9 +403,9 @@
             gboxArrows.Controls.Add(rbArrowType01);
             gboxArrows.Controls.Add(picboxArrowColorSample);
             gboxArrows.Dock = DockStyle.Fill;
-            gboxArrows.Location = new Point(176, 3);
+            gboxArrows.Location = new Point(170, 3);
             gboxArrows.Name = "gboxArrows";
-            gboxArrows.Size = new Size(155, 170);
+            gboxArrows.Size = new Size(161, 170);
             gboxArrows.TabIndex = 3;
             gboxArrows.TabStop = false;
             gboxArrows.Text = "Arrow";
@@ -402,11 +420,32 @@
             lbArrowLenght.Text = "Arrow Lenght: 9999";
             lbArrowLenght.Click += lbArrowLenght_Click;
             // 
+            // grboxNumbers
+            // 
+            grboxNumbers.Controls.Add(tbNumberFontSize);
+            grboxNumbers.Controls.Add(picboxNumberColorSample);
+            grboxNumbers.Dock = DockStyle.Fill;
+            grboxNumbers.Location = new Point(3, 179);
+            grboxNumbers.Name = "grboxNumbers";
+            grboxNumbers.Size = new Size(161, 98);
+            grboxNumbers.TabIndex = 4;
+            grboxNumbers.TabStop = false;
+            grboxNumbers.Text = "Numbers";
+            // 
+            // tbNumberFontSize
+            // 
+            tbNumberFontSize.Location = new Point(8, 24);
+            tbNumberFontSize.Name = "tbNumberFontSize";
+            tbNumberFontSize.Size = new Size(40, 23);
+            tbNumberFontSize.TabIndex = 5;
+            toolTipTool.SetToolTip(tbNumberFontSize, "Font size");
+            tbNumberFontSize.TextChanged += textBox1_TextChanged;
+            // 
             // FormSet
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(334, 400);
+            ClientSize = new Size(334, 497);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(gboxSizes);
             Controls.Add(panel1);
@@ -420,6 +459,7 @@
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).EndInit();
             ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBarArrowLenght).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picboxNumberColorSample).EndInit();
             panel1.ResumeLayout(false);
             gboxGuidlines.ResumeLayout(false);
             gboxGuidlines.PerformLayout();
@@ -431,6 +471,8 @@
             tableLayoutPanel1.ResumeLayout(false);
             gboxArrows.ResumeLayout(false);
             gboxArrows.PerformLayout();
+            grboxNumbers.ResumeLayout(false);
+            grboxNumbers.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -465,5 +507,8 @@
         private TrackBar trackBarArrowLenght;
         private Label lbArrowLenght;
         private Label lbIndent;
+        private PictureBox picboxNumberColorSample;
+        private GroupBox grboxNumbers;
+        private TextBox tbNumberFontSize;
     }
 }

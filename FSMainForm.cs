@@ -11,28 +11,19 @@ namespace screener3
     public partial class FormMain : Form
     {
         //Name
-        public const string PROG_NAME = "F.S. ";
-
-        public const string SUBPATH = "screenshots";
-
-        public static int NewWidth = 0;
-        public static int NewHeight = 0;
+        public const string PROG_NAME = "F.S. ", SUBPATH = "screenshots";
 
         //all monitors
-        public static int VirtScreenWidth = 0, VirtScreenHeight = 0;
-
-        public static int clientWidth, clientHeight;
+        public static int VirtScreenWidth = 0, VirtScreenHeight = 0, clientWidth, clientHeight, arrowLenght, NewWidth = 0, NewHeight = 0, numberFontSize;
 
         //Min size
         public const int MIN_WIDTH = 200, MIN_HEIGHT = 100;
-
-        public static int arrowLenght;
 
         //alpha color to remove 
         private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 0, 1);
 
         //default guidlines color
-        public static Color gridLinesColor = Color.LightGray, arrowColor = Color.Aqua, numberColor = Color.Yellow;
+        public static Color gridColor = Color.LightGray, arrowColor = Color.Aqua, numberColor = Color.Yellow;
 
         //for guidlines
         private bool drawGrid, drawArrows, saveToFile, drawNumber;
@@ -118,14 +109,22 @@ namespace screener3
 
         public static void DrawNumber(PaintEventArgs e, Point relativePoint, Color color, String numberString)
         {
-            int fontSize = 26;
 
-            Font drawFont = new Font("Arial", fontSize, FontStyle.Bold);
+            Font drawFont = new Font("Arial", numberFontSize, FontStyle.Bold);
+            //outline
+            Font outlineFont = new Font("Arial", numberFontSize + 2, FontStyle.Bold);
+
             SolidBrush drawBrush = new SolidBrush(color);
+            //outline
+            SolidBrush outlineBrush = new SolidBrush(Color.Black);
 
             StringFormat drawFormat = new StringFormat();
 
-            e.Graphics.DrawString(numberString, drawFont, drawBrush, relativePoint.X, relativePoint.Y - fontSize, drawFormat);
+            //outline
+            e.Graphics.DrawString(numberString, outlineFont, outlineBrush, relativePoint.X, relativePoint.Y - numberFontSize - 1, drawFormat);
+
+            e.Graphics.DrawString(numberString, drawFont, drawBrush, relativePoint.X, relativePoint.Y - numberFontSize, drawFormat);
+
 
             drawFont.Dispose();
             drawBrush.Dispose();
@@ -205,11 +204,24 @@ namespace screener3
 
 
             tempValueFromConfig = ConfigurationManager.AppSettings["guidlines_color"];
-            gridLinesColor = System.Drawing.ColorTranslator.FromHtml(tempValueFromConfig);
+            gridColor = ColorTranslator.FromHtml(tempValueFromConfig);
 
             tempValueFromConfig = ConfigurationManager.AppSettings["arrow_color"];
-            arrowColor = System.Drawing.ColorTranslator.FromHtml(tempValueFromConfig);
+            arrowColor = ColorTranslator.FromHtml(tempValueFromConfig);
 
+            tempValueFromConfig = ConfigurationManager.AppSettings["number_color"];
+            numberColor = ColorTranslator.FromHtml(tempValueFromConfig);
+
+
+            try
+            {
+                tempValueFromConfig = ConfigurationManager.AppSettings["number_size"];
+                FormMain.numberFontSize = int.Parse(tempValueFromConfig);
+            }
+            catch
+            {
+                FormMain.numberFontSize = 1;
+            }
 
             try
             {
@@ -306,6 +318,7 @@ namespace screener3
             {
                 mitSaveFile.Checked = true;
             }
+
 
         }
 
@@ -466,7 +479,7 @@ namespace screener3
             //turn on grid again
             if (gridIsOn == true)
             {
-                DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), gridLinesColor);
+                DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), gridColor);
 
             }
 
@@ -493,7 +506,7 @@ namespace screener3
         {
             if ((drawGrid == true) && (mitShowGuidlines.CheckState == CheckState.Checked))
             {
-                DrawGrid(e, gridLinesColor);
+                DrawGrid(e, gridColor);
             }
 
         }
@@ -737,12 +750,15 @@ namespace screener3
 
         private void SaveConfig()
         {
-            SetSetting("guidlines_color", ColorTranslator.ToHtml(gridLinesColor));
+            SetSetting("guidlines_color", ColorTranslator.ToHtml(gridColor));
             SetSetting("arrow_color", ColorTranslator.ToHtml(arrowColor));
+            SetSetting("number_color", ColorTranslator.ToHtml(numberColor));
+
 
             SetSetting("guidline_type", GridType.ToString());
             SetSetting("arrows_type", ArrowType.ToString());
             SetSetting("arrow_lenght", arrowLenght.ToString());
+            SetSetting("number_size", numberFontSize.ToString());
 
             SetSetting("draw_guidlines", drawGrid.ToString().ToLower());
             SetSetting("draw_arrows", drawArrows.ToString().ToLower());
