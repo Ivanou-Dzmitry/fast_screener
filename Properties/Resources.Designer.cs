@@ -113,6 +113,16 @@ namespace fast_screener.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap close {
+            get {
+                object obj = ResourceManager.GetObject("close", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap locked {
             get {
                 object obj = ResourceManager.GetObject("locked", resourceCulture);
@@ -126,6 +136,16 @@ namespace fast_screener.Properties {
         internal static System.Drawing.Bitmap menu {
             get {
                 object obj = ResourceManager.GetObject("menu", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap minimize {
+            get {
+                object obj = ResourceManager.GetObject("minimize", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

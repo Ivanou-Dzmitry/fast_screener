@@ -23,7 +23,7 @@ namespace screener3
         private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 0, 1);
 
         //default guidlines color
-        public static Color gridColor = Color.LightGray, arrowColor = Color.Aqua, numberColor = Color.Yellow;
+        public static Color gridColor = Color.LightGray, arrowColor = Color.Aqua, numberColor = Color.Yellow, frameColor = Color.Gray;
 
         //for guidlines
         private bool drawGrid, drawArrows, saveToFile, drawNumber;
@@ -48,10 +48,24 @@ namespace screener3
         // Create the Keyboard Hook
         KeyboardHook keyboardHook = new KeyboardHook();
 
+        private bool dragging = false;
+        private Point dragCursorPoint;
+        private Point dragFormPoint;
+
+        private int pnlToolBarH = 0;
+
 
         public FormMain()
         {
             InitializeComponent();
+
+            pnlToolBarH = pnlToolbarMain.Height;
+
+            lineLeft.BackColor = frameColor;
+            lineBottom.BackColor = frameColor;
+            lineRight.BackColor = frameColor;
+
+            lblHeader.TabStop = false;
 
             //set transparent
             this.BackColor = ALPHA_KEY_COLOR;
@@ -176,7 +190,7 @@ namespace screener3
             try
             {
                 StartResW = Convert.ToInt32(tempStringArray[0]);
-                StartResH = Convert.ToInt32(tempStringArray[1]);
+                StartResH = Convert.ToInt32(tempStringArray[1]); //set height
                 this.ClientSize = new Size(StartResW, StartResH);
             }
             catch
@@ -188,10 +202,10 @@ namespace screener3
 
             //set client size
             clientWidth = this.ClientSize.Width;
-            clientHeight = this.ClientSize.Height;
+            clientHeight = this.ClientSize.Height; //set height
 
             //Update form name
-            this.Text = TextUpdater(PROG_NAME, clientWidth, clientHeight);
+            lblHeader.Text = TextUpdater(PROG_NAME, clientWidth, clientHeight);
 
             Rectangle VirtScreenRect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
 
@@ -325,35 +339,51 @@ namespace screener3
         private void btnMainMenu_Click(object sender, EventArgs e)
         {
             contextMenuMain.Show(Cursor.Position.X, Cursor.Position.Y);
+            
         }
 
         private void mitSize01_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
+            int clientW = Convert.ToInt32(RES_WORKED[0, 0]);
+            int clientH = Convert.ToInt32(RES_WORKED[1, 0]) + pnlToolBarH;
 
-            this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
+            this.ClientSize = new Size(clientW, clientH);
+
+            TextUpdater(PROG_NAME, clientW, clientH);
         }
 
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new Size(Convert.ToInt32(RES_WORKED[0, 1]), Convert.ToInt32(Convert.ToInt32(RES_WORKED[1, 1])));
 
-            this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
+            int clientW = Convert.ToInt32(RES_WORKED[0, 1]);
+            int clientH = Convert.ToInt32(RES_WORKED[1, 1]) + pnlToolBarH;
+
+            this.ClientSize = new Size(clientW, clientH);
+
+            TextUpdater(PROG_NAME, clientW, clientH);
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new Size(Convert.ToInt32(Convert.ToInt32(RES_WORKED[0, 2])), Convert.ToInt32(RES_WORKED[1, 2]));
 
-            this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
+            int clientW = Convert.ToInt32(RES_WORKED[0, 2]);
+            int clientH = Convert.ToInt32(RES_WORKED[1, 2]) + pnlToolBarH;
+
+            this.ClientSize = new Size(clientW, clientH);
+
+            TextUpdater(PROG_NAME, clientW, clientH);
         }
 
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        private void mitSize04_Click(object sender, EventArgs e)
         {
-            this.ClientSize = new Size(Convert.ToInt32(RES_WORKED[0, 3]), Convert.ToInt32(Convert.ToInt32(RES_WORKED[1, 3])));
 
-            this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
+            int clientW = Convert.ToInt32(RES_WORKED[0, 3]);
+            int clientH = Convert.ToInt32(RES_WORKED[1, 3]) + pnlToolBarH;
+
+            this.ClientSize = new Size(clientW, clientH);
+
+            TextUpdater(PROG_NAME, clientW, clientH);
         }
 
 
@@ -361,11 +391,13 @@ namespace screener3
         private void FormMain_Move(object sender, EventArgs e)
         {
             lblInfo.Visible = false;
+            lineBottom.Visible = true;
         }
 
         private void contextMenuMain_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             lblInfo.Visible = false;
+            lineBottom.Visible = true;
         }
 
         private void btnScreen_Click(object sender, EventArgs e)
@@ -377,17 +409,21 @@ namespace screener3
         {
             string FinalText = "";
 
-            FinalText = (Width.ToString() + "x" + Height.ToString());
+            FinalText = (Width.ToString() + "x" + (Height - pnlToolBarH).ToString()); //set size
 
-            toolTipMain.SetToolTip(btnScreen, "Take screenshot. Size: " + Width.ToString() + "x" + Height.ToString() + "px");
+            lblHeader.Text = FinalText;
 
-            lblInfo.Text = "Size setted to " + Width.ToString() + "x" + Height.ToString() + "px";
+            toolTipMain.SetToolTip(btnScreen, "Take screenshot. Size: " + FinalText + "px");
+
+            lblInfo.Text = "Size setted to " + FinalText + "px";
 
             lblInfo.Visible = true;
             lblInfo.BackColor = Color.SteelBlue;
 
             //refresh screen
             this.Refresh();
+
+            this.Text = FinalText;
 
             return FinalText;
         }
@@ -399,6 +435,10 @@ namespace screener3
             pnlToolbarMain.Visible = false;
             lblInfo.Visible = false;
 
+            lineLeft.Visible = false;
+            lineBottom.Visible = false;
+            lineRight.Visible = false;
+
             bool gridIsOn = false;
 
             if (mitShowGuidlines.Checked == true)
@@ -409,8 +449,11 @@ namespace screener3
                 lblInfo.Visible = false;
             }
 
+            int bitmapWidth = this.ClientSize.Width;
+            int bitmapHeight = this.ClientSize.Height - pnlToolBarH;
+
             //Creating a new Bitmap object
-            Bitmap captureBitmap = new Bitmap(this.ClientSize.Width, this.ClientSize.Height, PixelFormat.Format32bppArgb);
+            Bitmap captureBitmap = new Bitmap(bitmapWidth, bitmapHeight, PixelFormat.Format32bppArgb);
 
             //Bitmap captureBitmap = new Bitmap(int width, int height, PixelFormat);
             //Creating a Rectangle object which will
@@ -422,13 +465,13 @@ namespace screener3
             Graphics captureGraphics = Graphics.FromImage(captureBitmap);
 
             //Get window elements
-            int captionH = SystemInformation.CaptionHeight;
-            int frameSH = SystemInformation.FrameBorderSize.Height;
-            int frameSW = SystemInformation.FrameBorderSize.Width;
+            //int captionH = SystemInformation.CaptionHeight;
+            //int frameSH = SystemInformation.FrameBorderSize.Height;
+            //int frameSW = SystemInformation.FrameBorderSize.Width;
 
             //Posytion of screenshot
-            int posY = captionH + this.Location.Y + frameSH * 2;
-            int posX = this.Location.X + frameSW * 2;
+            int posY = this.Location.Y + pnlToolBarH; //set size
+            int posX = this.Location.X;
 
             //Copying Image from The Screen
             captureGraphics.CopyFromScreen(posX, posY, 0, 0, captureRectangle.Size);
@@ -473,8 +516,13 @@ namespace screener3
 
             pnlToolbarMain.Visible = true;
 
+            lineLeft.Visible = true;
+            
+            lineRight.Visible = true;
 
-            this.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
+
+            lblHeader.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
+
 
             //turn on grid again
             if (gridIsOn == true)
@@ -498,7 +546,7 @@ namespace screener3
         {
 
             lblInfo.Visible = false;
-
+            lineBottom.Visible = true;
         }
 
 
@@ -519,8 +567,11 @@ namespace screener3
 
             if (GridType == 1)
             {
+                int screenAreaH = (this.ClientSize.Height - pnlToolBarH);
+
+
                 initialPointVertical = this.ClientSize.Width / 3;
-                initialPointHorizontal = this.ClientSize.Height / 3;
+                initialPointHorizontal = (this.ClientSize.Height + pnlToolBarH) / 3 ; //set size
 
                 Pen pen = new Pen(lineColor);
 
@@ -537,7 +588,7 @@ namespace screener3
             {
 
                 initialPointVertical = this.ClientSize.Width / 4;
-                initialPointHorizontal = this.ClientSize.Height / 4;
+                initialPointHorizontal = (this.ClientSize.Height + pnlToolBarH)/ 4;
 
                 Pen pen = new Pen(lineColor);
 
@@ -565,7 +616,7 @@ namespace screener3
                 Pen pen = new Pen(lineColor);
 
                 //top
-                e.Graphics.DrawLine(pen, 0, topIndent, this.ClientSize.Width, topIndent);
+                e.Graphics.DrawLine(pen, 0, topIndent + pnlToolBarH, this.ClientSize.Width, topIndent + pnlToolBarH);
 
                 //bottom
                 e.Graphics.DrawLine(pen, 0, this.ClientSize.Height - bottonIndent, this.ClientSize.Width, this.ClientSize.Height - bottonIndent);
@@ -862,7 +913,37 @@ namespace screener3
             SaveConfig();
         }
 
+        private void pnlToolbarMain_MouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
 
+        private void pnlToolbarMain_MouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
+        }
+
+        private void pnlToolbarMain_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new Size(dif));
+            }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            SaveConfig();
+            Close();
+        }
+
+        private void btnMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
     }
 
 }

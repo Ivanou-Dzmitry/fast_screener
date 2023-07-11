@@ -41,11 +41,14 @@
             cbLock = new CheckBox();
             trackBarArrowLenght = new TrackBar();
             picboxNumberColorSample = new PictureBox();
+            tbNumberFontSize = new TextBox();
             panel1 = new Panel();
             btnOK = new Button();
             gboxGuidlines = new GroupBox();
-            pnlGMargin = new Panel();
+            label2 = new Label();
             lbIndent = new Label();
+            label1 = new Label();
+            pnlGMargin = new Panel();
             tbGridlineTop = new TextBox();
             tbGridlineBottom = new TextBox();
             tbGridlineLeft = new TextBox();
@@ -60,9 +63,14 @@
             gboxSizes = new GroupBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             gboxArrows = new GroupBox();
+            label5 = new Label();
+            label4 = new Label();
             lbArrowLenght = new Label();
+            label3 = new Label();
             grboxNumbers = new GroupBox();
-            tbNumberFontSize = new TextBox();
+            label7 = new Label();
+            label6 = new Label();
+            label8 = new Label();
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBarArrowLenght).BeginInit();
@@ -93,7 +101,7 @@
             // 
             picboxGuidlineColorSample.BackColor = Color.White;
             picboxGuidlineColorSample.BorderStyle = BorderStyle.FixedSingle;
-            picboxGuidlineColorSample.Location = new Point(8, 128);
+            picboxGuidlineColorSample.Location = new Point(136, 136);
             picboxGuidlineColorSample.Name = "picboxGuidlineColorSample";
             picboxGuidlineColorSample.Size = new Size(32, 32);
             picboxGuidlineColorSample.TabIndex = 4;
@@ -105,7 +113,7 @@
             // 
             picboxArrowColorSample.BackColor = Color.Cyan;
             picboxArrowColorSample.BorderStyle = BorderStyle.FixedSingle;
-            picboxArrowColorSample.Location = new Point(8, 128);
+            picboxArrowColorSample.Location = new Point(136, 104);
             picboxArrowColorSample.Name = "picboxArrowColorSample";
             picboxArrowColorSample.Size = new Size(32, 32);
             picboxArrowColorSample.TabIndex = 8;
@@ -116,7 +124,7 @@
             // rbArrowType04
             // 
             rbArrowType04.Image = fast_screener.Properties.Resources.arrow_type04;
-            rbArrowType04.Location = new Point(56, 48);
+            rbArrowType04.Location = new Point(280, 24);
             rbArrowType04.Name = "rbArrowType04";
             rbArrowType04.Size = new Size(40, 24);
             rbArrowType04.TabIndex = 12;
@@ -127,7 +135,7 @@
             // rbArrowType03
             // 
             rbArrowType03.Image = fast_screener.Properties.Resources.arrow_type03;
-            rbArrowType03.Location = new Point(56, 24);
+            rbArrowType03.Location = new Point(232, 24);
             rbArrowType03.Name = "rbArrowType03";
             rbArrowType03.Size = new Size(40, 24);
             rbArrowType03.TabIndex = 11;
@@ -138,7 +146,7 @@
             // rbArrowType02
             // 
             rbArrowType02.Image = fast_screener.Properties.Resources.arrow_type02;
-            rbArrowType02.Location = new Point(8, 48);
+            rbArrowType02.Location = new Point(184, 24);
             rbArrowType02.Name = "rbArrowType02";
             rbArrowType02.Size = new Size(40, 24);
             rbArrowType02.TabIndex = 10;
@@ -150,7 +158,7 @@
             // 
             rbArrowType01.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             rbArrowType01.Image = fast_screener.Properties.Resources.arrow_type01;
-            rbArrowType01.Location = new Point(8, 24);
+            rbArrowType01.Location = new Point(136, 24);
             rbArrowType01.Name = "rbArrowType01";
             rbArrowType01.Size = new Size(40, 24);
             rbArrowType01.TabIndex = 9;
@@ -162,28 +170,27 @@
             // 
             cbLock.Appearance = Appearance.Button;
             cbLock.Image = fast_screener.Properties.Resources.unlocked;
-            cbLock.Location = new Point(56, 24);
+            cbLock.Location = new Point(104, 8);
             cbLock.Name = "cbLock";
             cbLock.Size = new Size(23, 23);
             cbLock.TabIndex = 13;
             toolTipTool.SetToolTip(cbLock, "Lock values");
             cbLock.UseVisualStyleBackColor = true;
+            cbLock.CheckedChanged += cbLock_CheckedChanged;
             cbLock.Click += cbLock_Click;
             // 
             // trackBarArrowLenght
             // 
-            trackBarArrowLenght.AutoSize = false;
             trackBarArrowLenght.LargeChange = 20;
-            trackBarArrowLenght.Location = new Point(8, 80);
+            trackBarArrowLenght.Location = new Point(136, 56);
             trackBarArrowLenght.Maximum = 200;
             trackBarArrowLenght.Minimum = 30;
             trackBarArrowLenght.Name = "trackBarArrowLenght";
-            trackBarArrowLenght.Size = new Size(144, 24);
+            trackBarArrowLenght.Size = new Size(144, 45);
             trackBarArrowLenght.SmallChange = 10;
             trackBarArrowLenght.TabIndex = 13;
             trackBarArrowLenght.Tag = "";
             trackBarArrowLenght.TickFrequency = 50;
-            trackBarArrowLenght.TickStyle = TickStyle.TopLeft;
             toolTipTool.SetToolTip(trackBarArrowLenght, "Arrow lenght");
             trackBarArrowLenght.Value = 50;
             trackBarArrowLenght.ValueChanged += trackBarArrowLenght_ValueChanged;
@@ -192,7 +199,7 @@
             // 
             picboxNumberColorSample.BackColor = Color.Yellow;
             picboxNumberColorSample.BorderStyle = BorderStyle.FixedSingle;
-            picboxNumberColorSample.Location = new Point(8, 56);
+            picboxNumberColorSample.Location = new Point(136, 56);
             picboxNumberColorSample.Name = "picboxNumberColorSample";
             picboxNumberColorSample.Size = new Size(32, 32);
             picboxNumberColorSample.TabIndex = 4;
@@ -200,13 +207,22 @@
             toolTipTool.SetToolTip(picboxNumberColorSample, "Set numbers color");
             picboxNumberColorSample.Click += picboxNumberColorSample_Click;
             // 
+            // tbNumberFontSize
+            // 
+            tbNumberFontSize.Location = new Point(136, 24);
+            tbNumberFontSize.Name = "tbNumberFontSize";
+            tbNumberFontSize.Size = new Size(40, 23);
+            tbNumberFontSize.TabIndex = 5;
+            toolTipTool.SetToolTip(tbNumberFontSize, "Font size");
+            tbNumberFontSize.TextChanged += textBox1_TextChanged;
+            // 
             // panel1
             // 
             panel1.Controls.Add(btnOK);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 457);
+            panel1.Location = new Point(0, 628);
             panel1.Name = "panel1";
-            panel1.Size = new Size(334, 40);
+            panel1.Size = new Size(335, 37);
             panel1.TabIndex = 1;
             // 
             // btnOK
@@ -221,47 +237,67 @@
             // 
             // gboxGuidlines
             // 
+            gboxGuidlines.Controls.Add(label8);
+            gboxGuidlines.Controls.Add(label2);
+            gboxGuidlines.Controls.Add(lbIndent);
+            gboxGuidlines.Controls.Add(label1);
             gboxGuidlines.Controls.Add(pnlGMargin);
             gboxGuidlines.Controls.Add(rbGuidType02);
             gboxGuidlines.Controls.Add(rbGuidType03);
-            gboxGuidlines.Controls.Add(picboxGuidlineColorSample);
             gboxGuidlines.Controls.Add(rbGuidType01);
+            gboxGuidlines.Controls.Add(picboxGuidlineColorSample);
             gboxGuidlines.Dock = DockStyle.Fill;
             gboxGuidlines.Location = new Point(3, 3);
             gboxGuidlines.Name = "gboxGuidlines";
-            gboxGuidlines.Size = new Size(161, 170);
+            gboxGuidlines.Size = new Size(330, 178);
             gboxGuidlines.TabIndex = 2;
             gboxGuidlines.TabStop = false;
             gboxGuidlines.Text = "Grid";
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(8, 136);
+            label2.Name = "label2";
+            label2.Size = new Size(36, 15);
+            label2.TabIndex = 15;
+            label2.Text = "Color";
+            // 
+            // lbIndent
+            // 
+            lbIndent.AutoSize = true;
+            lbIndent.Location = new Point(8, 64);
+            lbIndent.Margin = new Padding(0);
+            lbIndent.Name = "lbIndent";
+            lbIndent.Size = new Size(121, 15);
+            lbIndent.TabIndex = 14;
+            lbIndent.Text = "Padding Top/ Bottom";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(8, 24);
+            label1.Name = "label1";
+            label1.Size = new Size(31, 15);
+            label1.TabIndex = 9;
+            label1.Text = "Type";
+            // 
             // pnlGMargin
             // 
-            pnlGMargin.Controls.Add(lbIndent);
             pnlGMargin.Controls.Add(cbLock);
             pnlGMargin.Controls.Add(tbGridlineTop);
             pnlGMargin.Controls.Add(tbGridlineBottom);
             pnlGMargin.Controls.Add(tbGridlineLeft);
             pnlGMargin.Controls.Add(tbGridlineRight);
-            pnlGMargin.Dock = DockStyle.Right;
             pnlGMargin.Enabled = false;
-            pnlGMargin.Location = new Point(74, 19);
+            pnlGMargin.Location = new Point(136, 53);
             pnlGMargin.Name = "pnlGMargin";
-            pnlGMargin.Size = new Size(84, 148);
+            pnlGMargin.Size = new Size(184, 75);
             pnlGMargin.TabIndex = 8;
-            // 
-            // lbIndent
-            // 
-            lbIndent.AutoSize = true;
-            lbIndent.Location = new Point(5, 0);
-            lbIndent.Margin = new Padding(0);
-            lbIndent.Name = "lbIndent";
-            lbIndent.Size = new Size(51, 15);
-            lbIndent.TabIndex = 14;
-            lbIndent.Text = "Padding";
             // 
             // tbGridlineTop
             // 
-            tbGridlineTop.Location = new Point(8, 24);
+            tbGridlineTop.Location = new Point(8, 8);
             tbGridlineTop.Name = "tbGridlineTop";
             tbGridlineTop.PlaceholderText = "Top";
             tbGridlineTop.Size = new Size(40, 23);
@@ -271,7 +307,7 @@
             // 
             // tbGridlineBottom
             // 
-            tbGridlineBottom.Location = new Point(8, 56);
+            tbGridlineBottom.Location = new Point(56, 8);
             tbGridlineBottom.Name = "tbGridlineBottom";
             tbGridlineBottom.PlaceholderText = "Bottom";
             tbGridlineBottom.Size = new Size(40, 23);
@@ -281,7 +317,7 @@
             // 
             // tbGridlineLeft
             // 
-            tbGridlineLeft.Location = new Point(8, 88);
+            tbGridlineLeft.Location = new Point(8, 40);
             tbGridlineLeft.Name = "tbGridlineLeft";
             tbGridlineLeft.PlaceholderText = "Left";
             tbGridlineLeft.Size = new Size(40, 23);
@@ -291,7 +327,7 @@
             // 
             // tbGridlineRight
             // 
-            tbGridlineRight.Location = new Point(8, 120);
+            tbGridlineRight.Location = new Point(56, 40);
             tbGridlineRight.Name = "tbGridlineRight";
             tbGridlineRight.PlaceholderText = "Right";
             tbGridlineRight.Size = new Size(40, 23);
@@ -302,7 +338,7 @@
             // rbGuidType02
             // 
             rbGuidType02.AutoSize = true;
-            rbGuidType02.Location = new Point(8, 48);
+            rbGuidType02.Location = new Point(192, 24);
             rbGuidType02.Name = "rbGuidType02";
             rbGuidType02.Size = new Size(43, 19);
             rbGuidType02.TabIndex = 6;
@@ -312,7 +348,7 @@
             // rbGuidType03
             // 
             rbGuidType03.AutoSize = true;
-            rbGuidType03.Location = new Point(8, 72);
+            rbGuidType03.Location = new Point(248, 24);
             rbGuidType03.Name = "rbGuidType03";
             rbGuidType03.Size = new Size(67, 19);
             rbGuidType03.TabIndex = 7;
@@ -324,7 +360,7 @@
             // 
             rbGuidType01.AutoSize = true;
             rbGuidType01.Checked = true;
-            rbGuidType01.Location = new Point(8, 24);
+            rbGuidType01.Location = new Point(136, 24);
             rbGuidType01.Name = "rbGuidType01";
             rbGuidType01.Size = new Size(43, 19);
             rbGuidType01.TabIndex = 5;
@@ -343,12 +379,12 @@
             dataGridSize.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridSize.Columns.AddRange(new DataGridViewColumn[] { colWidth, colHeight });
             dataGridSize.Dock = DockStyle.Bottom;
-            dataGridSize.Location = new Point(3, 40);
+            dataGridSize.Location = new Point(3, 47);
             dataGridSize.Name = "dataGridSize";
             dataGridSize.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dataGridSize.RowTemplate.Height = 25;
             dataGridSize.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            dataGridSize.Size = new Size(328, 127);
+            dataGridSize.Size = new Size(329, 138);
             dataGridSize.TabIndex = 5;
             dataGridSize.CellValidating += dataGridSize_CellValidating;
             // 
@@ -356,46 +392,50 @@
             // 
             colWidth.HeaderText = "Width, px";
             colWidth.Name = "colWidth";
-            colWidth.Width = 125;
+            colWidth.Width = 140;
             // 
             // colHeight
             // 
             colHeight.HeaderText = "Height, px";
             colHeight.Name = "colHeight";
-            colHeight.Width = 125;
+            colHeight.Width = 140;
             // 
             // gboxSizes
             // 
             gboxSizes.Controls.Add(lblInfo);
             gboxSizes.Controls.Add(dataGridSize);
             gboxSizes.Dock = DockStyle.Bottom;
-            gboxSizes.Location = new Point(0, 287);
+            gboxSizes.Location = new Point(0, 440);
             gboxSizes.Name = "gboxSizes";
-            gboxSizes.Size = new Size(334, 170);
+            gboxSizes.Size = new Size(335, 188);
             gboxSizes.TabIndex = 6;
             gboxSizes.TabStop = false;
             gboxSizes.Text = "Sizes";
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Controls.Add(gboxGuidlines, 0, 0);
-            tableLayoutPanel1.Controls.Add(gboxArrows, 1, 0);
-            tableLayoutPanel1.Controls.Add(grboxNumbers, 0, 1);
-            tableLayoutPanel1.Dock = DockStyle.Top;
+            tableLayoutPanel1.Controls.Add(gboxArrows, 0, 1);
+            tableLayoutPanel1.Controls.Add(grboxNumbers, 0, 2);
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowCount = 3;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 104F));
-            tableLayoutPanel1.Size = new Size(334, 280);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 148F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            tableLayoutPanel1.Size = new Size(336, 432);
             tableLayoutPanel1.TabIndex = 7;
+            tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
             // 
             // gboxArrows
             // 
+            gboxArrows.Controls.Add(label5);
+            gboxArrows.Controls.Add(label4);
             gboxArrows.Controls.Add(lbArrowLenght);
+            gboxArrows.Controls.Add(label3);
             gboxArrows.Controls.Add(trackBarArrowLenght);
             gboxArrows.Controls.Add(rbArrowType04);
             gboxArrows.Controls.Add(rbArrowType03);
@@ -403,49 +443,99 @@
             gboxArrows.Controls.Add(rbArrowType01);
             gboxArrows.Controls.Add(picboxArrowColorSample);
             gboxArrows.Dock = DockStyle.Fill;
-            gboxArrows.Location = new Point(170, 3);
+            gboxArrows.Location = new Point(3, 187);
             gboxArrows.Name = "gboxArrows";
-            gboxArrows.Size = new Size(161, 170);
+            gboxArrows.Size = new Size(330, 142);
             gboxArrows.TabIndex = 3;
             gboxArrows.TabStop = false;
             gboxArrows.Text = "Arrow";
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(8, 104);
+            label5.Name = "label5";
+            label5.Size = new Size(36, 15);
+            label5.TabIndex = 17;
+            label5.Text = "Color";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(8, 56);
+            label4.Name = "label4";
+            label4.Size = new Size(44, 15);
+            label4.TabIndex = 16;
+            label4.Text = "Length";
+            // 
             // lbArrowLenght
             // 
             lbArrowLenght.AutoSize = true;
-            lbArrowLenght.Location = new Point(8, 106);
+            lbArrowLenght.Location = new Point(288, 56);
             lbArrowLenght.Name = "lbArrowLenght";
-            lbArrowLenght.Size = new Size(109, 15);
+            lbArrowLenght.Size = new Size(31, 15);
             lbArrowLenght.TabIndex = 14;
-            lbArrowLenght.Text = "Arrow Lenght: 9999";
+            lbArrowLenght.Text = "9999";
             lbArrowLenght.Click += lbArrowLenght_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(8, 24);
+            label3.Name = "label3";
+            label3.Size = new Size(31, 15);
+            label3.TabIndex = 15;
+            label3.Text = "Type";
             // 
             // grboxNumbers
             // 
+            grboxNumbers.Controls.Add(label7);
+            grboxNumbers.Controls.Add(label6);
             grboxNumbers.Controls.Add(tbNumberFontSize);
             grboxNumbers.Controls.Add(picboxNumberColorSample);
             grboxNumbers.Dock = DockStyle.Fill;
-            grboxNumbers.Location = new Point(3, 179);
+            grboxNumbers.Location = new Point(3, 335);
             grboxNumbers.Name = "grboxNumbers";
-            grboxNumbers.Size = new Size(161, 98);
+            grboxNumbers.Size = new Size(330, 94);
             grboxNumbers.TabIndex = 4;
             grboxNumbers.TabStop = false;
             grboxNumbers.Text = "Numbers";
             // 
-            // tbNumberFontSize
+            // label7
             // 
-            tbNumberFontSize.Location = new Point(8, 24);
-            tbNumberFontSize.Name = "tbNumberFontSize";
-            tbNumberFontSize.Size = new Size(40, 23);
-            tbNumberFontSize.TabIndex = 5;
-            toolTipTool.SetToolTip(tbNumberFontSize, "Font size");
-            tbNumberFontSize.TextChanged += textBox1_TextChanged;
+            label7.AutoSize = true;
+            label7.Location = new Point(8, 56);
+            label7.Name = "label7";
+            label7.Size = new Size(36, 15);
+            label7.TabIndex = 18;
+            label7.Text = "Color";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(8, 24);
+            label6.Name = "label6";
+            label6.Size = new Size(54, 15);
+            label6.TabIndex = 17;
+            label6.Text = "Font Size";
+            label6.Click += label6_Click;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(8, 96);
+            label8.Margin = new Padding(0);
+            label8.Name = "label8";
+            label8.Size = new Size(114, 15);
+            label8.TabIndex = 16;
+            label8.Text = "Padding Letft/ Right";
+            label8.Click += label8_Click;
             // 
             // FormSet
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(334, 497);
+            ClientSize = new Size(335, 665);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(gboxSizes);
             Controls.Add(panel1);
@@ -493,8 +583,6 @@
         private RadioButton rbGuidType03;
         private RadioButton rbGuidType02;
         private RadioButton rbGuidType01;
-        private DataGridViewTextBoxColumn colWidth;
-        private DataGridViewTextBoxColumn colHeight;
         private PictureBox picboxArrowColorSample;
         private TableLayoutPanel tableLayoutPanel1;
         private GroupBox gboxArrows;
@@ -510,5 +598,15 @@
         private PictureBox picboxNumberColorSample;
         private GroupBox grboxNumbers;
         private TextBox tbNumberFontSize;
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private Label label4;
+        private Label label5;
+        private Label label6;
+        private Label label7;
+        private DataGridViewTextBoxColumn colWidth;
+        private DataGridViewTextBoxColumn colHeight;
+        private Label label8;
     }
 }

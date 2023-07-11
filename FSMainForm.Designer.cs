@@ -48,30 +48,43 @@
             aboutToolStripMenuItem = new ToolStripMenuItem();
             mitExit = new ToolStripMenuItem();
             pnlToolbarMain = new Panel();
+            lblHeader = new Label();
+            btnMinimize = new Button();
+            btnClose = new Button();
             btnScreen = new Button();
             lblInfo = new Label();
             toolTipMain = new ToolTip(components);
+            lineBottom = new PictureBox();
+            lineLeft = new PictureBox();
+            lineRight = new PictureBox();
             contextMenuMain.SuspendLayout();
             pnlToolbarMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)lineBottom).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lineLeft).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lineRight).BeginInit();
             SuspendLayout();
             // 
             // btnMainMenu
             // 
+            btnMainMenu.BackColor = Color.Transparent;
             btnMainMenu.ContextMenuStrip = contextMenuMain;
+            btnMainMenu.Dock = DockStyle.Left;
+            btnMainMenu.FlatAppearance.BorderSize = 0;
+            btnMainMenu.FlatStyle = FlatStyle.Flat;
             btnMainMenu.Image = fast_screener.Properties.Resources.menu;
-            btnMainMenu.Location = new Point(12, 12);
+            btnMainMenu.Location = new Point(0, 0);
             btnMainMenu.Name = "btnMainMenu";
-            btnMainMenu.Size = new Size(24, 24);
+            btnMainMenu.Size = new Size(40, 40);
             btnMainMenu.TabIndex = 0;
             toolTipMain.SetToolTip(btnMainMenu, "Main menu");
-            btnMainMenu.UseVisualStyleBackColor = true;
+            btnMainMenu.UseVisualStyleBackColor = false;
             btnMainMenu.Click += btnMainMenu_Click;
             // 
             // contextMenuMain
             // 
             contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitTakeScreen, toolStripSeparator3, mitShowGuidlines, mitShowArrows, mitAddNumber, mitSaveFile, mitSettings, toolStripSeparator1, aboutToolStripMenuItem, mitExit });
             contextMenuMain.Name = "contextMenuStrip1";
-            contextMenuMain.Size = new Size(227, 308);
+            contextMenuMain.Size = new Size(227, 286);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
             // mitSize01
@@ -104,7 +117,7 @@
             mitSize04.ShortcutKeys = Keys.Alt | Keys.D4;
             mitSize04.Size = new Size(226, 22);
             mitSize04.Text = "960x600";
-            mitSize04.Click += toolStripMenuItem1_Click;
+            mitSize04.Click += mitSize04_Click;
             // 
             // toolStripSeparator2
             // 
@@ -190,24 +203,74 @@
             // 
             // pnlToolbarMain
             // 
-            pnlToolbarMain.AutoSize = true;
-            pnlToolbarMain.BackColor = Color.Transparent;
+            pnlToolbarMain.BackColor = SystemColors.WindowFrame;
+            pnlToolbarMain.Controls.Add(lblHeader);
+            pnlToolbarMain.Controls.Add(btnMinimize);
+            pnlToolbarMain.Controls.Add(btnClose);
             pnlToolbarMain.Controls.Add(btnScreen);
             pnlToolbarMain.Controls.Add(btnMainMenu);
+            pnlToolbarMain.Dock = DockStyle.Top;
             pnlToolbarMain.Location = new Point(0, 0);
+            pnlToolbarMain.Margin = new Padding(0);
             pnlToolbarMain.Name = "pnlToolbarMain";
-            pnlToolbarMain.Size = new Size(80, 39);
+            pnlToolbarMain.Size = new Size(600, 40);
             pnlToolbarMain.TabIndex = 1;
+            pnlToolbarMain.MouseDown += pnlToolbarMain_MouseDown;
+            pnlToolbarMain.MouseMove += pnlToolbarMain_MouseMove;
+            pnlToolbarMain.MouseUp += pnlToolbarMain_MouseUp;
+            // 
+            // lblHeader
+            // 
+            lblHeader.Dock = DockStyle.Left;
+            lblHeader.Location = new Point(80, 0);
+            lblHeader.Name = "lblHeader";
+            lblHeader.Size = new Size(64, 40);
+            lblHeader.TabIndex = 4;
+            lblHeader.Text = "9999x9999";
+            lblHeader.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // btnMinimize
+            // 
+            btnMinimize.BackColor = Color.Transparent;
+            btnMinimize.Dock = DockStyle.Right;
+            btnMinimize.FlatAppearance.BorderSize = 0;
+            btnMinimize.FlatStyle = FlatStyle.Flat;
+            btnMinimize.Image = fast_screener.Properties.Resources.minimize;
+            btnMinimize.Location = new Point(520, 0);
+            btnMinimize.Name = "btnMinimize";
+            btnMinimize.Size = new Size(40, 40);
+            btnMinimize.TabIndex = 2;
+            btnMinimize.Text = "_";
+            btnMinimize.UseVisualStyleBackColor = false;
+            btnMinimize.Click += btnMinimize_Click;
+            // 
+            // btnClose
+            // 
+            btnClose.BackColor = Color.Transparent;
+            btnClose.Dock = DockStyle.Right;
+            btnClose.FlatAppearance.BorderSize = 0;
+            btnClose.FlatStyle = FlatStyle.Flat;
+            btnClose.Image = fast_screener.Properties.Resources.close;
+            btnClose.Location = new Point(560, 0);
+            btnClose.Name = "btnClose";
+            btnClose.Size = new Size(40, 40);
+            btnClose.TabIndex = 3;
+            btnClose.UseVisualStyleBackColor = false;
+            btnClose.Click += btnClose_Click;
             // 
             // btnScreen
             // 
+            btnScreen.BackColor = Color.Transparent;
+            btnScreen.Dock = DockStyle.Left;
+            btnScreen.FlatAppearance.BorderSize = 0;
+            btnScreen.FlatStyle = FlatStyle.Flat;
             btnScreen.Image = fast_screener.Properties.Resources.scr;
-            btnScreen.Location = new Point(50, 12);
+            btnScreen.Location = new Point(40, 0);
             btnScreen.Name = "btnScreen";
-            btnScreen.Size = new Size(24, 24);
+            btnScreen.Size = new Size(40, 40);
             btnScreen.TabIndex = 1;
             toolTipMain.SetToolTip(btnScreen, "Take screenshot");
-            btnScreen.UseVisualStyleBackColor = true;
+            btnScreen.UseVisualStyleBackColor = false;
             btnScreen.Click += btnScreen_Click;
             // 
             // lblInfo
@@ -216,22 +279,55 @@
             lblInfo.Dock = DockStyle.Bottom;
             lblInfo.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             lblInfo.ForeColor = Color.White;
-            lblInfo.Location = new Point(0, 264);
+            lblInfo.Location = new Point(0, 304);
             lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(584, 34);
+            lblInfo.Size = new Size(600, 33);
             lblInfo.TabIndex = 2;
             lblInfo.Text = "Screenshot copied to clipboard";
             lblInfo.TextAlign = ContentAlignment.MiddleLeft;
             lblInfo.Visible = false;
             // 
+            // lineBottom
+            // 
+            lineBottom.BackColor = Color.Black;
+            lineBottom.Dock = DockStyle.Bottom;
+            lineBottom.Location = new Point(0, 303);
+            lineBottom.Name = "lineBottom";
+            lineBottom.Size = new Size(600, 1);
+            lineBottom.TabIndex = 3;
+            lineBottom.TabStop = false;
+            // 
+            // lineLeft
+            // 
+            lineLeft.BackColor = Color.Black;
+            lineLeft.Dock = DockStyle.Left;
+            lineLeft.Location = new Point(0, 40);
+            lineLeft.Name = "lineLeft";
+            lineLeft.Size = new Size(1, 263);
+            lineLeft.TabIndex = 4;
+            lineLeft.TabStop = false;
+            // 
+            // lineRight
+            // 
+            lineRight.BackColor = Color.Black;
+            lineRight.Dock = DockStyle.Right;
+            lineRight.Location = new Point(599, 40);
+            lineRight.Name = "lineRight";
+            lineRight.Size = new Size(1, 263);
+            lineRight.TabIndex = 5;
+            lineRight.TabStop = false;
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(584, 298);
+            ClientSize = new Size(600, 337);
+            Controls.Add(lineRight);
+            Controls.Add(lineLeft);
+            Controls.Add(lineBottom);
             Controls.Add(lblInfo);
             Controls.Add(pnlToolbarMain);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
             MaximizeBox = false;
@@ -246,8 +342,10 @@
             Move += FormMain_Move;
             contextMenuMain.ResumeLayout(false);
             pnlToolbarMain.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)lineBottom).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lineLeft).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lineRight).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -273,5 +371,11 @@
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem aboutToolStripMenuItem;
         private ToolStripMenuItem mitAddNumber;
+        private Button btnClose;
+        private Button btnMinimize;
+        private Label lblHeader;
+        private PictureBox lineBottom;
+        private PictureBox lineLeft;
+        private PictureBox lineRight;
     }
 }

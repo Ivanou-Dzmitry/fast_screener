@@ -89,7 +89,7 @@ namespace screener3
 
             toolTipTool.SetToolTip(trackBarArrowLenght, trackBarArrowLenghtToolTip);
 
-            lbArrowLenght.Text = "Arrow Lenght: " + trackBarArrowLenght.Value.ToString();
+            lbArrowLenght.Text = trackBarArrowLenght.Value.ToString();
 
             try
             {
@@ -192,6 +192,17 @@ namespace screener3
             }
 
             FormMain.arrowLenght = trackBarArrowLenght.Value;
+
+            try
+            {
+                FormMain.numberFontSize = int.Parse(tbNumberFontSize.Text);
+            }
+            catch
+            {
+
+                FormMain.numberFontSize = 26;
+            }
+            
 
         }
 
@@ -373,7 +384,7 @@ namespace screener3
         private void trackBarArrowLenght_ValueChanged(object sender, EventArgs e)
         {
 
-            lbArrowLenght.Text = "Arrow Lenght: " + trackBarArrowLenght.Value.ToString();
+            lbArrowLenght.Text = trackBarArrowLenght.Value.ToString();
         }
 
         private double CalcHypo(int width, int height)
@@ -413,10 +424,36 @@ namespace screener3
                 tbNumberFontSize.Text = tbNumberFontSize.Text.Remove(tbNumberFontSize.Text.Length - 1);
             }
 
-            if (Int32.TryParse(tbNumberFontSize.Text, out int numValueW) == true && numValueW < 8)
+            int maxFontSize = 96, minFontSize = 8;
+
+            if (Int32.TryParse(tbNumberFontSize.Text, out int numValueW) == true && numValueW > maxFontSize)
             {
                 tbNumberFontSize.Text = tbNumberFontSize.Text.Remove(tbNumberFontSize.Text.Length - 1);
             }
+
+            if (tbNumberFontSize.Text == "0")
+                tbNumberFontSize.Text = minFontSize.ToString();
+
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void cbLock_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
