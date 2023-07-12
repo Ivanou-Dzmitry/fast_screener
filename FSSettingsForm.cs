@@ -11,7 +11,7 @@ namespace screener3
     public partial class FormSet : Form
     {
 
-        private string limitsText = "Limits (WxH): max " + FormMain.VirtScreenWidth.ToString() + "x" + FormMain.VirtScreenHeight.ToString() + ", min " + FormMain.MIN_WIDTH.ToString() +"x" + FormMain.MIN_HEIGHT.ToString();
+        private string limitsText = "Limits (WxH): max " + FormMain.VirtScreenWidth.ToString() + "x" + FormMain.VirtScreenHeight.ToString() + ", min " + FormMain.MIN_WIDTH.ToString() + "x" + FormMain.MIN_HEIGHT.ToString();
 
         public FormSet()
         {
@@ -78,7 +78,8 @@ namespace screener3
                 cbLock_Click(this, EventArgs.Empty);
             }
 
-            int arrowLenght = Convert.ToInt32(CalcHypo(FormMain.clientWidth, FormMain.clientHeight));
+            //hypotinusa
+            int arrowLenght = Convert.ToInt32(CalcHypo(FormMain.clientWidth, FormMain.pnlToolBarH));
 
 
             trackBarArrowLenght.Maximum = arrowLenght;
@@ -200,7 +201,7 @@ namespace screener3
 
                 FormMain.numberFontSize = 26;
             }
-            
+
 
         }
 
@@ -434,24 +435,19 @@ namespace screener3
 
         }
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        private void rbGuidType01_Click(object sender, EventArgs e)
         {
-
+            FormMain.GridType = 1;
         }
 
-        private void cbLock_CheckedChanged(object sender, EventArgs e)
+        private void rbGuidType02_Click(object sender, EventArgs e)
         {
-
+            FormMain.GridType = 2;
         }
 
-        private void label6_Click(object sender, EventArgs e)
+        private void rbGuidType03_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void label8_Click(object sender, EventArgs e)
-        {
-
+            FormMain.GridType = 3;
         }
     }
 }

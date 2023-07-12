@@ -32,7 +32,7 @@ namespace screener3
         public static bool indentValueLock = false;
 
         //1 - 3x3, 2 - 4x4, 3 - custom
-        public static int GridType, ArrowType, StartResW = 0, StartResH = 0, numbering = 1;
+        public static int GridType, ArrowType, StartResW = 0, StartResH = 0, numbering = 1, pnlToolBarH = 0;
 
         static Point relativePoint;
 
@@ -52,8 +52,6 @@ namespace screener3
         private bool dragging = false;
         private Point dragCursorPoint;
         private Point dragFormPoint;
-
-        private int pnlToolBarH = 0;
 
 
         public FormMain()
@@ -102,7 +100,6 @@ namespace screener3
 
             // important point
             relativePoint = pnlCanvas.PointToClient(Cursor.Position);
-
 
 
             if (drawArrows == true)
@@ -356,6 +353,8 @@ namespace screener3
             this.ClientSize = new Size(clientW, clientH);
 
             TextUpdater(PROG_NAME, clientW, clientH);
+
+            this.Refresh();
         }
 
 
@@ -368,6 +367,8 @@ namespace screener3
             this.ClientSize = new Size(clientW, clientH);
 
             TextUpdater(PROG_NAME, clientW, clientH);
+
+            this.Refresh();
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
@@ -379,6 +380,8 @@ namespace screener3
             this.ClientSize = new Size(clientW, clientH);
 
             TextUpdater(PROG_NAME, clientW, clientH);
+
+            this.Refresh();
         }
 
         private void mitSize04_Click(object sender, EventArgs e)
@@ -390,6 +393,8 @@ namespace screener3
             this.ClientSize = new Size(clientW, clientH);
 
             TextUpdater(PROG_NAME, clientW, clientH);
+
+            this.Refresh();
         }
 
 
@@ -425,9 +430,6 @@ namespace screener3
 
             lblInfo.Visible = true;
             lblInfo.BackColor = Color.SteelBlue;
-
-            //refresh screen
-            this.Refresh();
 
             this.Text = FinalText;
 
@@ -513,6 +515,7 @@ namespace screener3
                     MessageBox.Show("Can't save screenshot to file! Path: " + URLString, "FastScreener Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
+
             }
 
 
@@ -521,6 +524,7 @@ namespace screener3
 
             //pnlToolbarMain.Visible = true;
             pnlCanvas.BorderStyle = BorderStyle.FixedSingle;
+
             lblHeader.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
 
 
@@ -538,7 +542,7 @@ namespace screener3
                 lblInfo.Text = lblInfo.Text + " and saved to file: " + Environment.NewLine + URLString;
             }
 
-
+            numbering = 1;
 
         }
 
@@ -756,7 +760,20 @@ namespace screener3
         private void mitShowGuidlines_Click(object sender, EventArgs e)
         {
             drawGridStatus();
-            this.Refresh();
+
+            if (drawArrows != true && drawNumber != true)
+            {
+                this.Refresh();
+            }
+
+            if (drawGrid == false)
+            {
+                DrawGrid(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), ALPHA_KEY_COLOR);
+            }
+            else
+            {
+                DrawGrid(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), gridColor);
+            }
 
         }
 
@@ -764,7 +781,6 @@ namespace screener3
         private void mitShowArrows_Click(object sender, EventArgs e)
         {
             drawArrowStatus();
-            this.Refresh();
         }
 
 
@@ -776,7 +792,8 @@ namespace screener3
         private void mitAddNumber_Click(object sender, EventArgs e)
         {
             drawNumberStatus();
-            this.Refresh();
+
+            numbering = 1;
         }
 
 
@@ -841,7 +858,11 @@ namespace screener3
 
             MenuItemUpdate();
 
-            this.Refresh();
+            if (drawGrid ==  true )
+            {
+                this.Refresh();
+                DrawGrid(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), gridColor);
+            }
         }
 
         private void MenuItemUpdate()
@@ -948,6 +969,11 @@ namespace screener3
             {
                 DrawGrid(e, gridColor);
             }
+        }
+
+        private void mitClear_Click(object sender, EventArgs e)
+        {
+            this.Refresh();
         }
     }
 

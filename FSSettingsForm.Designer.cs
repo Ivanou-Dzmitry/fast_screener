@@ -42,9 +42,11 @@
             trackBarArrowLenght = new TrackBar();
             picboxNumberColorSample = new PictureBox();
             tbNumberFontSize = new TextBox();
+            lbArrowLenght = new Label();
             panel1 = new Panel();
             btnOK = new Button();
             gboxGuidlines = new GroupBox();
+            label8 = new Label();
             label2 = new Label();
             lbIndent = new Label();
             label1 = new Label();
@@ -65,12 +67,10 @@
             gboxArrows = new GroupBox();
             label5 = new Label();
             label4 = new Label();
-            lbArrowLenght = new Label();
             label3 = new Label();
             grboxNumbers = new GroupBox();
             label7 = new Label();
             label6 = new Label();
-            label8 = new Label();
             ((System.ComponentModel.ISupportInitialize)picboxGuidlineColorSample).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picboxArrowColorSample).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBarArrowLenght).BeginInit();
@@ -170,13 +170,12 @@
             // 
             cbLock.Appearance = Appearance.Button;
             cbLock.Image = fast_screener.Properties.Resources.unlocked;
-            cbLock.Location = new Point(104, 8);
+            cbLock.Location = new Point(96, 8);
             cbLock.Name = "cbLock";
             cbLock.Size = new Size(23, 23);
             cbLock.TabIndex = 13;
             toolTipTool.SetToolTip(cbLock, "Lock values");
             cbLock.UseVisualStyleBackColor = true;
-            cbLock.CheckedChanged += cbLock_CheckedChanged;
             cbLock.Click += cbLock_Click;
             // 
             // trackBarArrowLenght
@@ -216,6 +215,17 @@
             toolTipTool.SetToolTip(tbNumberFontSize, "Font size");
             tbNumberFontSize.TextChanged += textBox1_TextChanged;
             // 
+            // lbArrowLenght
+            // 
+            lbArrowLenght.AutoSize = true;
+            lbArrowLenght.Location = new Point(288, 56);
+            lbArrowLenght.Name = "lbArrowLenght";
+            lbArrowLenght.Size = new Size(31, 15);
+            lbArrowLenght.TabIndex = 14;
+            lbArrowLenght.Text = "9999";
+            toolTipTool.SetToolTip(lbArrowLenght, "Current arrow lenght. Click to reset");
+            lbArrowLenght.Click += lbArrowLenght_Click;
+            // 
             // panel1
             // 
             panel1.Controls.Add(btnOK);
@@ -254,6 +264,16 @@
             gboxGuidlines.TabStop = false;
             gboxGuidlines.Text = "Grid";
             // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(8, 96);
+            label8.Margin = new Padding(0);
+            label8.Name = "label8";
+            label8.Size = new Size(114, 15);
+            label8.TabIndex = 16;
+            label8.Text = "Padding Letft/ Right";
+            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -291,13 +311,14 @@
             pnlGMargin.Controls.Add(tbGridlineRight);
             pnlGMargin.Enabled = false;
             pnlGMargin.Location = new Point(136, 53);
+            pnlGMargin.Margin = new Padding(0);
             pnlGMargin.Name = "pnlGMargin";
             pnlGMargin.Size = new Size(184, 75);
             pnlGMargin.TabIndex = 8;
             // 
             // tbGridlineTop
             // 
-            tbGridlineTop.Location = new Point(8, 8);
+            tbGridlineTop.Location = new Point(0, 8);
             tbGridlineTop.Name = "tbGridlineTop";
             tbGridlineTop.PlaceholderText = "Top";
             tbGridlineTop.Size = new Size(40, 23);
@@ -307,7 +328,7 @@
             // 
             // tbGridlineBottom
             // 
-            tbGridlineBottom.Location = new Point(56, 8);
+            tbGridlineBottom.Location = new Point(48, 8);
             tbGridlineBottom.Name = "tbGridlineBottom";
             tbGridlineBottom.PlaceholderText = "Bottom";
             tbGridlineBottom.Size = new Size(40, 23);
@@ -317,7 +338,8 @@
             // 
             // tbGridlineLeft
             // 
-            tbGridlineLeft.Location = new Point(8, 40);
+            tbGridlineLeft.Location = new Point(0, 40);
+            tbGridlineLeft.Margin = new Padding(0);
             tbGridlineLeft.Name = "tbGridlineLeft";
             tbGridlineLeft.PlaceholderText = "Left";
             tbGridlineLeft.Size = new Size(40, 23);
@@ -327,7 +349,7 @@
             // 
             // tbGridlineRight
             // 
-            tbGridlineRight.Location = new Point(56, 40);
+            tbGridlineRight.Location = new Point(48, 40);
             tbGridlineRight.Name = "tbGridlineRight";
             tbGridlineRight.PlaceholderText = "Right";
             tbGridlineRight.Size = new Size(40, 23);
@@ -344,6 +366,7 @@
             rbGuidType02.TabIndex = 6;
             rbGuidType02.Text = "4x4";
             rbGuidType02.UseVisualStyleBackColor = true;
+            rbGuidType02.Click += rbGuidType02_Click;
             // 
             // rbGuidType03
             // 
@@ -355,6 +378,7 @@
             rbGuidType03.Text = "Custom";
             rbGuidType03.UseVisualStyleBackColor = true;
             rbGuidType03.CheckedChanged += rbGuidType03_CheckedChanged;
+            rbGuidType03.Click += rbGuidType03_Click;
             // 
             // rbGuidType01
             // 
@@ -367,6 +391,7 @@
             rbGuidType01.TabStop = true;
             rbGuidType01.Text = "3x3";
             rbGuidType01.UseVisualStyleBackColor = true;
+            rbGuidType01.Click += rbGuidType01_Click;
             // 
             // dataGridSize
             // 
@@ -428,7 +453,6 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
             tableLayoutPanel1.Size = new Size(336, 432);
             tableLayoutPanel1.TabIndex = 7;
-            tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
             // 
             // gboxArrows
             // 
@@ -467,16 +491,6 @@
             label4.Size = new Size(44, 15);
             label4.TabIndex = 16;
             label4.Text = "Length";
-            // 
-            // lbArrowLenght
-            // 
-            lbArrowLenght.AutoSize = true;
-            lbArrowLenght.Location = new Point(288, 56);
-            lbArrowLenght.Name = "lbArrowLenght";
-            lbArrowLenght.Size = new Size(31, 15);
-            lbArrowLenght.TabIndex = 14;
-            lbArrowLenght.Text = "9999";
-            lbArrowLenght.Click += lbArrowLenght_Click;
             // 
             // label3
             // 
@@ -518,18 +532,6 @@
             label6.Size = new Size(54, 15);
             label6.TabIndex = 17;
             label6.Text = "Font Size";
-            label6.Click += label6_Click;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Location = new Point(8, 96);
-            label8.Margin = new Padding(0);
-            label8.Name = "label8";
-            label8.Size = new Size(114, 15);
-            label8.TabIndex = 16;
-            label8.Text = "Padding Letft/ Right";
-            label8.Click += label8_Click;
             // 
             // FormSet
             // 
