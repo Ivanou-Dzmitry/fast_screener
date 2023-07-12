@@ -54,14 +54,10 @@
             btnScreen = new Button();
             lblInfo = new Label();
             toolTipMain = new ToolTip(components);
-            lineBottom = new PictureBox();
-            lineLeft = new PictureBox();
-            lineRight = new PictureBox();
+            pnlCanvas = new Panel();
             contextMenuMain.SuspendLayout();
             pnlToolbarMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)lineBottom).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)lineLeft).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)lineRight).BeginInit();
+            pnlCanvas.SuspendLayout();
             SuspendLayout();
             // 
             // btnMainMenu
@@ -203,7 +199,7 @@
             // 
             // pnlToolbarMain
             // 
-            pnlToolbarMain.BackColor = SystemColors.WindowFrame;
+            pnlToolbarMain.BackColor = Color.SlateGray;
             pnlToolbarMain.Controls.Add(lblHeader);
             pnlToolbarMain.Controls.Add(btnMinimize);
             pnlToolbarMain.Controls.Add(btnClose);
@@ -246,7 +242,7 @@
             // 
             // btnClose
             // 
-            btnClose.BackColor = Color.Transparent;
+            btnClose.BackColor = Color.Firebrick;
             btnClose.Dock = DockStyle.Right;
             btnClose.FlatAppearance.BorderSize = 0;
             btnClose.FlatStyle = FlatStyle.Flat;
@@ -279,53 +275,31 @@
             lblInfo.Dock = DockStyle.Bottom;
             lblInfo.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             lblInfo.ForeColor = Color.White;
-            lblInfo.Location = new Point(0, 304);
+            lblInfo.Location = new Point(0, 262);
             lblInfo.Name = "lblInfo";
-            lblInfo.Size = new Size(600, 33);
+            lblInfo.Size = new Size(598, 33);
             lblInfo.TabIndex = 2;
             lblInfo.Text = "Screenshot copied to clipboard";
             lblInfo.TextAlign = ContentAlignment.MiddleLeft;
             lblInfo.Visible = false;
             // 
-            // lineBottom
+            // pnlCanvas
             // 
-            lineBottom.BackColor = Color.Black;
-            lineBottom.Dock = DockStyle.Bottom;
-            lineBottom.Location = new Point(0, 303);
-            lineBottom.Name = "lineBottom";
-            lineBottom.Size = new Size(600, 1);
-            lineBottom.TabIndex = 3;
-            lineBottom.TabStop = false;
-            // 
-            // lineLeft
-            // 
-            lineLeft.BackColor = Color.Black;
-            lineLeft.Dock = DockStyle.Left;
-            lineLeft.Location = new Point(0, 40);
-            lineLeft.Name = "lineLeft";
-            lineLeft.Size = new Size(1, 263);
-            lineLeft.TabIndex = 4;
-            lineLeft.TabStop = false;
-            // 
-            // lineRight
-            // 
-            lineRight.BackColor = Color.Black;
-            lineRight.Dock = DockStyle.Right;
-            lineRight.Location = new Point(599, 40);
-            lineRight.Name = "lineRight";
-            lineRight.Size = new Size(1, 263);
-            lineRight.TabIndex = 5;
-            lineRight.TabStop = false;
+            pnlCanvas.BorderStyle = BorderStyle.FixedSingle;
+            pnlCanvas.Controls.Add(lblInfo);
+            pnlCanvas.Dock = DockStyle.Fill;
+            pnlCanvas.Location = new Point(0, 40);
+            pnlCanvas.Name = "pnlCanvas";
+            pnlCanvas.Size = new Size(600, 297);
+            pnlCanvas.TabIndex = 6;
+            pnlCanvas.Paint += pnlCanvas_Paint;
             // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(600, 337);
-            Controls.Add(lineRight);
-            Controls.Add(lineLeft);
-            Controls.Add(lineBottom);
-            Controls.Add(lblInfo);
+            Controls.Add(pnlCanvas);
             Controls.Add(pnlToolbarMain);
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -342,9 +316,7 @@
             Move += FormMain_Move;
             contextMenuMain.ResumeLayout(false);
             pnlToolbarMain.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)lineBottom).EndInit();
-            ((System.ComponentModel.ISupportInitialize)lineLeft).EndInit();
-            ((System.ComponentModel.ISupportInitialize)lineRight).EndInit();
+            pnlCanvas.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -374,8 +346,6 @@
         private Button btnClose;
         private Button btnMinimize;
         private Label lblHeader;
-        private PictureBox lineBottom;
-        private PictureBox lineLeft;
-        private PictureBox lineRight;
+        private Panel pnlCanvas;
     }
 }

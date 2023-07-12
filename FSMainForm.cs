@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 
 namespace screener3
 {
@@ -17,7 +18,7 @@ namespace screener3
         public static int VirtScreenWidth = 0, VirtScreenHeight = 0, clientWidth, clientHeight, arrowLenght, NewWidth = 0, NewHeight = 0, numberFontSize;
 
         //Min size
-        public const int MIN_WIDTH = 200, MIN_HEIGHT = 100;
+        public const int MIN_WIDTH = 300, MIN_HEIGHT = 200;
 
         //alpha color to remove 
         private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 0, 1);
@@ -61,10 +62,6 @@ namespace screener3
 
             pnlToolBarH = pnlToolbarMain.Height;
 
-            lineLeft.BackColor = frameColor;
-            lineBottom.BackColor = frameColor;
-            lineRight.BackColor = frameColor;
-
             lblHeader.TabStop = false;
 
             //set transparent
@@ -103,18 +100,21 @@ namespace screener3
         private void mouseHook_MMB(MouseHook.MSLLHOOKSTRUCT mouse)
         {
 
-            relativePoint = this.PointToClient(Cursor.Position);
+            // important point
+            relativePoint = pnlCanvas.PointToClient(Cursor.Position);
+
+
 
             if (drawArrows == true)
             {
 
-                DrawArrow(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), relativePoint, arrowColor);
+                DrawArrow(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, arrowColor);
 
             }
 
             if (drawNumber == true)
             {
-                DrawNumber(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), relativePoint, numberColor, numbering.ToString());
+                DrawNumber(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, numberColor, numbering.ToString());
                 numbering++;
             }
 
@@ -124,9 +124,11 @@ namespace screener3
         public static void DrawNumber(PaintEventArgs e, Point relativePoint, Color color, String numberString)
         {
 
+            int outlineShift = 2;
+
             Font drawFont = new Font("Arial", numberFontSize, FontStyle.Bold);
             //outline
-            Font outlineFont = new Font("Arial", numberFontSize + 2, FontStyle.Bold);
+            Font outlineFont = new Font("Arial", numberFontSize + outlineShift, FontStyle.Bold);
 
             SolidBrush drawBrush = new SolidBrush(color);
             //outline
@@ -134,10 +136,14 @@ namespace screener3
 
             StringFormat drawFormat = new StringFormat();
 
-            //outline
-            e.Graphics.DrawString(numberString, outlineFont, outlineBrush, relativePoint.X, relativePoint.Y - numberFontSize - 1, drawFormat);
+            //align string
+            drawFormat.Alignment = StringAlignment.Center;
+            drawFormat.LineAlignment = StringAlignment.Center;
 
-            e.Graphics.DrawString(numberString, drawFont, drawBrush, relativePoint.X, relativePoint.Y - numberFontSize, drawFormat);
+            //outline
+            e.Graphics.DrawString(numberString, outlineFont, outlineBrush, relativePoint.X, relativePoint.Y + outlineShift, drawFormat);
+
+            e.Graphics.DrawString(numberString, drawFont, drawBrush, relativePoint.X, relativePoint.Y, drawFormat);
 
 
             drawFont.Dispose();
@@ -339,7 +345,7 @@ namespace screener3
         private void btnMainMenu_Click(object sender, EventArgs e)
         {
             contextMenuMain.Show(Cursor.Position.X, Cursor.Position.Y);
-            
+
         }
 
         private void mitSize01_Click(object sender, EventArgs e)
@@ -391,13 +397,13 @@ namespace screener3
         private void FormMain_Move(object sender, EventArgs e)
         {
             lblInfo.Visible = false;
-            lineBottom.Visible = true;
+
         }
 
         private void contextMenuMain_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             lblInfo.Visible = false;
-            lineBottom.Visible = true;
+
         }
 
         private void btnScreen_Click(object sender, EventArgs e)
@@ -428,16 +434,14 @@ namespace screener3
             return FinalText;
         }
 
+        //SCREEN
         private void CaptureMyScreen()
         {
 
             //this.Hide();
-            pnlToolbarMain.Visible = false;
+            //pnlToolbarMain.Visible = false;
+            pnlCanvas.BorderStyle = BorderStyle.None;
             lblInfo.Visible = false;
-
-            lineLeft.Visible = false;
-            lineBottom.Visible = false;
-            lineRight.Visible = false;
 
             bool gridIsOn = false;
 
@@ -445,12 +449,13 @@ namespace screener3
             {
                 gridIsOn = true;
 
-                DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), ALPHA_KEY_COLOR);
+                DrawGrid(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), ALPHA_KEY_COLOR);
                 lblInfo.Visible = false;
             }
 
-            int bitmapWidth = this.ClientSize.Width;
-            int bitmapHeight = this.ClientSize.Height - pnlToolBarH;
+            // bitmap size
+            int bitmapWidth = pnlCanvas.Width;
+            int bitmapHeight = pnlCanvas.Height;
 
             //Creating a new Bitmap object
             Bitmap captureBitmap = new Bitmap(bitmapWidth, bitmapHeight, PixelFormat.Format32bppArgb);
@@ -514,20 +519,15 @@ namespace screener3
             Clipboard.SetImage(captureBitmap);
 
 
-            pnlToolbarMain.Visible = true;
-
-            lineLeft.Visible = true;
-            
-            lineRight.Visible = true;
-
-
+            //pnlToolbarMain.Visible = true;
+            pnlCanvas.BorderStyle = BorderStyle.FixedSingle;
             lblHeader.Text = TextUpdater(PROG_NAME, this.ClientSize.Width, this.ClientSize.Height);
 
 
             //turn on grid again
             if (gridIsOn == true)
             {
-                DrawGrid(new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle), gridColor);
+                DrawGrid(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), gridColor);
 
             }
 
@@ -546,16 +546,12 @@ namespace screener3
         {
 
             lblInfo.Visible = false;
-            lineBottom.Visible = true;
         }
 
 
         private void FormMain_Paint(object sender, PaintEventArgs e)
         {
-            if ((drawGrid == true) && (mitShowGuidlines.CheckState == CheckState.Checked))
-            {
-                DrawGrid(e, gridColor);
-            }
+
 
         }
 
@@ -567,11 +563,8 @@ namespace screener3
 
             if (GridType == 1)
             {
-                int screenAreaH = (this.ClientSize.Height - pnlToolBarH);
-
-
-                initialPointVertical = this.ClientSize.Width / 3;
-                initialPointHorizontal = (this.ClientSize.Height + pnlToolBarH) / 3 ; //set size
+                initialPointVertical = pnlCanvas.Width / 3;
+                initialPointHorizontal = pnlCanvas.Height / 3; //set size
 
                 Pen pen = new Pen(lineColor);
 
@@ -587,8 +580,8 @@ namespace screener3
             if (GridType == 2)
             {
 
-                initialPointVertical = this.ClientSize.Width / 4;
-                initialPointHorizontal = (this.ClientSize.Height + pnlToolBarH)/ 4;
+                initialPointVertical = pnlCanvas.Width / 4;
+                initialPointHorizontal = pnlCanvas.Height / 4;
 
                 Pen pen = new Pen(lineColor);
 
@@ -616,16 +609,20 @@ namespace screener3
                 Pen pen = new Pen(lineColor);
 
                 //top
-                e.Graphics.DrawLine(pen, 0, topIndent + pnlToolBarH, this.ClientSize.Width, topIndent + pnlToolBarH);
+                e.Graphics.DrawLine(pen, 0, topIndent, pnlCanvas.Width, topIndent);
+
+                // border fix
+                int canvasSizeH = pnlCanvas.Height - 3;
+                int canvasSizeW = pnlCanvas.Width - 3;
 
                 //bottom
-                e.Graphics.DrawLine(pen, 0, this.ClientSize.Height - bottonIndent, this.ClientSize.Width, this.ClientSize.Height - bottonIndent);
+                e.Graphics.DrawLine(pen, 0, canvasSizeH - bottonIndent, pnlCanvas.Width, canvasSizeH - bottonIndent);
 
                 //left
-                e.Graphics.DrawLine(pen, leftIndent, 0, leftIndent, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, leftIndent, 0, leftIndent, pnlCanvas.Height);
 
                 //right
-                e.Graphics.DrawLine(pen, this.ClientSize.Width - rightIndent, 0, this.ClientSize.Width - rightIndent, this.ClientSize.Height);
+                e.Graphics.DrawLine(pen, canvasSizeW - rightIndent, 0, canvasSizeW - rightIndent, pnlCanvas.Height);
 
             }
 
@@ -691,13 +688,13 @@ namespace screener3
             {
                 mitShowGuidlines.CheckState = CheckState.Unchecked;
                 drawGrid = false;
-                lblInfo.Text = "Guidlines turned OFF";
+                lblInfo.Text = "Grid turned OFF";
             }
             else
             {
                 mitShowGuidlines.CheckState = CheckState.Checked;
                 drawGrid = true;
-                lblInfo.Text = "Guidlines turned ON";
+                lblInfo.Text = "Grid turned ON";
             }
 
         }
@@ -943,6 +940,14 @@ namespace screener3
         private void btnMinimize_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void pnlCanvas_Paint(object sender, PaintEventArgs e)
+        {
+            if ((drawGrid == true) && (mitShowGuidlines.CheckState == CheckState.Checked))
+            {
+                DrawGrid(e, gridColor);
+            }
         }
     }
 

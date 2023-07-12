@@ -11,9 +11,7 @@ namespace screener3
     public partial class FormSet : Form
     {
 
-        public Color guidlinesColor;
-
-        private string limitsText = "Limits (WxH): max " + FormMain.VirtScreenWidth.ToString() + "x" + FormMain.VirtScreenHeight.ToString() + ", min 200x100";
+        private string limitsText = "Limits (WxH): max " + FormMain.VirtScreenWidth.ToString() + "x" + FormMain.VirtScreenHeight.ToString() + ", min " + FormMain.MIN_WIDTH.ToString() +"x" + FormMain.MIN_HEIGHT.ToString();
 
         public FormSet()
         {
