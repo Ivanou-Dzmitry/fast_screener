@@ -40,7 +40,7 @@
             mitTakeScreen = new ToolStripMenuItem();
             mitClear = new ToolStripMenuItem();
             toolStripSeparator3 = new ToolStripSeparator();
-            mitShowGuidlines = new ToolStripMenuItem();
+            mitShowGrid = new ToolStripMenuItem();
             mitShowArrows = new ToolStripMenuItem();
             mitAddNumber = new ToolStripMenuItem();
             mitSaveFile = new ToolStripMenuItem();
@@ -50,6 +50,7 @@
             mitExit = new ToolStripMenuItem();
             pnlToolbarMain = new Panel();
             lblHeader = new Label();
+            btnArrowType = new Button();
             btnMinimize = new Button();
             btnClose = new Button();
             btnScreen = new Button();
@@ -79,7 +80,7 @@
             // 
             // contextMenuMain
             // 
-            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitTakeScreen, mitClear, toolStripSeparator3, mitShowGuidlines, mitShowArrows, mitAddNumber, mitSaveFile, mitSettings, toolStripSeparator1, aboutToolStripMenuItem, mitExit });
+            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitTakeScreen, mitClear, toolStripSeparator3, mitShowGrid, mitShowArrows, mitAddNumber, mitSaveFile, mitSettings, toolStripSeparator1, aboutToolStripMenuItem, mitExit });
             contextMenuMain.Name = "contextMenuStrip1";
             contextMenuMain.Size = new Size(236, 308);
             contextMenuMain.Opening += contextMenuMain_Opening;
@@ -143,15 +144,15 @@
             toolStripSeparator3.Name = "toolStripSeparator3";
             toolStripSeparator3.Size = new Size(232, 6);
             // 
-            // mitShowGuidlines
+            // mitShowGrid
             // 
-            mitShowGuidlines.Checked = true;
-            mitShowGuidlines.CheckState = CheckState.Checked;
-            mitShowGuidlines.Name = "mitShowGuidlines";
-            mitShowGuidlines.ShortcutKeys = Keys.Control | Keys.Shift | Keys.G;
-            mitShowGuidlines.Size = new Size(235, 22);
-            mitShowGuidlines.Text = "Show Grid";
-            mitShowGuidlines.Click += mitShowGuidlines_Click;
+            mitShowGrid.Checked = true;
+            mitShowGrid.CheckState = CheckState.Checked;
+            mitShowGrid.Name = "mitShowGrid";
+            mitShowGrid.ShortcutKeys = Keys.Control | Keys.Shift | Keys.G;
+            mitShowGrid.Size = new Size(235, 22);
+            mitShowGrid.Text = "Show Grid";
+            mitShowGrid.Click += mitShowGrid_Click;
             // 
             // mitShowArrows
             // 
@@ -210,6 +211,7 @@
             // 
             pnlToolbarMain.BackColor = Color.SlateGray;
             pnlToolbarMain.Controls.Add(lblHeader);
+            pnlToolbarMain.Controls.Add(btnArrowType);
             pnlToolbarMain.Controls.Add(btnMinimize);
             pnlToolbarMain.Controls.Add(btnClose);
             pnlToolbarMain.Controls.Add(btnScreen);
@@ -227,12 +229,28 @@
             // lblHeader
             // 
             lblHeader.Dock = DockStyle.Left;
-            lblHeader.Location = new Point(80, 0);
+            lblHeader.Location = new Point(120, 0);
             lblHeader.Name = "lblHeader";
             lblHeader.Size = new Size(64, 40);
             lblHeader.TabIndex = 4;
             lblHeader.Text = "9999x9999";
             lblHeader.TextAlign = ContentAlignment.MiddleLeft;
+            lblHeader.Click += lblHeader_Click;
+            // 
+            // btnArrowType
+            // 
+            btnArrowType.BackColor = Color.Transparent;
+            btnArrowType.Dock = DockStyle.Left;
+            btnArrowType.FlatAppearance.BorderSize = 0;
+            btnArrowType.FlatStyle = FlatStyle.Flat;
+            btnArrowType.Image = fast_screener.Properties.Resources.arrow_type01;
+            btnArrowType.Location = new Point(80, 0);
+            btnArrowType.Name = "btnArrowType";
+            btnArrowType.Size = new Size(40, 40);
+            btnArrowType.TabIndex = 2;
+            toolTipMain.SetToolTip(btnArrowType, "Arrow type");
+            btnArrowType.UseVisualStyleBackColor = false;
+            btnArrowType.Click += btnArrowType_Click;
             // 
             // btnMinimize
             // 
@@ -244,7 +262,7 @@
             btnMinimize.Location = new Point(520, 0);
             btnMinimize.Name = "btnMinimize";
             btnMinimize.Size = new Size(40, 40);
-            btnMinimize.TabIndex = 2;
+            btnMinimize.TabIndex = 3;
             btnMinimize.Text = "_";
             btnMinimize.UseVisualStyleBackColor = false;
             btnMinimize.Click += btnMinimize_Click;
@@ -259,7 +277,7 @@
             btnClose.Location = new Point(560, 0);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(40, 40);
-            btnClose.TabIndex = 3;
+            btnClose.TabIndex = 4;
             btnClose.UseVisualStyleBackColor = false;
             btnClose.Click += btnClose_Click;
             // 
@@ -320,8 +338,6 @@
             TopMost = true;
             Deactivate += FormMain_Deactivate;
             Shown += FormMain_Shown;
-            Paint += FormMain_Paint;
-            KeyDown += FormMain_KeyDown;
             Move += FormMain_Move;
             contextMenuMain.ResumeLayout(false);
             pnlToolbarMain.ResumeLayout(false);
@@ -345,7 +361,7 @@
         private ToolTip toolTipMain;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem mitSettings;
-        private ToolStripMenuItem mitShowGuidlines;
+        private ToolStripMenuItem mitShowGrid;
         private ToolStripMenuItem mitShowArrows;
         private ToolStripMenuItem mitExit;
         private ToolStripMenuItem mitSaveFile;
@@ -357,5 +373,6 @@
         private Label lblHeader;
         private Panel pnlCanvas;
         private ToolStripMenuItem mitClear;
+        private Button btnArrowType;
     }
 }
