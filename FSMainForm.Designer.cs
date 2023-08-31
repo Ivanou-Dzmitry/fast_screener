@@ -235,7 +235,7 @@
             lblHeader.TabIndex = 4;
             lblHeader.Text = "9999x9999";
             lblHeader.TextAlign = ContentAlignment.MiddleLeft;
-            lblHeader.Click += lblHeader_Click;
+            toolTipMain.SetToolTip(lblHeader, "Current size");
             // 
             // btnArrowType
             // 

@@ -27,7 +27,10 @@ namespace screener3
         private Color ALPHA_KEY_COLOR = Color.FromArgb(255, 1, 0, 1);
 
         //default guidlines color
-        public static Color gridColor = Color.LightGray, arrowColor = Color.Aqua, numberColor = Color.Yellow, frameColor = Color.Gray;
+        public static Color gridColor = Color.LightGray,
+            arrowColor = Color.Aqua,
+            numberColor = Color.Yellow,
+            frameColor = Color.Gray;
 
         //for guidlines
         private bool drawGrid, drawArrows, saveToFile, drawNumber;
@@ -158,6 +161,7 @@ namespace screener3
 
         }
 
+        //load SETTINGS
         private void LoadSettings()
         {
 
@@ -229,12 +233,24 @@ namespace screener3
             VirtScreenHeight = VirtScreenRect.Height;
 
 
+            //Grid COLOR
             tempValueFromConfig = ConfigurationManager.AppSettings["guidlines_color"];
-            gridColor = ColorTranslator.FromHtml(tempValueFromConfig);
+            try
+            {
+                gridColor = ColorTranslator.FromHtml(tempValueFromConfig);
+                //MessageBox.Show(gridColor.ToString());
+            }
+            catch
+            {
+                gridColor = Color.FromName(tempValueFromConfig);
+                //MessageBox.Show(gridColor.ToString());
+            }
 
+            //Arrow COLOR
             tempValueFromConfig = ConfigurationManager.AppSettings["arrow_color"];
             arrowColor = ColorTranslator.FromHtml(tempValueFromConfig);
 
+            //Number COLOR
             tempValueFromConfig = ConfigurationManager.AppSettings["number_color"];
             numberColor = ColorTranslator.FromHtml(tempValueFromConfig);
 
@@ -285,7 +301,7 @@ namespace screener3
                 btnArrowType.Enabled = false;
             }
 
-            
+
 
             tempValueFromConfig = ConfigurationManager.AppSettings["draw_number"];
             drawNumber = Convert.ToBoolean(tempValueFromConfig);
@@ -474,26 +490,20 @@ namespace screener3
             //Creating a new Bitmap object
             Bitmap captureBitmap = new Bitmap(bitmapWidth, bitmapHeight, PixelFormat.Format32bppArgb);
 
-            //Bitmap captureBitmap = new Bitmap(int width, int height, PixelFormat);
-            //Creating a Rectangle object which will
-            //capture our Current Screen
+            //Creating a Rectangle object which will capture our Current Screen
             Rectangle captureRectangle = Screen.AllScreens[0].Bounds;
-
 
             //Creating a New Graphics Object
             Graphics captureGraphics = Graphics.FromImage(captureBitmap);
 
-            //Get window elements
-            //int captionH = SystemInformation.CaptionHeight;
-            //int frameSH = SystemInformation.FrameBorderSize.Height;
-            //int frameSW = SystemInformation.FrameBorderSize.Width;
-
-            //Posytion of screenshot
+            //Position of screenshot
             int posY = this.Location.Y + pnlToolBarH; //set size
             int posX = this.Location.X;
 
             //Copying Image from The Screen
+
             captureGraphics.CopyFromScreen(posX, posY, 0, 0, captureRectangle.Size);
+            captureGraphics.Dispose();
 
             string URLString = "";
 
@@ -527,9 +537,7 @@ namespace screener3
                     MessageBox.Show("Can't save screenshot to file! Path: " + URLString, "FastScreener Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-
             }
-
 
             Clipboard.SetImage(captureBitmap);
 
@@ -555,6 +563,7 @@ namespace screener3
             //return nubering to start
             numbering = 1;
 
+            //dispose objects
             captureBitmap.Dispose();
             captureGraphics.Dispose();
         }
@@ -667,7 +676,7 @@ namespace screener3
 
                 case 3:
                     startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y - arrowLenght);
-                    
+
                     break;
                 case 4:
                     startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y + arrowLenght);
@@ -834,7 +843,7 @@ namespace screener3
 
         private void SaveConfig()
         {
-            SetSetting("guidlines_color", ColorTranslator.ToHtml(gridColor));
+            SetSetting("guidlines_color", ColorTranslator.ToHtml(gridColor)); //COLOR
             SetSetting("arrow_color", ColorTranslator.ToHtml(arrowColor));
             SetSetting("number_color", ColorTranslator.ToHtml(numberColor));
 
@@ -1002,18 +1011,11 @@ namespace screener3
             }
         }
 
-
-        private void lblHeader_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnArrowType_Click(object sender, EventArgs e)
         {
             clickCount++;
 
             arrowPictureUpdater(clickCount);
-
         }
     }
 
