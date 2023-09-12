@@ -1,14 +1,9 @@
 using fast_screener;
 using fast_screener.Properties;
-using Microsoft.VisualBasic.Devices;
 using System.Configuration;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Dynamic;
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-
 namespace screener3
 {
 
@@ -238,12 +233,10 @@ namespace screener3
             try
             {
                 gridColor = ColorTranslator.FromHtml(tempValueFromConfig);
-                //MessageBox.Show(gridColor.ToString());
             }
             catch
             {
                 gridColor = Color.FromName(tempValueFromConfig);
-                //MessageBox.Show(gridColor.ToString());
             }
 
             //Arrow COLOR
@@ -432,12 +425,12 @@ namespace screener3
 
         private void FormMain_Move(object sender, EventArgs e)
         {
-            lblInfo.Visible = false;
+            toolTipMain.Hide(pnlToolbarMain);
         }
 
         private void contextMenuMain_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            lblInfo.Visible = false;
+            toolTipMain.Hide(pnlToolbarMain);
         }
 
         private void btnScreen_Click(object sender, EventArgs e)
@@ -455,10 +448,7 @@ namespace screener3
 
             toolTipMain.SetToolTip(btnScreen, "Take screenshot. Size: " + FinalText + "px");
 
-            lblInfo.Text = "Size setted to " + FinalText + "px";
-
-            lblInfo.Visible = true;
-            lblInfo.BackColor = Color.SteelBlue;
+            toolTipMain.Show("Size setted to " + FinalText + "px", pnlToolbarMain);
 
             this.Text = FinalText;
 
@@ -470,7 +460,7 @@ namespace screener3
         {
 
             pnlCanvas.BorderStyle = BorderStyle.None;
-            lblInfo.Visible = false;
+            toolTipMain.Hide(pnlToolbarMain);
 
             bool gridIsOn = false;
 
@@ -480,7 +470,7 @@ namespace screener3
                 gridIsOn = true;
 
                 DrawGrid(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), ALPHA_KEY_COLOR);
-                lblInfo.Visible = false;
+                toolTipMain.Hide(pnlToolbarMain);
             }
 
             // bitmap size
@@ -552,12 +542,14 @@ namespace screener3
 
             }
 
-            lblInfo.Text = "Screenshot copied to clipboard";
+            toolTipMain.Show("Screenshot copied to clipboard", pnlToolbarMain);
 
             //is save to file
             if (saveToFile == true)
             {
-                lblInfo.Text = lblInfo.Text + " and saved to file: " + Environment.NewLine + URLString;
+                string longString = "Screenshot copied to clipboard and saved to file: " + Environment.NewLine + URLString;
+
+                toolTipMain.Show(longString, pnlToolbarMain);
             }
 
             //return nubering to start
@@ -571,7 +563,7 @@ namespace screener3
         private void FormMain_Deactivate(object sender, EventArgs e)
         {
 
-            lblInfo.Visible = false;
+            toolTipMain.Hide(pnlToolbarMain);
         }
 
 
@@ -712,76 +704,73 @@ namespace screener3
         private void drawGridStatus()
         {
 
-            lblInfo.Visible = true;
-
             if (mitShowGrid.CheckState == CheckState.Checked)
             {
                 mitShowGrid.CheckState = CheckState.Unchecked;
                 drawGrid = false;
-                lblInfo.Text = "Grid turned OFF";
+                toolTipMain.Show("Grid turned OFF", pnlToolbarMain);
             }
             else
             {
                 mitShowGrid.CheckState = CheckState.Checked;
                 drawGrid = true;
-                lblInfo.Text = "Grid turned ON";
+                toolTipMain.Show("Grid turned ON", pnlToolbarMain);
             }
 
         }
 
         private void drawArrowStatus()
         {
-            lblInfo.Visible = true;
 
             if (mitShowArrows.CheckState == CheckState.Checked)
             {
                 mitShowArrows.CheckState = CheckState.Unchecked;
                 drawArrows = false;
-                lblInfo.Text = "Arrows turned OFF";
+                toolTipMain.Show("Arrows turned OFF", pnlToolbarMain);
                 btnArrowType.Enabled = false;
             }
             else
             {
                 mitShowArrows.CheckState = CheckState.Checked;
                 drawArrows = true;
-                lblInfo.Text = "Arrows turned ON";
+                toolTipMain.Show("Arrows turned ON", pnlToolbarMain);
                 btnArrowType.Enabled = true;
             }
         }
 
         private void drawNumberStatus()
         {
-            lblInfo.Visible = true;
 
             if (mitAddNumber.CheckState == CheckState.Checked)
             {
                 mitAddNumber.CheckState = CheckState.Unchecked;
                 drawNumber = false;
-                lblInfo.Text = "Numbers turned OFF";
+                toolTipMain.Show("Numbers turned OFF", pnlToolbarMain);
+
             }
             else
             {
                 mitAddNumber.CheckState = CheckState.Checked;
                 drawNumber = true;
-                lblInfo.Text = "Numbers turned ON";
+                toolTipMain.Show("Numbers turned ON", pnlToolbarMain);
+
             }
         }
 
         private void saveToFileStatus()
         {
-            lblInfo.Visible = true;
 
             if (mitSaveFile.CheckState == CheckState.Checked)
             {
                 mitSaveFile.CheckState = CheckState.Unchecked;
                 saveToFile = false;
-                lblInfo.Text = "Save to file turned OFF";
+                toolTipMain.Show("Save to file turned OFF", pnlToolbarMain);
             }
             else
             {
                 mitSaveFile.CheckState = CheckState.Checked;
                 saveToFile = true;
-                lblInfo.Text = "Save to file turned ON";
+                toolTipMain.Show("Save to file turned ON", pnlToolbarMain);
             }
         }
 
@@ -1016,6 +1005,8 @@ namespace screener3
             clickCount++;
 
             arrowPictureUpdater(clickCount);
+
+            toolTipMain.Hide(pnlToolbarMain);
         }
     }
 
