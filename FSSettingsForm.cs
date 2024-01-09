@@ -1,31 +1,13 @@
 ﻿
 using fast_screener;
 using fast_screener.Properties;
-using Microsoft.VisualBasic;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
-using System.Reflection;
-using System.Reflection.Emit;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using static screener3.FormSet;
-using static System.ComponentModel.TypeConverter;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-
-
-
 
 
 namespace screener3
 {
-
-
 
     public partial class FormSet : Form
     {
@@ -34,8 +16,6 @@ namespace screener3
         private bool lockPadding;
         private int lockedPadding;
         int defaultPadding = 10;
-
-
 
         public FormSet()
         {
@@ -243,6 +223,34 @@ namespace screener3
                 case "4.2 Height":
                     FormMain.RES_WORKED[1, 3] = sizeChecker(Convert.ToInt32(value), "height");
                     break;
+                case "Frame Color":
+                    FormMain.frameColor = stringToColor(value);
+                    break;
+                case "Frame Width":
+                    int currentW = int.Parse(value);                    
+                    if (currentW > FormMain.clientWidth)
+                    {
+                        FormMain.FrameWidth = 80;
+                    }
+                    else
+                    {
+                        FormMain.FrameWidth = currentW;
+                    }
+                    
+                    break;
+                case "Frame Height":
+                    int currentH = int.Parse(value);
+                    if (currentH > FormMain.clientHeight)
+                    {
+                        FormMain.FrameHeight = 80;
+                    }
+                    else
+                    {
+                        FormMain.FrameHeight = currentH;
+                    }
+                    
+                    break;
+
                 default:
                     break;
             }
@@ -530,6 +538,7 @@ namespace screener3
             pgSettings.SelectedObject = numbers;
 
         }
+
         public class ResWidthConverter : Int16Converter
         {
             public override object ConvertTo(ITypeDescriptorContext context,
@@ -564,6 +573,37 @@ namespace screener3
                 return base.ConvertTo(context, culture, value, destinationType);
             }
 
+        }
+
+        //FRAME
+        public class Frame
+        {
+            [Category("Frame Settings")]
+            [Description("Frame Width")]
+            [DisplayName("Frame Width")]
+            public int FrameWidth { get; set; } 
+ 
+            [Category("Frame Settings")]
+            [Description("Frame Height")]
+            [DisplayName("Frame Height")]
+            public int FrameHeight { get; set; }
+
+            [Category("Frame Settings")]
+            [Description("Set frame color.")]
+            [DisplayName("Frame Color")]
+            public Color Color { get; set; }
+
+        }
+
+        private void FrameSettings()
+        {
+            Frame frame = new Frame();
+
+            frame.FrameWidth = Convert.ToInt32(FormMain.FrameWidth);
+            frame.FrameHeight = Convert.ToInt32(FormMain.FrameHeight);
+            frame.Color = FormMain.frameColor;
+           
+            pgSettings.SelectedObject = frame;
         }
 
         //NUMBER
@@ -650,6 +690,9 @@ namespace screener3
             }
         }
 
+     
+
+
         //resolution
         private void ResolutionSettings()
         {
@@ -735,12 +778,15 @@ namespace screener3
                     ArrowSettings();
                     break;
                 case 1:
-                    GridSettings();
+                    FrameSettings();
                     break;
                 case 2:
-                    NumbersSettings();
+                    GridSettings();
                     break;
                 case 3:
+                    NumbersSettings();
+                    break;
+                case 4:
                     ResolutionSettings();
                     break;
                 default:

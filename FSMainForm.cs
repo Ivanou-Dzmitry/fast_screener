@@ -1,9 +1,11 @@
 using fast_screener;
 using fast_screener.Properties;
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Windows.Forms;
+
+
 namespace screener3
 {
 
@@ -12,8 +14,19 @@ namespace screener3
         //Name
         public const string PROG_NAME = "F.S. ", SUBPATH = "screenshots";
 
+        private string URLString = "";
+
         //all monitors
-        public static int VirtScreenWidth = 0, VirtScreenHeight = 0, clientWidth, clientHeight, arrowLenght, NewWidth = 0, NewHeight = 0, numberFontSize;
+        public static int VirtScreenWidth = 0,
+            VirtScreenHeight = 0,
+            clientWidth,
+            clientHeight,
+            arrowLenght,
+            NewWidth = 0,
+            NewHeight = 0,
+            numberFontSize;
+
+        public static int FrameWidth=64, FrameHeight=64; 
 
         //Min size
         public const int MIN_WIDTH = 300, MIN_HEIGHT = 200;
@@ -28,7 +41,7 @@ namespace screener3
             frameColor = Color.Gray;
 
         //for guidlines
-        private bool drawGrid, drawArrows, saveToFile, drawNumber;
+        public static bool drawGrid, drawArrows, saveToFile, drawNumber, drawFrame;
 
         public static bool indentValueLock = false;
 
@@ -41,8 +54,6 @@ namespace screener3
         public static object[,] RES_DEFAULT = { { 600, 600, 600, 960 }, { 337, 600, 700, 600 } };
         public static object[,] RES_WORKED = new object[2, 4];
         public static object[] CUSTOM_GRID = new object[] { 0, 0, 0, 0 };
-
-        public static string[] tempStringArray = new string[] { "" };
 
         // Create the Mouse Hook
         MouseHook mouseHook = new MouseHook();
@@ -65,9 +76,47 @@ namespace screener3
 
             //set transparent
             this.BackColor = ALPHA_KEY_COLOR;
-            this.TransparencyKey = ALPHA_KEY_COLOR;
+            this.TransparencyKey = ALPHA_KEY_COLOR;            
 
-            LoadSettings();
+            SettingsManager.LoadSettings();
+
+            this.ClientSize = new Size(StartResW, StartResH);
+
+            //set client size
+            clientWidth = this.ClientSize.Width;
+            clientHeight = this.ClientSize.Height; //set height
+
+            //grid
+            mitShowGrid.Checked = SettingsManager.DrawGridConfigValue;
+
+            //arrow
+            mitShowArrows.Checked = SettingsManager.DrawArrowConfigValue;
+            btnArrowType.Enabled = SettingsManager.DrawArrowConfigValue;
+
+            //numbers
+            mitAddNumber.Checked = SettingsManager.DrawNumberConfigValue;
+
+            //files
+            mitSaveFile.Checked = SettingsManager.SaveFileConfigValue;
+
+            //frame
+            mitFrame.Checked = SettingsManager.DrawFrameConfigValue;
+
+            MenuItemUpdate();
+
+            //Update form name
+            lblHeader.Text = TextUpdater(PROG_NAME, clientWidth, clientHeight);
+
+            Rectangle VirtScreenRect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
+
+            foreach (Screen screen in Screen.AllScreens)
+                VirtScreenRect = Rectangle.Union(VirtScreenRect, screen.Bounds);
+
+            //Get virtual screen size
+            VirtScreenWidth = VirtScreenRect.Width;
+            VirtScreenHeight = VirtScreenRect.Height;
+
+            arrowPictureUpdater(ArrowType);
 
             // Capture the events
             mouseHook.MiddleButtonDown += new MouseHook.MouseHookCallback(mouseHook_MMB);
@@ -106,15 +155,22 @@ namespace screener3
             // important point
             relativePoint = pnlCanvas.PointToClient(Cursor.Position);
 
+            //draw Frame
+            if (drawFrame)
+            {
+                DrawFrame(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, frameColor);
+            }
 
-            if (drawArrows == true)
+            //draw Arrow
+            if (drawArrows)
             {
 
                 DrawArrow(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, arrowColor);
 
             }
 
-            if (drawNumber == true)
+            //draw Number
+            if (drawNumber)
             {
                 DrawNumber(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, numberColor, numbering.ToString());
                 numbering++;
@@ -155,213 +211,7 @@ namespace screener3
             e.Graphics.Dispose();
 
         }
-
-        //load SETTINGS
-        private void LoadSettings()
-        {
-
-            //temp value for read
-            string tempValueFromConfig;
-
-            //add resolution
-            for (int i = 1; i < 5; i++)
-            {
-
-                tempValueFromConfig = ConfigurationManager.AppSettings["resolution_" + i.ToString()];
-                tempStringArray = tempValueFromConfig.Split(",");
-
-                try
-                {
-                    RES_WORKED[0, i - 1] = int.Parse(tempStringArray[0]);
-                }
-                catch
-                {
-                    RES_WORKED[0, i - 1] = RES_DEFAULT[0, i - 1];
-                }
-
-                try
-                {
-                    RES_WORKED[1, i - 1] = int.Parse(tempStringArray[1]);
-                }
-                catch
-                {
-                    RES_WORKED[1, i - 1] = RES_DEFAULT[1, i - 1];
-                }
-
-            }
-
-            MenuItemUpdate();
-
-            //resolution on close
-            tempValueFromConfig = ConfigurationManager.AppSettings["res_on_close"];
-            tempStringArray = tempValueFromConfig.Split(",");
-
-
-            // Set client size
-            try
-            {
-                StartResW = Convert.ToInt32(tempStringArray[0]);
-                StartResH = Convert.ToInt32(tempStringArray[1]); //set height
-                this.ClientSize = new Size(StartResW, StartResH);
-            }
-            catch
-            {
-                this.ClientSize = new Size(Convert.ToInt32(RES_WORKED[0, 0]), Convert.ToInt32(RES_WORKED[1, 0]));
-
-            }
-
-
-            //set client size
-            clientWidth = this.ClientSize.Width;
-            clientHeight = this.ClientSize.Height; //set height
-
-            //Update form name
-            lblHeader.Text = TextUpdater(PROG_NAME, clientWidth, clientHeight);
-
-            Rectangle VirtScreenRect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
-
-            foreach (Screen screen in Screen.AllScreens)
-                VirtScreenRect = Rectangle.Union(VirtScreenRect, screen.Bounds);
-
-            //Get virtual screen size
-            VirtScreenWidth = VirtScreenRect.Width;
-            VirtScreenHeight = VirtScreenRect.Height;
-
-
-            //Grid COLOR
-            tempValueFromConfig = ConfigurationManager.AppSettings["guidlines_color"];
-            try
-            {
-                gridColor = ColorTranslator.FromHtml(tempValueFromConfig);
-            }
-            catch
-            {
-                gridColor = Color.FromName(tempValueFromConfig);
-            }
-
-            //Arrow COLOR
-            tempValueFromConfig = ConfigurationManager.AppSettings["arrow_color"];
-            arrowColor = ColorTranslator.FromHtml(tempValueFromConfig);
-
-            //Number COLOR
-            tempValueFromConfig = ConfigurationManager.AppSettings["number_color"];
-            numberColor = ColorTranslator.FromHtml(tempValueFromConfig);
-
-
-            try
-            {
-                tempValueFromConfig = ConfigurationManager.AppSettings["number_size"];
-                FormMain.numberFontSize = int.Parse(tempValueFromConfig);
-            }
-            catch
-            {
-                FormMain.numberFontSize = 1;
-            }
-
-            try
-            {
-                tempValueFromConfig = ConfigurationManager.AppSettings["guidline_type"];
-                FormMain.GridType = int.Parse(tempValueFromConfig);
-            }
-            catch
-            {
-                FormMain.GridType = 1;
-            }
-
-            tempValueFromConfig = ConfigurationManager.AppSettings["draw_guidlines"];
-            drawGrid = Convert.ToBoolean(tempValueFromConfig);
-
-            if (drawGrid == true)
-            {
-                mitShowGrid.Checked = true;
-            }
-            else
-            {
-                mitShowGrid.Checked = false;
-            }
-
-            tempValueFromConfig = ConfigurationManager.AppSettings["draw_arrows"];
-            drawArrows = Convert.ToBoolean(tempValueFromConfig);
-
-            if (drawArrows == true)
-            {
-                mitShowArrows.Checked = true;
-                btnArrowType.Enabled = true;
-            }
-            else
-            {
-                mitShowArrows.Checked = false;
-                btnArrowType.Enabled = false;
-            }
-
-
-
-            tempValueFromConfig = ConfigurationManager.AppSettings["draw_number"];
-            drawNumber = Convert.ToBoolean(tempValueFromConfig);
-
-            if (drawNumber == true)
-            {
-                mitAddNumber.Checked = true;
-            }
-            else
-            {
-                mitAddNumber.Checked = false;
-            }
-
-            tempValueFromConfig = ConfigurationManager.AppSettings["arrows_type"];
-            try
-            {
-                ArrowType = int.Parse(tempValueFromConfig);
-            }
-            catch
-            {
-
-                ArrowType = 1;
-            }
-
-            arrowPictureUpdater(ArrowType);
-
-            tempValueFromConfig = ConfigurationManager.AppSettings["arrow_lenght"];
-            try
-            {
-                arrowLenght = int.Parse(tempValueFromConfig);
-            }
-            catch
-            {
-                arrowLenght = 50;
-            }
-
-
-            //resolution on close
-            tempValueFromConfig = ConfigurationManager.AppSettings["custom_grid"];
-            tempStringArray = tempValueFromConfig.Split(",");
-
-            for (int i = 0; i < 4; i++)
-            {
-                try
-                {
-                    CUSTOM_GRID[i] = int.Parse(tempStringArray[i]);
-                }
-                catch
-                {
-                    CUSTOM_GRID[i] = 10;
-                }
-
-            }
-
-            tempValueFromConfig = ConfigurationManager.AppSettings["ident_value_lock"];
-            indentValueLock = Convert.ToBoolean(tempValueFromConfig);
-
-            tempValueFromConfig = ConfigurationManager.AppSettings["save_to_file"];
-            saveToFile = Convert.ToBoolean(tempValueFromConfig);
-
-            if (saveToFile == true)
-            {
-                mitSaveFile.Checked = true;
-            }
-
-
-        }
+ 
 
         private void btnMainMenu_Click(object sender, EventArgs e)
         {
@@ -494,8 +344,6 @@ namespace screener3
 
             captureGraphics.CopyFromScreen(posX, posY, 0, 0, captureRectangle.Size);
             captureGraphics.Dispose();
-
-            string URLString = "";
 
             //Saving the Image File (I am here Saving it in My E drive).
             if (saveToFile == true)
@@ -646,6 +494,20 @@ namespace screener3
 
 
         }
+
+        //drawFrame
+        public static void DrawFrame(PaintEventArgs e, Point relativePoint, Color color)
+        {
+            var FramePen = new Pen(color, 1);
+            
+            //find center
+            int XShift = FrameWidth/2;
+            int YShift = FrameHeight/2;
+
+            e.Graphics.DrawRectangle(FramePen, relativePoint.X - XShift, relativePoint.Y - YShift, FrameWidth, FrameHeight);
+
+        }
+
 
         //draw arrow
         public static void DrawArrow(PaintEventArgs e, Point relativePoint, Color color)
@@ -825,40 +687,8 @@ namespace screener3
 
         private void mitExit_Click(object sender, EventArgs e)
         {
-
-            SaveConfig();
+            SettingsManager.SaveConfig(this.ClientSize.Width, this.ClientSize.Height);
             Close();
-        }
-
-        private void SaveConfig()
-        {
-            SetSetting("guidlines_color", ColorTranslator.ToHtml(gridColor)); //COLOR
-            SetSetting("arrow_color", ColorTranslator.ToHtml(arrowColor));
-            SetSetting("number_color", ColorTranslator.ToHtml(numberColor));
-
-
-            SetSetting("guidline_type", GridType.ToString());
-            SetSetting("arrows_type", ArrowType.ToString());
-            SetSetting("arrow_lenght", arrowLenght.ToString());
-            SetSetting("number_size", numberFontSize.ToString());
-
-            SetSetting("draw_guidlines", drawGrid.ToString().ToLower());
-            SetSetting("draw_arrows", drawArrows.ToString().ToLower());
-            SetSetting("draw_number", drawNumber.ToString().ToLower());
-            SetSetting("save_to_file", saveToFile.ToString().ToLower());
-
-
-            for (int i = 1; i < 5; i++)
-            {
-                SetSetting("resolution_" + i.ToString(), RES_WORKED[0, i - 1] + "," + RES_WORKED[1, i - 1]);
-            }
-
-            SetSetting("res_on_close", this.ClientSize.Width.ToString() + "," + this.ClientSize.Height.ToString());
-
-            SetSetting("custom_grid", CUSTOM_GRID[0].ToString() + "," + CUSTOM_GRID[1].ToString() + "," + CUSTOM_GRID[2].ToString() + "," + CUSTOM_GRID[3].ToString());
-
-            SetSetting("ident_value_lock", indentValueLock.ToString().ToLower());
-
         }
 
         private void mitSettings_Click(object sender, EventArgs e)
@@ -907,7 +737,7 @@ namespace screener3
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string aboutText = "Author: Dzmitry Ivanou" + "\n" + "e-mail: frosofco@gmail.com" + "\n" + "https://github.com/Ivanou-Dzmitry/fast_screener";
-            MessageBox.Show(aboutText, "About FastScreener 0.1");
+            MessageBox.Show(aboutText, "About FastScreener 0.2");
         }
 
         private void OnApplicationExit(object sender, EventArgs e)
@@ -918,7 +748,7 @@ namespace screener3
             mouseHook.MiddleButtonDown -= new MouseHook.MouseHookCallback(mouseHook_MMB);
             mouseHook.Uninstall();
 
-            SaveConfig();
+            SettingsManager.SaveConfig(this.ClientSize.Width, this.ClientSize.Height);
         }
 
         private void pnlToolbarMain_MouseDown(object sender, MouseEventArgs e)
@@ -944,7 +774,7 @@ namespace screener3
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            SaveConfig();
+            SettingsManager.SaveConfig(this.ClientSize.Width, this.ClientSize.Height);
             Close();
         }
 
@@ -1007,6 +837,65 @@ namespace screener3
             arrowPictureUpdater(clickCount);
 
             toolTipMain.Hide(pnlToolbarMain);
+        }
+
+        private void lblHeader_MouseDown(object sender, MouseEventArgs e)
+        {
+            dragging = true;
+            dragCursorPoint = Cursor.Position;
+            dragFormPoint = this.Location;
+        }
+
+        private void lblHeader_MouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
+        }
+
+        private void lblHeader_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+                this.Location = Point.Add(dragFormPoint, new Size(dif));
+            }
+        }
+
+        //open dir with files
+        private void mitOpenFolder_Click(object sender, EventArgs e)
+        {
+            string appExeDir = Directory.GetCurrentDirectory();
+
+            //check directory for files
+            bool exists = Directory.Exists(appExeDir + "\\" + SUBPATH);
+
+            // create if not exists
+            if (!exists)
+                Directory.CreateDirectory(appExeDir + "\\" + SUBPATH);
+
+            //path to open
+            string PathToDir = appExeDir + "\\" + SUBPATH;
+
+            //open dir
+            Process.Start("explorer.exe", PathToDir);
+        }
+
+        private void mitFrame_Click(object sender, EventArgs e)
+        {
+            DrawFrameStatus();
+        }
+
+        private void DrawFrameStatus()
+        {
+            if (mitFrame.CheckState == CheckState.Checked)
+            {
+                mitFrame.CheckState = CheckState.Unchecked;
+                drawFrame = false;
+            }
+            else
+            {
+                mitFrame.CheckState = CheckState.Checked;
+                drawFrame = true;
+            }
         }
     }
 

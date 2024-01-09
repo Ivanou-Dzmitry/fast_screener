@@ -43,7 +43,9 @@
             mitShowGrid = new ToolStripMenuItem();
             mitShowArrows = new ToolStripMenuItem();
             mitAddNumber = new ToolStripMenuItem();
+            mitFrame = new ToolStripMenuItem();
             mitSaveFile = new ToolStripMenuItem();
+            mitOpenFolder = new ToolStripMenuItem();
             mitSettings = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
@@ -78,9 +80,9 @@
             // 
             // contextMenuMain
             // 
-            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitTakeScreen, mitClear, toolStripSeparator3, mitShowGrid, mitShowArrows, mitAddNumber, mitSaveFile, mitSettings, toolStripSeparator1, aboutToolStripMenuItem, mitExit });
+            contextMenuMain.Items.AddRange(new ToolStripItem[] { mitSize01, mitSize02, mitSize03, mitSize04, toolStripSeparator2, mitTakeScreen, mitClear, toolStripSeparator3, mitShowGrid, mitShowArrows, mitAddNumber, mitFrame, mitSaveFile, mitOpenFolder, mitSettings, toolStripSeparator1, aboutToolStripMenuItem, mitExit });
             contextMenuMain.Name = "contextMenuStrip1";
-            contextMenuMain.Size = new Size(211, 308);
+            contextMenuMain.Size = new Size(211, 374);
             contextMenuMain.Opening += contextMenuMain_Opening;
             // 
             // mitSize01
@@ -144,8 +146,6 @@
             // 
             // mitShowGrid
             // 
-            mitShowGrid.Checked = true;
-            mitShowGrid.CheckState = CheckState.Checked;
             mitShowGrid.Name = "mitShowGrid";
             mitShowGrid.ShortcutKeys = Keys.Control | Keys.Shift | Keys.G;
             mitShowGrid.Size = new Size(210, 22);
@@ -154,8 +154,6 @@
             // 
             // mitShowArrows
             // 
-            mitShowArrows.Checked = true;
-            mitShowArrows.CheckState = CheckState.Checked;
             mitShowArrows.Name = "mitShowArrows";
             mitShowArrows.ShortcutKeys = Keys.Control | Keys.Shift | Keys.A;
             mitShowArrows.Size = new Size(210, 22);
@@ -170,12 +168,27 @@
             mitAddNumber.Text = "Numbering";
             mitAddNumber.Click += mitAddNumber_Click;
             // 
+            // mitFrame
+            // 
+            mitFrame.Name = "mitFrame";
+            mitFrame.ShortcutKeys = Keys.Control | Keys.Shift | Keys.F;
+            mitFrame.Size = new Size(210, 22);
+            mitFrame.Text = "Frame";
+            mitFrame.Click += mitFrame_Click;
+            // 
             // mitSaveFile
             // 
             mitSaveFile.Name = "mitSaveFile";
             mitSaveFile.Size = new Size(210, 22);
             mitSaveFile.Text = "Save To File";
             mitSaveFile.Click += mitSaveFile_Click;
+            // 
+            // mitOpenFolder
+            // 
+            mitOpenFolder.Name = "mitOpenFolder";
+            mitOpenFolder.Size = new Size(210, 22);
+            mitOpenFolder.Text = "Open Folder with Files";
+            mitOpenFolder.Click += mitOpenFolder_Click;
             // 
             // mitSettings
             // 
@@ -234,6 +247,9 @@
             lblHeader.Text = "9999x9999";
             lblHeader.TextAlign = ContentAlignment.MiddleLeft;
             toolTipMain.SetToolTip(lblHeader, "Current size");
+            lblHeader.MouseDown += lblHeader_MouseDown;
+            lblHeader.MouseMove += lblHeader_MouseMove;
+            lblHeader.MouseUp += lblHeader_MouseUp;
             // 
             // btnArrowType
             // 
@@ -355,5 +371,7 @@
         private Panel pnlCanvas;
         private ToolStripMenuItem mitClear;
         private Button btnArrowType;
+        private ToolStripMenuItem mitOpenFolder;
+        private ToolStripMenuItem mitFrame;
     }
 }
