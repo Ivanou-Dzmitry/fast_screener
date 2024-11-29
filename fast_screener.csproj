@@ -10,6 +10,8 @@
 	<PackageIcon>scr.png</PackageIcon>
 	<EnableDynamicLoading>true</EnableDynamicLoading>
 	<StartupObject>screener3.Program</StartupObject>
+	<ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+	<ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
   </PropertyGroup>
 
   <ItemGroup>

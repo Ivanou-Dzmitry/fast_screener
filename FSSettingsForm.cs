@@ -161,12 +161,12 @@ namespace screener3
                     }
                     else
                     {
-                        FormMain.arrowLenght = CurrentArrowValue;
+                        FormMain.arrowLenght = (int)(CurrentArrowValue);
                     }
 
                     if (CurrentArrowValue < 8)
                     {
-                        FormMain.arrowLenght = 50; //default value
+                        FormMain.arrowLenght = (int)(50); //default value
                     }
 
 
@@ -227,28 +227,26 @@ namespace screener3
                     FormMain.frameColor = stringToColor(value);
                     break;
                 case "Frame Width":
-                    int currentW = int.Parse(value);                    
-                    if (currentW > FormMain.clientWidth)
+                    int currentW = int.Parse(value);
+                    if (currentW > FormMain.clientWidth | currentW < FormMain.FrameMinSize)
                     {
-                        FormMain.FrameWidth = 80;
+                        FormMain.FrameWidth = FormMain.FrameInitialSize;
                     }
                     else
                     {
                         FormMain.FrameWidth = currentW;
                     }
-                    
                     break;
                 case "Frame Height":
                     int currentH = int.Parse(value);
-                    if (currentH > FormMain.clientHeight)
+                    if (currentH > FormMain.clientHeight | currentH < FormMain.FrameMinSize)
                     {
-                        FormMain.FrameHeight = 80;
+                        FormMain.FrameWidth = FormMain.FrameInitialSize;
                     }
                     else
                     {
                         FormMain.FrameHeight = currentH;
                     }
-                    
                     break;
 
                 default:
@@ -579,12 +577,12 @@ namespace screener3
         public class Frame
         {
             [Category("Frame Settings")]
-            [Description("Frame Width")]
+            [Description("Frame width. Max - screenshot width, min - 16. Default 80.")]
             [DisplayName("Frame Width")]
-            public int FrameWidth { get; set; } 
- 
+            public int FrameWidth { get; set; }
+
             [Category("Frame Settings")]
-            [Description("Frame Height")]
+            [Description("Frame height. Max - screenshot height, min - 16. Default 80.")]
             [DisplayName("Frame Height")]
             public int FrameHeight { get; set; }
 
@@ -602,7 +600,7 @@ namespace screener3
             frame.FrameWidth = Convert.ToInt32(FormMain.FrameWidth);
             frame.FrameHeight = Convert.ToInt32(FormMain.FrameHeight);
             frame.Color = FormMain.frameColor;
-           
+
             pgSettings.SelectedObject = frame;
         }
 
@@ -690,7 +688,7 @@ namespace screener3
             }
         }
 
-     
+
 
 
         //resolution
@@ -841,15 +839,9 @@ namespace screener3
                 {
                     lockPadding = false;
                 }
-
             }
-
         }
 
-
-
+  
     }
-
-
-
 }

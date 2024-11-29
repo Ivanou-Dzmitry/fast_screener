@@ -1,9 +1,13 @@
 using fast_screener;
 using fast_screener.Properties;
+using Microsoft.VisualBasic.Devices;
 using System.Configuration;
 using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Net;
+using System.Windows.Forms;
 
 
 namespace screener3
@@ -11,6 +15,23 @@ namespace screener3
 
     public partial class FormMain : Form
     {
+        public struct Line
+        {
+            public Point StartPoint { get; set; }
+            public Point EndPoint { get; set; }
+            public Color Color { get; set; }
+            public float Width { get; set; }
+
+            public Line(Point start, Point end, Color color, float width)
+            {
+                StartPoint = start;
+                EndPoint = end;
+                Color = color;
+                Width = width;
+            }
+        }
+
+
         //Name
         public const string PROG_NAME = "F.S. ", SUBPATH = "screenshots";
 
@@ -26,7 +47,10 @@ namespace screener3
             NewHeight = 0,
             numberFontSize;
 
-        public static int FrameWidth=64, FrameHeight=64; 
+        public static int FrameWidth, FrameHeight;
+
+        public const int FrameInitialSize = 80, FrameMinSize = 16;
+
 
         //Min size
         public const int MIN_WIDTH = 300, MIN_HEIGHT = 200;
@@ -65,6 +89,16 @@ namespace screener3
         private Point dragCursorPoint;
         private Point dragFormPoint;
 
+        public static float scalingFactor;
+
+        private Point startPoint;
+        private Rectangle currentRectangle;
+        private bool isDrawing;
+
+        private List<Rectangle> drawnRectangles = new List<Rectangle>();
+        private List<Line> drawnArrows = new List<Line>();
+
+        private int minDrawSize = 3;
 
         public FormMain()
         {
@@ -76,11 +110,17 @@ namespace screener3
 
             //set transparent
             this.BackColor = ALPHA_KEY_COLOR;
-            this.TransparencyKey = ALPHA_KEY_COLOR;            
+            this.TransparencyKey = ALPHA_KEY_COLOR;
 
             SettingsManager.LoadSettings();
 
-            this.ClientSize = new Size(StartResW, StartResH);
+            //this.ClientSize = new Size(StartResW, StartResH);
+
+            //get scaling
+            scalingFactor = GetScalingFactor(this);
+
+            // Set client size
+            this.ClientSize = new Size((int)(StartResW), (int)(StartResH));
 
             //set client size
             clientWidth = this.ClientSize.Width;
@@ -105,7 +145,15 @@ namespace screener3
             MenuItemUpdate();
 
             //Update form name
-            lblHeader.Text = TextUpdater(PROG_NAME, clientWidth, clientHeight);
+            if (scalingFactor == 1)
+            {
+                lblHeader.Text = TextUpdater(PROG_NAME, clientWidth, clientHeight);
+            }
+            else
+            {
+                lblHeader.Text = TextUpdater(PROG_NAME, (int)(clientWidth / scalingFactor), (int)(clientHeight / scalingFactor));
+            }
+
 
             Rectangle VirtScreenRect = new Rectangle(int.MaxValue, int.MaxValue, int.MinValue, int.MinValue);
 
@@ -120,6 +168,8 @@ namespace screener3
 
             // Capture the events
             mouseHook.MiddleButtonDown += new MouseHook.MouseHookCallback(mouseHook_MMB);
+            mouseHook.MiddleButtonUp += new MouseHook.MouseHookCallback(mouseHook_MouseUp);
+            mouseHook.MouseMove += new MouseHook.MouseHookCallback(mouseHook_MouseMove);
 
             //Installing the Mouse Hooks
             mouseHook.Install();
@@ -133,40 +183,59 @@ namespace screener3
 
             // Handle the ApplicationExit event to know when the application is exiting.
             Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
+
+            ScaleButtonImage(btnScreen, scalingFactor);
+            ScaleButtonImage(btnMainMenu, scalingFactor);
+            ScaleButtonImage(btnArrowType, scalingFactor);
+        }
+
+        private void ScaleButtonImage(Button button, float scalingFactor)
+        {
+            if (button.Image != null)
+            {
+                button.Image = ScaleImage(button.Image, scalingFactor);
+            }
+        }
+
+
+        private Image ScaleImage(Image originalImage, float scaleFactor)
+        {
+            int newWidth = (int)(originalImage.Width * scaleFactor);
+            int newHeight = (int)(originalImage.Height * scaleFactor);
+
+            Bitmap resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight));
+            return resizedImage;
         }
 
 
         //hook keys
         private void keyboardHook_KeyDown(KeyboardHook.VKeys key)
         {
-
             if (key == KeyboardHook.VKeys.F4)
             {
                 CaptureMyScreen();
             }
-
         }
 
 
         //hook mouse
         private void mouseHook_MMB(MouseHook.MSLLHOOKSTRUCT mouse)
         {
-
             // important point
             relativePoint = pnlCanvas.PointToClient(Cursor.Position);
 
             //draw Frame
             if (drawFrame)
             {
-                DrawFrame(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, frameColor);
+                startPoint = new Point(relativePoint.X, relativePoint.Y);
+                currentRectangle = new Rectangle(startPoint, new Size(0, 0));
+                isDrawing = true;
             }
 
             //draw Arrow
             if (drawArrows)
             {
-
                 DrawArrow(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, arrowColor);
-
             }
 
             //draw Number
@@ -175,8 +244,6 @@ namespace screener3
                 DrawNumber(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, numberColor, numbering.ToString());
                 numbering++;
             }
-
-
         }
 
         public static void DrawNumber(PaintEventArgs e, Point relativePoint, Color color, String numberString)
@@ -205,72 +272,45 @@ namespace screener3
 
             e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 
-
             drawFont.Dispose();
             drawBrush.Dispose();
             e.Graphics.Dispose();
-
         }
- 
+
 
         private void btnMainMenu_Click(object sender, EventArgs e)
         {
             contextMenuMain.Show(Cursor.Position.X, Cursor.Position.Y);
-
         }
 
-        private void mitSize01_Click(object sender, EventArgs e)
+        private void AdjustClientSize(int widthIndex, int heightIndex)
         {
-            int clientW = Convert.ToInt32(RES_WORKED[0, 0]);
-            int clientH = Convert.ToInt32(RES_WORKED[1, 0]) + pnlToolBarH;
+            // Retrieve dimensions
+            int clientW = Convert.ToInt32(RES_WORKED[0, widthIndex]);
+            int clientH = Convert.ToInt32(RES_WORKED[1, heightIndex]) + pnlToolBarH;
 
-            this.ClientSize = new Size(clientW, clientH);
+            // Apply scaling factor
+            int scaledClientW = (int)(clientW * scalingFactor);
+            int scaledClientH = (int)(clientH * scalingFactor);
 
+            // Set client size
+            this.ClientSize = new Size(scaledClientW, scaledClientH);
+
+            // Update text
             TextUpdater(PROG_NAME, clientW, clientH);
 
+            // Refresh the form
             this.Refresh();
         }
 
+        // Event handlers calling the common method
+        private void mitSize01_Click(object sender, EventArgs e) => AdjustClientSize(0, 0);
 
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)
-        {
+        private void toolStripMenuItem3_Click(object sender, EventArgs e) => AdjustClientSize(1, 1);
 
-            int clientW = Convert.ToInt32(RES_WORKED[0, 1]);
-            int clientH = Convert.ToInt32(RES_WORKED[1, 1]) + pnlToolBarH;
+        private void toolStripMenuItem4_Click(object sender, EventArgs e) => AdjustClientSize(2, 2);
 
-            this.ClientSize = new Size(clientW, clientH);
-
-            TextUpdater(PROG_NAME, clientW, clientH);
-
-            this.Refresh();
-        }
-
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)
-        {
-
-            int clientW = Convert.ToInt32(RES_WORKED[0, 2]);
-            int clientH = Convert.ToInt32(RES_WORKED[1, 2]) + pnlToolBarH;
-
-            this.ClientSize = new Size(clientW, clientH);
-
-            TextUpdater(PROG_NAME, clientW, clientH);
-
-            this.Refresh();
-        }
-
-        private void mitSize04_Click(object sender, EventArgs e)
-        {
-
-            int clientW = Convert.ToInt32(RES_WORKED[0, 3]);
-            int clientH = Convert.ToInt32(RES_WORKED[1, 3]) + pnlToolBarH;
-
-            this.ClientSize = new Size(clientW, clientH);
-
-            TextUpdater(PROG_NAME, clientW, clientH);
-
-            this.Refresh();
-        }
-
+        private void mitSize04_Click(object sender, EventArgs e) => AdjustClientSize(3, 3);
 
 
         private void FormMain_Move(object sender, EventArgs e)
@@ -292,13 +332,21 @@ namespace screener3
         {
             string FinalText = "";
 
-            FinalText = (Width.ToString() + "x" + (Height - pnlToolBarH).ToString()); //set size
+            if (scalingFactor == 1)
+            {
+                FinalText = (Width.ToString() + "x" + (Height - pnlToolBarH).ToString()); //set size
+            }
+            else
+            {
+                FinalText = (Width.ToString() + "x" + (Height - pnlToolBarH).ToString()) + " (x" + scalingFactor + ")"; //set size
+            }
+
 
             lblHeader.Text = FinalText;
 
-            toolTipMain.SetToolTip(btnScreen, "Take screenshot. Size: " + FinalText + "px");
+            toolTipMain.SetToolTip(btnScreen, "Take screenshot. Size: " + FinalText);
 
-            toolTipMain.Show("Size setted to " + FinalText + "px", pnlToolbarMain);
+            toolTipMain.Show("Size setted to " + FinalText, pnlToolbarMain);
 
             this.Text = FinalText;
 
@@ -377,7 +425,10 @@ namespace screener3
 
             }
 
-            Clipboard.SetImage(captureBitmap);
+            //set clipboard
+            //Clipboard.SetImage(captureBitmap);
+
+            SetScaledBitmapToClipboard(captureBitmap, scalingFactor);
 
             pnlCanvas.BorderStyle = BorderStyle.FixedSingle;
 
@@ -387,7 +438,6 @@ namespace screener3
             if (gridIsOn == true)
             {
                 DrawGrid(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), gridColor);
-
             }
 
             toolTipMain.Show("Screenshot copied to clipboard", pnlToolbarMain);
@@ -406,135 +456,134 @@ namespace screener3
             //dispose objects
             captureBitmap.Dispose();
             captureGraphics.Dispose();
+
+            //rectangle data
+            pnlCanvas.Invalidate();
+            drawnRectangles.Clear();
+            currentRectangle = new Rectangle(startPoint, new Size(0, 0));
+
+            drawnArrows.Clear();    
+        }
+
+
+        void SetScaledBitmapToClipboard(Bitmap originalBitmap, float scalingFactor)
+        {
+            // Calculate new dimensions
+            int scaledWidth = (int)(originalBitmap.Width / scalingFactor);
+            int scaledHeight = (int)(originalBitmap.Height / scalingFactor);
+
+            // Create a new bitmap with scaled dimensions
+            Bitmap scaledBitmap = new Bitmap(scaledWidth, scaledHeight);
+
+            // Draw the original bitmap onto the scaled bitmap
+            using (Graphics g = Graphics.FromImage(scaledBitmap))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(originalBitmap, 0, 0, scaledWidth, scaledHeight);
+            }
+
+            // Set the scaled bitmap to the clipboard
+            Clipboard.SetImage(scaledBitmap);
+
+            // Dispose of the scaled bitmap if no longer needed
+            scaledBitmap.Dispose();
         }
 
         private void FormMain_Deactivate(object sender, EventArgs e)
         {
-
             toolTipMain.Hide(pnlToolbarMain);
         }
 
 
-        //draw grid
+        // Draw the grid
         private void DrawGrid(PaintEventArgs e, Color lineColor)
         {
-
-            int initialPointVertical, initialPointHorizontal;
-
-            if (GridType == 1)
+            // Create a reusable pen instance
+            using (Pen gridPen = new Pen(lineColor))
             {
-                initialPointVertical = pnlCanvas.Width / 3;
-                initialPointHorizontal = pnlCanvas.Height / 3; //set size
+                int initialPointVertical, initialPointHorizontal;
 
-                Pen gridPen = new Pen(lineColor);
+                if (GridType == 1 || GridType == 2)
+                {
+                    // Determine the grid size based on the type
+                    int divisions = (GridType == 1) ? 3 : 4;
+                    initialPointVertical = pnlCanvas.Width / divisions;
+                    initialPointHorizontal = pnlCanvas.Height / divisions;
 
-                //vertical
-                e.Graphics.DrawLine(gridPen, initialPointVertical, 0, initialPointVertical, this.ClientSize.Height);
-                e.Graphics.DrawLine(gridPen, initialPointVertical * 2, 0, initialPointVertical * 2, this.ClientSize.Height);
+                    // Draw vertical lines
+                    for (int i = 1; i < divisions; i++)
+                    {
+                        int x = initialPointVertical * i;
+                        e.Graphics.DrawLine(gridPen, x, 0, x, this.ClientSize.Height);
+                    }
 
-                //horizontal
-                e.Graphics.DrawLine(gridPen, 0, initialPointHorizontal, this.ClientSize.Width, initialPointHorizontal);
-                e.Graphics.DrawLine(gridPen, 0, initialPointHorizontal * 2, this.ClientSize.Width, initialPointHorizontal * 2);
+                    // Draw horizontal lines
+                    for (int i = 1; i < divisions; i++)
+                    {
+                        int y = initialPointHorizontal * i;
+                        e.Graphics.DrawLine(gridPen, 0, y, this.ClientSize.Width, y);
+                    }
+                }
+                else if (GridType == 3)
+                {
+                    // Custom grid dimensions
+                    int topIndent = Convert.ToInt32(CUSTOM_GRID[0]);
+                    int bottomIndent = Convert.ToInt32(CUSTOM_GRID[1]);
+                    int leftIndent = Convert.ToInt32(CUSTOM_GRID[2]);
+                    int rightIndent = Convert.ToInt32(CUSTOM_GRID[3]);
 
-                gridPen.Dispose();
+                    // Fix border dimensions
+                    int canvasSizeH = pnlCanvas.Height - 3;
+                    int canvasSizeW = pnlCanvas.Width - 3;
+
+                    // Draw top and bottom lines
+                    e.Graphics.DrawLine(gridPen, 0, topIndent, pnlCanvas.Width, topIndent);
+                    e.Graphics.DrawLine(gridPen, 0, canvasSizeH - bottomIndent, pnlCanvas.Width, canvasSizeH - bottomIndent);
+
+                    // Draw left and right lines
+                    e.Graphics.DrawLine(gridPen, leftIndent, 0, leftIndent, pnlCanvas.Height);
+                    e.Graphics.DrawLine(gridPen, canvasSizeW - rightIndent, 0, canvasSizeW - rightIndent, pnlCanvas.Height);
+                }
             }
-
-            if (GridType == 2)
-            {
-
-                initialPointVertical = pnlCanvas.Width / 4;
-                initialPointHorizontal = pnlCanvas.Height / 4;
-
-                Pen gridPen = new Pen(lineColor);
-
-                //vertical
-                e.Graphics.DrawLine(gridPen, initialPointVertical, 0, initialPointVertical, this.ClientSize.Height);
-                e.Graphics.DrawLine(gridPen, initialPointVertical * 2, 0, initialPointVertical * 2, this.ClientSize.Height);
-                e.Graphics.DrawLine(gridPen, initialPointVertical * 3, 0, initialPointVertical * 3, this.ClientSize.Height);
-
-                //horizontal
-                e.Graphics.DrawLine(gridPen, 0, initialPointHorizontal, this.ClientSize.Width, initialPointHorizontal);
-                e.Graphics.DrawLine(gridPen, 0, initialPointHorizontal * 2, this.ClientSize.Width, initialPointHorizontal * 2);
-                e.Graphics.DrawLine(gridPen, 0, initialPointHorizontal * 3, this.ClientSize.Width, initialPointHorizontal * 3);
-
-                gridPen.Dispose();
-
-            }
-
-            if (GridType == 3)
-            {
-
-                int topIndent = Convert.ToInt32(CUSTOM_GRID[0]);
-                int bottonIndent = Convert.ToInt32(CUSTOM_GRID[1]);
-
-                int leftIndent = Convert.ToInt32(CUSTOM_GRID[2]);
-                int rightIndent = Convert.ToInt32(CUSTOM_GRID[3]);
-
-                Pen gridPen = new Pen(lineColor);
-
-                //top
-                e.Graphics.DrawLine(gridPen, 0, topIndent, pnlCanvas.Width, topIndent);
-
-                // border fix
-                int canvasSizeH = pnlCanvas.Height - 3;
-                int canvasSizeW = pnlCanvas.Width - 3;
-
-                //bottom
-                e.Graphics.DrawLine(gridPen, 0, canvasSizeH - bottonIndent, pnlCanvas.Width, canvasSizeH - bottonIndent);
-
-                //left
-                e.Graphics.DrawLine(gridPen, leftIndent, 0, leftIndent, pnlCanvas.Height);
-
-                //right
-                e.Graphics.DrawLine(gridPen, canvasSizeW - rightIndent, 0, canvasSizeW - rightIndent, pnlCanvas.Height);
-
-                gridPen.Dispose();
-
-            }
-
-
         }
 
-        //drawFrame
-        public static void DrawFrame(PaintEventArgs e, Point relativePoint, Color color)
+        private void AddLine(Point startPoint, Point endPoint, Color color)
         {
-            var FramePen = new Pen(color, 1);
-            
-            //find center
-            int XShift = FrameWidth/2;
-            int YShift = FrameHeight/2;
+            Line newLine = new Line(
+                startPoint,
+                endPoint,
+                color,
+                1.0f // Example line width
+            );
 
-            e.Graphics.DrawRectangle(FramePen, relativePoint.X - XShift, relativePoint.Y - YShift, FrameWidth, FrameHeight);
+            // Add the line to the list
+            drawnArrows.Add(newLine);
 
         }
 
 
         //draw arrow
-        public static void DrawArrow(PaintEventArgs e, Point relativePoint, Color color)
+        public void DrawArrow(PaintEventArgs e, Point relativePoint, Color color)
         {
 
             Point startPoint = new Point(0, 0);
             Point endPoint = new Point(relativePoint.X, relativePoint.Y);
 
+            int scaledLenght = (int)(arrowLenght * scalingFactor);
+
             switch (ArrowType)
             {
                 case 1:
-                    startPoint = new Point(relativePoint.X - arrowLenght, relativePoint.Y + arrowLenght);
-
+                    startPoint = new Point(relativePoint.X - scaledLenght, relativePoint.Y + scaledLenght);
                     break;
-
                 case 2:
-                    startPoint = new Point(relativePoint.X - arrowLenght, relativePoint.Y - arrowLenght);
-
+                    startPoint = new Point(relativePoint.X - scaledLenght, relativePoint.Y - scaledLenght);
                     break;
-
                 case 3:
-                    startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y - arrowLenght);
-
+                    startPoint = new Point(relativePoint.X + scaledLenght, relativePoint.Y - scaledLenght);
                     break;
                 case 4:
-                    startPoint = new Point(relativePoint.X + arrowLenght, relativePoint.Y + arrowLenght);
-
+                    startPoint = new Point(relativePoint.X + scaledLenght, relativePoint.Y + scaledLenght);
                     break;
             }
 
@@ -551,94 +600,73 @@ namespace screener3
             arrowPenOutline.CustomEndCap = new AdjustableArrowCap(ArrowSize, ArrowSize + 1);
 
             //color arrow
-            arrowPen.CustomEndCap = new AdjustableArrowCap(ArrowSize, ArrowSize);
+            //arrowPen.CustomEndCap = new AdjustableArrowCap(ArrowSize, ArrowSize);
+
+            AddLine(startPoint, endPoint, color);
 
             e.Graphics.DrawLine(arrowPenOutline, startPoint, endPoint);
-            e.Graphics.DrawLine(arrowPen, startPoint, endPoint);
+            //e.Graphics.DrawLine(arrowPen, startPoint, endPoint);
 
-            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            RenderLines(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), ArrowSize);
 
             arrowPen.Dispose();
             arrowPenOutline.Dispose();
+
+           // MessageBox.Show("!" + startPoint.X + "." + startPoint.Y);
+        }
+
+        private void RenderLines(PaintEventArgs e, int aSize)
+        {
+            foreach (var line in drawnArrows)
+            {
+                using (Pen linePen = new Pen(line.Color, line.Width))
+                {
+                    linePen.CustomEndCap = new AdjustableArrowCap(aSize, aSize);
+                    e.Graphics.DrawLine(linePen, line.StartPoint, line.EndPoint);
+                }
+            }
         }
 
 
-        private void drawGridStatus()
+        // Generic method to handle status toggling
+        private void ToggleStatus(
+            ToolStripMenuItem menuItem,
+            ref bool statusFlag,
+            string onMessage,
+            string offMessage,
+            Control targetControl = null,
+            bool? controlState = null)
         {
-
-            if (mitShowGrid.CheckState == CheckState.Checked)
+            if (menuItem.CheckState == CheckState.Checked)
             {
-                mitShowGrid.CheckState = CheckState.Unchecked;
-                drawGrid = false;
-                toolTipMain.Show("Grid turned OFF", pnlToolbarMain);
+                menuItem.CheckState = CheckState.Unchecked;
+                statusFlag = false;
+                toolTipMain.Show(offMessage, pnlToolbarMain);
+
+                // Handle optional control state update
+                if (targetControl != null && controlState.HasValue)
+                {
+                    targetControl.Enabled = controlState.Value;
+                }
             }
             else
             {
-                mitShowGrid.CheckState = CheckState.Checked;
-                drawGrid = true;
-                toolTipMain.Show("Grid turned ON", pnlToolbarMain);
-            }
+                menuItem.CheckState = CheckState.Checked;
+                statusFlag = true;
+                toolTipMain.Show(onMessage, pnlToolbarMain);
 
-        }
-
-        private void drawArrowStatus()
-        {
-
-            if (mitShowArrows.CheckState == CheckState.Checked)
-            {
-                mitShowArrows.CheckState = CheckState.Unchecked;
-                drawArrows = false;
-                toolTipMain.Show("Arrows turned OFF", pnlToolbarMain);
-                btnArrowType.Enabled = false;
-            }
-            else
-            {
-                mitShowArrows.CheckState = CheckState.Checked;
-                drawArrows = true;
-                toolTipMain.Show("Arrows turned ON", pnlToolbarMain);
-                btnArrowType.Enabled = true;
+                if (targetControl != null && controlState.HasValue)
+                {
+                    targetControl.Enabled = !controlState.Value;
+                }
             }
         }
 
-        private void drawNumberStatus()
-        {
 
-            if (mitAddNumber.CheckState == CheckState.Checked)
-            {
-                mitAddNumber.CheckState = CheckState.Unchecked;
-                drawNumber = false;
-                toolTipMain.Show("Numbers turned OFF", pnlToolbarMain);
-
-            }
-            else
-            {
-                mitAddNumber.CheckState = CheckState.Checked;
-                drawNumber = true;
-                toolTipMain.Show("Numbers turned ON", pnlToolbarMain);
-
-            }
-        }
-
-        private void saveToFileStatus()
-        {
-
-            if (mitSaveFile.CheckState == CheckState.Checked)
-            {
-                mitSaveFile.CheckState = CheckState.Unchecked;
-                saveToFile = false;
-                toolTipMain.Show("Save to file turned OFF", pnlToolbarMain);
-            }
-            else
-            {
-                mitSaveFile.CheckState = CheckState.Checked;
-                saveToFile = true;
-                toolTipMain.Show("Save to file turned ON", pnlToolbarMain);
-            }
-        }
 
         private void mitShowGrid_Click(object sender, EventArgs e)
         {
-            drawGridStatus();
+            DrawGridStatus();
 
             if (drawArrows != true && drawNumber != true)
             {
@@ -656,10 +684,31 @@ namespace screener3
 
         }
 
+        // Specific status functions
+        private void DrawGridStatus()
+        {
+            ToggleStatus(mitShowGrid, ref drawGrid, "Grid turned ON", "Grid turned OFF");
+        }
+
+        private void DrawArrowStatus()
+        {
+            ToggleStatus(mitShowArrows, ref drawArrows, "Arrows turned ON", "Arrows turned OFF", btnArrowType, false);
+        }
+
+        private void DrawNumberStatus()
+        {
+            ToggleStatus(mitAddNumber, ref drawNumber, "Numbers turned ON", "Numbers turned OFF");
+        }
+
+        private void SaveToFileStatus()
+        {
+            ToggleStatus(mitSaveFile, ref saveToFile, "Save to file turned ON", "Save to file turned OFF");
+        }
+
 
         private void mitShowArrows_Click(object sender, EventArgs e)
         {
-            drawArrowStatus();
+            DrawArrowStatus();
         }
 
 
@@ -670,7 +719,7 @@ namespace screener3
 
         private void mitAddNumber_Click(object sender, EventArgs e)
         {
-            drawNumberStatus();
+            DrawNumberStatus();
 
             numbering = 1;
         }
@@ -727,17 +776,76 @@ namespace screener3
             this.TopMost = true;
             this.Focus();
             this.TopMost = true;
+
+            //float currentDpi = GetDpi(this);
+            //scalingFactor = GetScalingFactor(this);
+
+            //Console.WriteLine($"Current DPI: {currentDpi}");
+            //Console.WriteLine($"Scaling Factor: {scalingFactor}");
+
+            //MessageBox.Show($"CUR DPI: {currentDpi}, Scaling Factor: {scalingFactor}");
+        }
+
+        public float GetDpi(Form form)
+        {
+            using (Graphics g = form.CreateGraphics())
+            {
+                return g.DpiX; // DpiX for horizontal DPI, DpiY for vertical DPI
+            }
+        }
+
+        public float GetScalingFactor(Form form)
+        {
+            using (Graphics g = form.CreateGraphics())
+            {
+                float dpiX = g.DpiX;
+                return dpiX / 96f; // Assuming default DPI is 96
+            }
+        }
+
+        //on dpi change
+        protected override void WndProc(ref Message m)
+        {
+            const int WM_DPICHANGED = 0x02E0;
+
+            if (m.Msg == WM_DPICHANGED)
+            {
+                scalingFactor = GetScalingFactor(this);
+            }
+
+            base.WndProc(ref m);
+        }
+
+
+        public float GetDeviceDpi(Form form)
+        {
+            return form.DeviceDpi; // Returns the current DPI
+        }
+
+        protected override void OnDpiChanged(DpiChangedEventArgs e)
+        {
+            base.OnDpiChanged(e);
+            float newDpiX = e.DeviceDpiNew / 96f; // New DPI scaling factor
+            MessageBox.Show($"New DPI: {e.DeviceDpiNew}, Scaling Factor: {newDpiX}");
+        }
+
+        public float GetScreenDpi()
+        {
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                return g.DpiX;
+            }
         }
 
         private void mitSaveFile_Click(object sender, EventArgs e)
         {
-            saveToFileStatus();
+            SaveToFileStatus();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string aboutText = "Author: Dzmitry Ivanou" + "\n" + "e-mail: frosofco@gmail.com" + "\n" + "https://github.com/Ivanou-Dzmitry/fast_screener";
-            MessageBox.Show(aboutText, "About FastScreener 0.2");
+            MessageBox.Show(aboutText, "About FastScreener 0.3");
         }
 
         private void OnApplicationExit(object sender, EventArgs e)
@@ -745,7 +853,11 @@ namespace screener3
             keyboardHook.KeyDown -= new KeyboardHook.KeyboardHookCallback(keyboardHook_KeyDown);
             keyboardHook.Uninstall();
 
+
             mouseHook.MiddleButtonDown -= new MouseHook.MouseHookCallback(mouseHook_MMB);
+            mouseHook.MiddleButtonUp -= new MouseHook.MouseHookCallback(mouseHook_MouseUp);
+            mouseHook.MouseMove -= new MouseHook.MouseHookCallback(mouseHook_MouseMove);
+
             mouseHook.Uninstall();
 
             SettingsManager.SaveConfig(this.ClientSize.Width, this.ClientSize.Height);
@@ -789,6 +901,22 @@ namespace screener3
             {
                 DrawGrid(e, gridColor);
             }
+
+            if (drawArrows)
+            {
+                int ArrowSize = 6;
+                RenderLines(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), ArrowSize);
+            }
+           
+            if (drawFrame)
+            {
+                if (currentRectangle.Width > minDrawSize && currentRectangle.Height > minDrawSize)
+                    DrawFrameCurrent(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, frameColor);
+                
+                DrawFrame(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, frameColor);
+            }
+                
+
         }
 
         private void mitClear_Click(object sender, EventArgs e)
@@ -837,6 +965,8 @@ namespace screener3
             arrowPictureUpdater(clickCount);
 
             toolTipMain.Hide(pnlToolbarMain);
+
+            ScaleButtonImage(btnArrowType, scalingFactor);
         }
 
         private void lblHeader_MouseDown(object sender, MouseEventArgs e)
@@ -897,6 +1027,86 @@ namespace screener3
                 drawFrame = true;
             }
         }
+
+
+        private void mouseHook_MouseMove(MouseHook.MSLLHOOKSTRUCT mouse)
+        {
+            if (isDrawing)
+            {
+                // important point
+                relativePoint = pnlCanvas.PointToClient(Cursor.Position);
+
+                int width = relativePoint.X - startPoint.X;
+                int height = relativePoint.Y - startPoint.Y;
+
+                currentRectangle = new Rectangle(startPoint.X, startPoint.Y, width, height);
+
+                DrawFrameCurrent(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, frameColor);
+
+                if (drawFrame)
+                {
+                    DrawFrame(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, frameColor);
+                    pnlCanvas.Invalidate();
+                }
+                    
+
+                // Trigger a repaint
+                
+            }
+        }
+
+        // Mouse Middle Button Up (End drawing)
+        private void mouseHook_MouseUp(MouseHook.MSLLHOOKSTRUCT mouse)
+        {
+                isDrawing = false;
+
+            // Calculate the final rectangle
+            int width = relativePoint.X - startPoint.X;
+            int height = relativePoint.Y - startPoint.Y;
+
+            // Create and add the rectangle
+            Rectangle newRectangle = new Rectangle(
+                    Math.Min(startPoint.X, relativePoint.X),
+                    Math.Min(startPoint.Y, relativePoint.Y),
+                    Math.Abs(width),
+                    Math.Abs(height)
+                );
+
+            if (drawFrame)
+            {
+                drawnRectangles.Add(newRectangle);
+                DrawFrame(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, frameColor);
+            }
+
+
+        }
+
+        private void DrawFrameCurrent(PaintEventArgs e, Point relativePoint, Color color)
+        {
+            var framePen = new Pen(color, 1);
+            if (currentRectangle.Width > 0 && currentRectangle.Height > 0)
+                e.Graphics.DrawRectangle(framePen, currentRectangle);
+        }
+
+
+        //drawFrame
+        private void DrawFrame(PaintEventArgs e, Point relativePoint, Color color)
+        {
+            var framePen = new Pen(color, 1);
+         
+            if (currentRectangle.Width > minDrawSize && currentRectangle.Height > minDrawSize)
+            {
+                foreach (var rectangle in drawnRectangles)
+                {
+                    e.Graphics.DrawRectangle(framePen, rectangle);
+                }
+            }
+            
+            framePen.Dispose();
+        }
+
+
+
     }
 
 }
