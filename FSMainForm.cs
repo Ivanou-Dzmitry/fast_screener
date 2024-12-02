@@ -1,13 +1,11 @@
 using fast_screener;
 using fast_screener.Properties;
-using Microsoft.VisualBasic.Devices;
 using System.Configuration;
 using System.Diagnostics;
-using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Net;
-using System.Windows.Forms;
+
 
 
 namespace screener3
@@ -94,11 +92,16 @@ namespace screener3
         private Point startPoint;
         private Rectangle currentRectangle;
         private bool isDrawing;
+        private bool isLineDrawing;
 
         private List<Rectangle> drawnRectangles = new List<Rectangle>();
         private List<Line> drawnArrows = new List<Line>();
 
         private int minDrawSize = 3;
+
+        private int arrowSize = 6;
+
+
 
         public FormMain()
         {
@@ -232,8 +235,10 @@ namespace screener3
                 isDrawing = true;
             }
 
+            isLineDrawing = true;
+
             //draw Arrow
-            if (drawArrows)
+            if (drawArrows && isLineDrawing)
             {
                 DrawArrow(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, arrowColor);
             }
@@ -558,7 +563,6 @@ namespace screener3
 
             // Add the line to the list
             drawnArrows.Add(newLine);
-
         }
 
 
@@ -587,32 +591,9 @@ namespace screener3
                     break;
             }
 
-            //Color arrow
-            var arrowPen = new Pen(color, 1);
-
-            // for outline
-            var arrowPenOutline = new Pen(Color.Black, 2);
-
-            //TODO settings
-            int ArrowSize = 6;
-
-            // for outline
-            arrowPenOutline.CustomEndCap = new AdjustableArrowCap(ArrowSize, ArrowSize + 1);
-
-            //color arrow
-            //arrowPen.CustomEndCap = new AdjustableArrowCap(ArrowSize, ArrowSize);
-
             AddLine(startPoint, endPoint, color);
 
-            e.Graphics.DrawLine(arrowPenOutline, startPoint, endPoint);
-            //e.Graphics.DrawLine(arrowPen, startPoint, endPoint);
-
-            RenderLines(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), ArrowSize);
-
-            arrowPen.Dispose();
-            arrowPenOutline.Dispose();
-
-           // MessageBox.Show("!" + startPoint.X + "." + startPoint.Y);
+            RenderLines(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), arrowSize);
         }
 
         private void RenderLines(PaintEventArgs e, int aSize)
@@ -622,6 +603,13 @@ namespace screener3
                 using (Pen linePen = new Pen(line.Color, line.Width))
                 {
                     linePen.CustomEndCap = new AdjustableArrowCap(aSize, aSize);
+
+                    // for outline
+                    var arrowPenOutline = new Pen(Color.Black, 2);
+                    // for outline
+                    arrowPenOutline.CustomEndCap = new AdjustableArrowCap(aSize, aSize + 1);
+                    e.Graphics.DrawLine(arrowPenOutline, line.StartPoint, line.EndPoint);
+
                     e.Graphics.DrawLine(linePen, line.StartPoint, line.EndPoint);
                 }
             }
@@ -904,8 +892,7 @@ namespace screener3
 
             if (drawArrows)
             {
-                int ArrowSize = 6;
-                RenderLines(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), ArrowSize);
+                RenderLines(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), arrowSize);
             }
            
             if (drawFrame)
@@ -1031,6 +1018,8 @@ namespace screener3
 
         private void mouseHook_MouseMove(MouseHook.MSLLHOOKSTRUCT mouse)
         {
+            isLineDrawing = false;
+
             if (isDrawing)
             {
                 // important point
@@ -1048,17 +1037,15 @@ namespace screener3
                     DrawFrame(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, frameColor);
                     pnlCanvas.Invalidate();
                 }
-                    
-
-                // Trigger a repaint
-                
+                  
             }
         }
 
         // Mouse Middle Button Up (End drawing)
         private void mouseHook_MouseUp(MouseHook.MSLLHOOKSTRUCT mouse)
         {
-                isDrawing = false;
+            isDrawing = false;
+            isLineDrawing = false;
 
             // Calculate the final rectangle
             int width = relativePoint.X - startPoint.X;
@@ -1077,7 +1064,12 @@ namespace screener3
                 drawnRectangles.Add(newRectangle);
                 DrawFrame(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, frameColor);
             }
-
+            
+            //avoid draw line on mouse UP
+            if (drawArrows && isLineDrawing)
+            {
+                DrawArrow(new PaintEventArgs(pnlCanvas.CreateGraphics(), pnlCanvas.ClientRectangle), relativePoint, arrowColor);
+            }
 
         }
 
